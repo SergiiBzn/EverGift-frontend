@@ -3,13 +3,17 @@
 import { Routes, Route } from "react-router";
 import MainLayout from "./layouts/MainLayout.jsx";
 import ProtectedLayout from "./layouts/ProtectedLayout.jsx";
-import Contacts from "./pages/Contacts.jsx";
-import Dashboard from "./pages/Dashboard.jsx";
-import Login from "./pages/Login.jsx";
-import NotFound from "./pages/NotFound";
-import Notifications from "./pages/Notifications.jsx";
-import Profile from "./pages/Profile.jsx";
-import Register from "./pages/Register.jsx";
+
+import {
+  Contacts,
+  Dashboard,
+  Login,
+  NotFound,
+  Notifications,
+  Profile,
+  Register,
+} from "./pages";
+
 import { AuthContextProvider } from "./contexts/AuthContext.jsx";
 
 const App = () => {

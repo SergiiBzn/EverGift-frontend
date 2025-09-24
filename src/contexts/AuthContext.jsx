@@ -2,6 +2,7 @@
 
 import { createContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import { toast } from "react-toastify";
 
 const AuthContext = createContext();
 
@@ -15,7 +16,6 @@ export const AuthContextProvider = ({ children }) => {
   const navigate = useNavigate();
 
   const register = async (formState) => {
-    setIsRefreshing(true);
     try {
       const response = await fetch(`${baseUrl}/users/register`, {
         method: "POST",
@@ -28,9 +28,13 @@ export const AuthContextProvider = ({ children }) => {
 
       if (!response.ok) {
         //TODO: get zod validation error from response
-        const { error } = await response.json();
-        setError(error);
-        throw new Error("Error Signing Up");
+        /*   const { error } = await response.json();
+        setError(error); */
+        // throw new Error("Error Signing Up");
+        toast.error(
+          "Registration failed. Please check your credentials and try again."
+        );
+        return;
       }
       const userData = await response.json();
       setUser(userData);
@@ -39,11 +43,13 @@ export const AuthContextProvider = ({ children }) => {
     } catch (error) {
       // TODO: error handling with toastify
       console.log(error);
+      setError(error);
+    } finally {
+      setIsRefreshing(false);
     }
   };
 
   const login = async (formState) => {
-    setIsRefreshing(true);
     try {
       const response = await fetch(`${baseUrl}/users/login`, {
         method: "POST",
@@ -56,15 +62,26 @@ export const AuthContextProvider = ({ children }) => {
 
       if (!response.ok) {
         //TODO: get zod validation error from response
-        const { error } = await response.json();
+        /* const { error } = await response.json();
         setError(error);
-        throw new Error("Error Logging In");
+        console.log("error", error); */
+
+        toast.error(
+          "Login failed. Please check your credentials and try again."
+        );
+        return;
+        // throw new Error("Error Logging In");
       }
       const userData = await response.json();
       setUser(userData);
+      navigate("/dashboard");
     } catch (error) {
       console.log(error);
       // TODO: error handling with toastify
+
+      setError(error);
+    } finally {
+      setIsRefreshing(false);
     }
   };
 
@@ -83,6 +100,7 @@ export const AuthContextProvider = ({ children }) => {
       navigate("/login");
     } catch (error) {
       console.log(error);
+      setError(error);
       // TODO: error handling with toastify
     }
   };
@@ -99,16 +117,20 @@ export const AuthContextProvider = ({ children }) => {
         }
         const userData = await response.json();
         setUser(userData);
-        setIsRefreshing(false);
       } catch (error) {
         console.log(error);
         // navigate to login page if user is not authenticated
+        setError(error);
+
         navigate("/login");
+
         // TODO: error handling with toastify
+      } finally {
+        setIsRefreshing(false);
       }
     };
     refreshUser();
-  }, []);
+  }, [navigate]);
 
   return (
     <AuthContext.Provider

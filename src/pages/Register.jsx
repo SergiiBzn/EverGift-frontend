@@ -115,7 +115,7 @@ const Register = () => {
                 ? "bg-blue-400 cursor-not-allowed"
                 : "bg-blue-600 hover:bg-blue-700"
             }`}
-            disbale={isClicked}>
+            disabled={isClicked}>
             {isClicked ? "Registering..." : "Register"}
           </button>
         </fieldset>

@@ -36,8 +36,10 @@ const Login = () => {
     toast.error(error);
   }
   return (
-    <form onSubmit={handleSubmit}>
-      <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
+    <form
+      className=" inset-0 flex items-center justify-center h-full "
+      onSubmit={handleSubmit}>
+      <fieldset className=" fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
         <legend className="fieldset-legend">Login</legend>
         <label className="fieldset-label" htmlFor="email">
           Email

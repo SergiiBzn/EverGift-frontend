@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 import useAuth from "../hooks/useAuth.jsx";
+import { toast } from "react-toastify";
+import { Link } from "react-router";
 
 const Register = () => {
   const [formState, setFormState] = useState({
@@ -27,73 +29,102 @@ const Register = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // alert("Passwords do not match");
+
+    console.log("ok ich bin da");
 
     setIsClicked(true);
 
-    if (formState.password !== confirmPassword) {
+    if (formState.password !== formState.confirmPassword) {
       // alert("Passwords do not match");
+      toast.error("Passwords do not match");
+
+      console.log("Passwords do not match");
+
+      setIsClicked(false);
       return;
     }
+
+    console.log("formState", formState);
     register(formState);
     setIsClicked(false);
   };
 
+  /*   if (error) {
+    toast.error(error);
+  }
+ */
   return (
-    <form
-      className=" inset-0 flex items-center justify-center h-full "
-      onSubmit={handleSubmit}>
-      <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
-        <legend className="fieldset-legend">Register</legend>
-        <label className="fieldset-label" htmlFor="email">
-          Email
-        </label>
-        <input
-          type="email"
-          onChange={handleChange}
-          name="email"
-          value={formState.email}
-          className="input"
-          placeholder="Email"
-          id="email"
-          required
-        />
-        <label className="fieldset-label" htmlFor="password">
-          Password
-        </label>
-        <input
-          type="password"
-          onChange={handleChange}
-          name="password"
-          value={formState.password}
-          className="input"
-          placeholder="Password"
-          id="password"
-          required
-        />
-        <label className="fieldset-label" htmlFor="confirmPassword">
-          Confirm Password
-        </label>
-        <input
-          type="password"
-          onChange={handleChange}
-          name="confirmPassword"
-          value={formState.confirmPassword}
-          className="input"
-          placeholder="Confirm Password"
-          id="confirmPassword"
-          required
-        />
-        <button
-          className={`btn btn-neutral mt-4 ${
-            isClicked
-              ? "bg-blue-400 cursor-not-allowed"
-              : "bg-blue-600 hover:bg-blue-700"
-          }`}
-          disabled={isClicked}>
-          {isClicked ? "Registering..." : "Register"}
-        </button>
-      </fieldset>
-    </form>
+    <div className="flex items-center justify-center h-full ">
+      <form className="  w-full max-w-2xl " onSubmit={handleSubmit}>
+        <fieldset className="fieldset bg-base-200 border-base-300 rounded-box  border p-4">
+          {/* <legend className="fieldset-legend text-3xl font-bold text-black mb-6 text-center">
+            Register
+          </legend> */}
+          <div className="divider divider-info text-3xl font-bold text-black mb-6 text-center">
+            Register
+          </div>
+
+          <div className="flex flex-col gap-6">
+            <label className="fieldset-label text-lg " htmlFor="email">
+              Email
+            </label>
+            <input
+              type="email"
+              onChange={handleChange}
+              name="email"
+              value={formState.email}
+              className="input input-lg w-full"
+              placeholder="Email"
+              id="email"
+              required
+            />
+            <label className="fieldset-label text-lg" htmlFor="password">
+              Password
+            </label>
+            <input
+              type="password"
+              onChange={handleChange}
+              name="password"
+              value={formState.password}
+              className="input input-lg w-full"
+              placeholder="Password"
+              id="password"
+              required
+            />
+            <label className="fieldset-label text-lg" htmlFor="confirmPassword">
+              Confirm Password
+            </label>
+            <input
+              type="password"
+              onChange={handleChange}
+              name="confirmPassword"
+              value={formState.confirmPassword}
+              className="input input-lg w-full"
+              placeholder="Confirm Password"
+              id="confirmPassword"
+              required
+            />
+            <button
+              className={`btn btn-neutral btn-lg w-full my-4  ${
+                isClicked
+                  ? "bg-blue-400 cursor-not-allowed"
+                  : "bg-blue-600 hover:bg-blue-700"
+              }`}
+              disabled={isClicked}>
+              {isClicked ? "Registering..." : "Register"}
+            </button>
+
+            <p className="text-lg text-center ">
+              Already Have An Account?{"  "}
+              <Link className="link link-info" to="/login">
+                Login
+              </Link>
+            </p>
+          </div>
+        </fieldset>
+      </form>
+    </div>
   );
 };
 

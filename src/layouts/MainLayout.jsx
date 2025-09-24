@@ -1,14 +1,14 @@
 /** @format */
 
 import { Outlet } from "react-router";
-import Footer from "../components/Footer";
-import Navbar from "../components/Navbar";
+import Footer from "../components/Footer.jsx";
+import Navbar from "../components/Navbar.jsx";
 import { ToastContainer, toast, Bounce, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const MainLayout = () => {
   return (
-    <div className="grid grid-rows-[azto_1fr_auto] min-h-screen">
+    <div className="grid grid-rows-[auto_1fr_auto] min-h-screen">
       <div>
         <Navbar />
         <ToastContainer

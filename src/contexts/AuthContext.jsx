@@ -27,13 +27,9 @@ export const AuthContextProvider = ({ children }) => {
       });
 
       if (!response.ok) {
-        //TODO: get zod validation error from response
-        /*   const { error } = await response.json();
-        setError(error); */
-        // throw new Error("Error Signing Up");
-        toast.error(
-          "Registration failed. Please check your credentials and try again."
-        );
+        //get zod validation error from response
+        const { error } = await response.json();
+        await improveErrorMessage(error);
         return;
       }
       const userData = await response.json();
@@ -43,9 +39,9 @@ export const AuthContextProvider = ({ children }) => {
 
       navigate("/login");
     } catch (error) {
-      // TODO: error handling with toastify
-      console.log(error);
-      setError(error);
+      // error handling with toastify
+
+      toast.error(error);
     } finally {
       setIsRefreshing(false);
     }
@@ -63,25 +59,22 @@ export const AuthContextProvider = ({ children }) => {
       });
 
       if (!response.ok) {
-        //TODO: get zod validation error from response
-        /* const { error } = await response.json();
-        setError(error);
-        console.log("error", error); */
+        // get zod validation error from response
+        const { error } = await response.json();
+        await improveErrorMessage(error);
 
-        toast.error(
-          "Login failed. Please check your credentials and try again."
-        );
         return;
         // throw new Error("Error Logging In");
       }
       const userData = await response.json();
       setUser(userData);
+
+      toast.success(`welcome ${userData.profil.name}`);
       navigate("/dashboard");
     } catch (error) {
       console.log(error);
-      // TODO: error handling with toastify
-
-      setError(error);
+      // error handling with toastify
+      toast.error(error);
     } finally {
       setIsRefreshing(false);
     }
@@ -95,15 +88,15 @@ export const AuthContextProvider = ({ children }) => {
         credentials: "include",
       });
       if (!response.ok) {
-        throw new Error(" Logout Failed");
+        const { error } = await response.json();
+        await improveErrorMessage(error);
+        // throw new Error(" Logout Failed");
       }
       const { message } = await response.json();
       setUser(null);
       navigate("/login");
     } catch (error) {
-      console.log(error);
-      setError(error);
-      // TODO: error handling with toastify
+      toast.error(error);
     }
   };
 
@@ -120,20 +113,30 @@ export const AuthContextProvider = ({ children }) => {
         const userData = await response.json();
         setUser(userData);
       } catch (error) {
-        console.log(error);
-        // navigate to login page if user is not authenticated
-        setError(error);
+        console.error("Error fetching user:", error);
         setUser(null);
-
-        // navigate("/login");
-
-        // TODO: error handling with toastify
       } finally {
         setIsRefreshing(false);
       }
     };
     refreshUser();
   }, [navigate]);
+
+  const improveErrorMessage = async (error) => {
+    const errorArray = error
+      .split("✖")
+      .map((error) => "✖" + error)
+      .filter((error) => error !== "✖");
+    console.log("error", errorArray);
+    toast.error(
+      <div>
+        {errorArray.map((error) => (
+          <p>{error}</p>
+        ))}
+      </div>,
+      { autoClose: 8000 }
+    );
+  };
 
   return (
     <AuthContext.Provider

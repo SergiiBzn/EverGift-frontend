@@ -9,7 +9,7 @@ const Login = () => {
     password: "",
   });
 
-  const [isClicked, setIslicked] = useState(false);
+  const [isClicked, setIsClicked] = useState(false);
 
   const { login, error, setError } = useAuth();
 

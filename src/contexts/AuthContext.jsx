@@ -17,7 +17,7 @@ export const AuthContextProvider = ({ children }) => {
 
   const register = async (formState) => {
     try {
-      const response = await fetch(`${baseUrl}/users/register`, {
+      const response = await fetch(`${baseUrl}/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -37,6 +37,8 @@ export const AuthContextProvider = ({ children }) => {
         return;
       }
       const userData = await response.json();
+
+      console.log("userData", userData);
       setUser(userData);
 
       navigate("/login");
@@ -51,7 +53,7 @@ export const AuthContextProvider = ({ children }) => {
 
   const login = async (formState) => {
     try {
-      const response = await fetch(`${baseUrl}/users/login`, {
+      const response = await fetch(`${baseUrl}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

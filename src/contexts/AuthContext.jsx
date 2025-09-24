@@ -121,8 +121,9 @@ export const AuthContextProvider = ({ children }) => {
         console.log(error);
         // navigate to login page if user is not authenticated
         setError(error);
+        setUser(null);
 
-        navigate("/login");
+        // navigate("/login");
 
         // TODO: error handling with toastify
       } finally {

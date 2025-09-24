@@ -1,6 +1,4 @@
-/** @format */
-
-import React, { useState } from "react";
+import { useState } from "react";
 import useAuth from "../hooks/useAuth.jsx";
 import { toast } from "react-toastify";
 import { Link } from "react-router";
@@ -77,7 +75,8 @@ const Login = () => {
                   ? "bg-blue-400 cursor-not-allowed"
                   : "bg-blue-600 hover:bg-blue-700"
               }`}
-              disabled={isClicked}>
+              disabled={isClicked}
+            >
               {isClicked ? "Logging In..." : "Login"}
             </button>
             <p className="text-lg text-center ">

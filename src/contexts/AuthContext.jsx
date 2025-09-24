@@ -4,7 +4,7 @@ import { createContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 
-const AuthContext = createContext();
+export const AuthContext = createContext();
 
 const baseUrl = "http://localhost:3000";
 
@@ -150,7 +150,8 @@ export const AuthContextProvider = ({ children }) => {
         setIsRefreshing,
         error,
         setError,
-      }}>
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

@@ -27,7 +27,7 @@ const Register = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // alert("Passwords do not match");
 
@@ -45,9 +45,11 @@ const Register = () => {
       return;
     }
 
-    console.log("formState", formState);
-    register(formState);
-    setIsClicked(false);
+    try {
+      await register(formState);
+    } finally {
+      setIsClicked(false);
+    }
   };
 
   /*   if (error) {
@@ -106,11 +108,17 @@ const Register = () => {
               required
             />
             <button
-              className={`btn btn-primary btn-lg w-full my-4   ${
-                isClicked && "cursor-not-allowed"
-              }`}
-              disabled={isClicked}>
-              {isClicked ? "Registering..." : "Register"}
+              className={`btn  btn-lg w-full my-4   ${
+                isClicked ? "btn-secondary  cursor-not-allowed" : "btn-primary"
+              }`}>
+              {isClicked ? (
+                <>
+                  <span className="loading loading-spinner"></span>
+                  Registering...
+                </>
+              ) : (
+                "Register"
+              )}
             </button>
 
             <p className="text-lg text-center ">

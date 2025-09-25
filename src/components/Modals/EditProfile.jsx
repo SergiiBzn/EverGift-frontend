@@ -1,19 +1,35 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import useAuth from "../../hooks/useAuth";
 
-const EditProfile = ({ profile, isOpen, setIsOpen }) => {
+const EditProfile = ({ isOpen, setIsOpen }) => {
+  const { baseUrl, setUser, user } = useAuth();
+  const profile = user?.profile;
   const [formData, setFormData] = useState({
-    name: profile.name || "",
-    avatar: profile.avatar || "",
-    birthday: profile.birthday || "",
-    gender: profile.gender || "",
-    tags: profile.tags || [],
+    name: "",
+    avatar: "",
+    birthday: "",
+    gender: "",
+    tags: [],
   });
+  const [openEditAvatar, setOpenEditAvatar] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [newTag, setNewTag] = useState("");
-  console.log(formData.avatar);
+  useEffect(() => {
+    if (profile) {
+      setFormData({
+        name: profile.name || "",
+        avatar: profile.avatar || "",
+        birthday: new Date(profile.birthday).toISOString().split("T")[0] || "",
+        gender: profile.gender || "",
+        tags: profile.tags || [],
+      });
+    }
+  }, [profile]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const addTag = () => {
@@ -36,10 +52,48 @@ const EditProfile = ({ profile, isOpen, setIsOpen }) => {
   };
 
   const handleRemoveTag = (tagToRemove) => {
-    setFormData({
-      ...formData,
-      tags: formData.tags.filter((t) => t !== tagToRemove),
-    });
+    setFormData((prev) => ({
+      ...prev,
+      tags: prev.tags.filter((t) => t !== tagToRemove),
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!formData.name && !formData.birthday) {
+      toast.error("Please fill in at least one field");
+      return;
+    }
+    if (!formData.avatar) {
+      formData.avatar = profile.avatar;
+    }
+    if (formData.birthday) {
+      // check birthday is not in the future
+      const birthday = new Date(formData.birthday);
+      const today = new Date();
+      if (birthday > today) {
+        toast.error("Validate birthday");
+        return;
+      }
+    }
+    try {
+      setIsSubmitting(true);
+      const res = await fetch(`${baseUrl}/users/profile`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+        credentials: "include",
+      });
+      if (!res.ok) throw new Error("Error updating profile");
+      const updatedProfile = await res.json();
+      setUser((prev) => ({ ...prev, profile: updatedProfile }));
+      toast.success("Profile updated successfully");
+      setIsSubmitting(false);
+      setIsOpen(false);
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      toast.error("Error updating profile");
+    }
   };
 
   if (!isOpen) return null;
@@ -54,11 +108,12 @@ const EditProfile = ({ profile, isOpen, setIsOpen }) => {
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
         onClick={() => setIsOpen(false)}
       />
-      <div className="w-full relative max-w-lg rounded-xl bg-base-100 p-6 shadow-xl dark:bg-background-dark dark:ring-1 dark:ring-primary/30">
+      <div className="w-full relative max-w-lg rounded-xl bg-base-100 p-6 shadow-xl ">
         <div className="flex items-start justify-between">
           <h2 className="text-2xl font-bold ">Edit Profile</h2>
           <button
             className="btn btn-sm btn-ghost rounded-full"
+            type="button"
             onClick={() => setIsOpen(false)}
           >
             <span className="material-symbols-outlined text-primary/80 dark:text-primary/70">
@@ -66,36 +121,57 @@ const EditProfile = ({ profile, isOpen, setIsOpen }) => {
             </span>
           </button>
         </div>
-        <form className="mt-6 space-y-6">
-          <div className="flex items-center gap-4">
-            {/* <div className="relative h-24 w-24"> */}
+        <form className="mt-6 space-y-6" onSubmit={handleSubmit}>
+          <div className="flex gap-4 items-center ">
             <div className="relative avatar">
               <div className="w-24 rounded-xl">
-                <img src={formData.avatar} />
+                {formData.avatar ? (
+                  <img src={formData.avatar} alt="User Avatar" />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center">
+                    <span className="material-symbols-outlined text-5xl text-base-content/30">
+                      person
+                    </span>
+                  </div>
+                )}
               </div>
-              <button className="absolute bottom-0 right-0 btn btn-primary btn-sm rounded-2xl">
+              <button
+                type="button"
+                onClick={() => setOpenEditAvatar(!openEditAvatar)}
+                className="absolute bottom-0 right-0 btn bg-primary btn-sm rounded-2xl"
+              >
                 <span className="material-symbols-outlined text-sm">edit</span>
               </button>
-              {/* <input className="hidden" id="avatar-upload" type="file" /> */}
             </div>
-            <div className="flex-1">
-              <label className="block text-sm font-medium">
-                Name
+            {openEditAvatar && (
+              <div className="flex-1 flex-col ">
                 <input
-                  className="mt-1 w-full rounded-lg input input-lg input-primary"
-                  name="name"
+                  className="input input-primary w-full"
                   type="text"
-                  value={formData.name}
+                  name="avatar"
+                  value={formData.avatar}
                   onChange={handleChange}
                 />
-              </label>
-            </div>
+              </div>
+            )}
           </div>
           <div>
-            <label className="block text-sm font-medium">
+            <label className="block font-medium text-neutral-content">
+              Name
+              <input
+                className=" w-full rounded-lg input input-lg input-primary text-base-content"
+                name="name"
+                type="text"
+                value={formData.name}
+                onChange={handleChange}
+              />
+            </label>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-neutral-content">
               Birthday
               <input
-                className="mt-1 w-full rounded-lg border-primary/20 bg-background-light py-2 px-4 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary dark:border-primary/30 dark:bg-background-dark dark:focus:border-primary"
+                className=" w-full rounded-lg input input-lg input-primary text-base-content"
                 name="birthday"
                 type="date"
                 value={formData.birthday}
@@ -103,15 +179,57 @@ const EditProfile = ({ profile, isOpen, setIsOpen }) => {
               />
             </label>
           </div>
+          {/* Gender Selection */}
           <div>
-            <label className="block text-sm font-medium">
+            <label className="block text-sm font-medium text-neutral-content">
+              Gender
+            </label>
+            <div className="mt-2 flex items-center gap-x-6 text-base-content">
+              <div className="flex gap-2 items-center">
+                <input
+                  className="radio radio-xs radio-primary"
+                  type="radio"
+                  name="gender"
+                  value="male"
+                  onChange={handleChange}
+                  defaultChecked={formData.gender === "male"}
+                />
+                <span className=" material-symbols-outlined ">Male</span>
+              </div>
+              <div className="flex gap-2 items-center">
+                <input
+                  className="radio radio-xs radio-primary"
+                  type="radio"
+                  name="gender"
+                  value="female"
+                  onChange={handleChange}
+                  defaultChecked={formData.gender === "female"}
+                />
+                <span className="material-symbols-outlined ">Female</span>
+              </div>
+              <div className="flex gap-2 items-center">
+                <input
+                  className="radio radio-xs radio-primary"
+                  type="radio"
+                  name="gender"
+                  value="other"
+                  onChange={handleChange}
+                  defaultChecked={formData.gender === "other"}
+                />
+                <span className="">Other</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <label className=" text-sm font-medium text-neutral-content flex flex-col gap-2">
               Tags
-              <div className="mt-1 flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2">
                 {formData.tags.map((tag) => {
                   return (
                     <span className="flex items-center rounded-full bg-primary/10 px-3 py-1 text-sm text-primary dark:bg-primary/20">
                       {tag}
                       <button
+                        type="button"
                         className="ml-2 text-primary/50 hover:text-primary"
                         onClick={() => handleRemoveTag(tag)}
                       >
@@ -121,26 +239,31 @@ const EditProfile = ({ profile, isOpen, setIsOpen }) => {
                   );
                 })}
               </div>
+              <input
+                className=" w-full rounded-lg input input-lg input-primary text-base-content "
+                name="tags"
+                placeholder="Add a tag..."
+                type="text"
+                value={newTag}
+                onChange={(e) => setNewTag(e.target.value)}
+                onKeyDown={handleKeyDown}
+              />
             </label>
-            <input
-              className="mt-2 w-full rounded-lg border-primary/20 bg-background-light py-2 px-4 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary dark:border-primary/30 dark:bg-background-dark dark:focus:border-primary"
-              name="tags"
-              placeholder="Add a tag..."
-              type="text"
-              value={newTag}
-              onChange={(e) => setNewTag(e.target.value)}
-              onKeyDown={handleKeyDown}
-            />
           </div>
           <div className="flex justify-end gap-4 pt-4">
             <button
+              type="button"
               className="btn btn-outline  hover:bg-primary/10 rounded-xl "
               onClick={() => setIsOpen(false)}
             >
               Cancel
             </button>
-            <button className="btn btn-primary rounded-xl" type="submit">
-              Save Changes
+            <button
+              className="btn btn-primary rounded-xl"
+              disabled={isSubmitting}
+              type="submit"
+            >
+              {isSubmitting ? "Saving..." : "Save Changes"}
             </button>
           </div>
         </form>

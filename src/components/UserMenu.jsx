@@ -48,7 +48,7 @@ const UserMenu = ({ user }) => {
             </Link>
           </li>
           <li>
-            <Link to="/dashboard">dashboard</Link>
+            <Link to="/">dashboard</Link>
           </li>
           <li>
             <button onClick={logout}>Logout</button>

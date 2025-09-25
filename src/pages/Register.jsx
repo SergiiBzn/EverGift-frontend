@@ -61,7 +61,7 @@ const Register = () => {
           {/* <legend className="fieldset-legend text-3xl font-bold text-black mb-6 text-center">
             Register
           </legend> */}
-          <div className="divider divider-info text-3xl font-bold text-black mb-6 text-center">
+          <div className="divider divider-primary text-3xl font-bold text-black mb-6 text-center">
             Register
           </div>
 
@@ -106,10 +106,8 @@ const Register = () => {
               required
             />
             <button
-              className={`btn btn-neutral btn-lg w-full my-4  ${
-                isClicked
-                  ? "bg-blue-400 cursor-not-allowed"
-                  : "bg-blue-600 hover:bg-blue-700"
+              className={`btn btn-primary btn-lg w-full my-4   ${
+                isClicked && "cursor-not-allowed"
               }`}
               disabled={isClicked}>
               {isClicked ? "Registering..." : "Register"}
@@ -117,7 +115,7 @@ const Register = () => {
 
             <p className="text-lg text-center ">
               Already Have An Account?{"  "}
-              <Link className="link link-info" to="/login">
+              <Link className="link link-primary" to="/login">
                 Login
               </Link>
             </p>

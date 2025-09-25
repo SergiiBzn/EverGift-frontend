@@ -6,7 +6,9 @@ import { toast } from "react-toastify";
 
 export const AuthContext = createContext();
 
+
 const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
 
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -150,8 +152,7 @@ export const AuthContextProvider = ({ children }) => {
         setIsRefreshing,
         error,
         setError,
-      }}
-    >
+      }}>
       {children}
     </AuthContext.Provider>
   );

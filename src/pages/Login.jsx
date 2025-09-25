@@ -1,3 +1,5 @@
+/** @format */
+
 import { useState } from "react";
 import useAuth from "../hooks/useAuth.jsx";
 import { toast } from "react-toastify";
@@ -39,7 +41,7 @@ const Login = () => {
             Login
           </legend> */}
 
-          <div className="divider divider-info text-3xl font-bold text-black mb-6 text-center">
+          <div className="divider divider-primary text-3xl font-bold text-black mb-6 text-center">
             Login
           </div>
           <div className="flex flex-col gap-6">
@@ -70,18 +72,15 @@ const Login = () => {
               required
             />
             <button
-              className={`btn btn-neutral btn-lg w-full my-4 ${
-                isClicked
-                  ? "bg-blue-400 cursor-not-allowed"
-                  : "bg-blue-600 hover:bg-blue-700"
+              className={`btn btn-primary btn-lg w-full my-4   ${
+                isClicked && "cursor-not-allowed"
               }`}
-              disabled={isClicked}
-            >
+              disabled={isClicked}>
               {isClicked ? "Logging In..." : "Login"}
             </button>
             <p className="text-lg text-center ">
               Don't Have An Account?{"  "}
-              <Link className="link link-info" to="/register">
+              <Link className="link link-primary" to="/register">
                 Register
               </Link>
             </p>

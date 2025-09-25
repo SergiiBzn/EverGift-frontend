@@ -21,11 +21,11 @@ const App = () => {
     <AuthContextProvider>
       <Routes>
         <Route element={<MainLayout />}>
-          <Route index element={<Dashboard />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route element={<ProtectedLayout />}>
-            <Route path="/dashboard" element={<div>Dashboard</div>} />
+            <Route index element={<Dashboard />} />
+            {/* <Route path="/dashboard" element={<div>Dashboard</div>} /> */}
             <Route path="/profile" element={<Profile />} />
             <Route path="/contacts" element={<Contacts />} />
             <Route path="/notifications" element={<Notifications />} />

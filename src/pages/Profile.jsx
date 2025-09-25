@@ -3,15 +3,15 @@
 import { useState, useEffect } from 'react';
 import ReceivedGiftModal from '../components/ReceivedGiftModal.jsx';
 import useAuth from '../hooks/useAuth.jsx';
-import EditProfile from "../components/Modals/EditProfile.jsx";
+import EditProfile from '../components/Modals/EditProfile.jsx';
 
 export default function Profile() {
   const [open, setOpen] = useState(false);
   const [receivedGifts, setReceivedGifts] = useState([]);
   const [editingGift, setEditingGift] = useState(null);
-  const { profil } = user;
   const [isOpenEditProfile, setIsOpenEditProfile] = useState(false);
   const { user } = useAuth();
+  const { profil } = user;
 
   // Fetch received gifts from the backend
   const fetchReceivedGifts = async () => {
@@ -118,7 +118,7 @@ export default function Profile() {
   useEffect(() => {
     fetchReceivedGifts();
   }, []);
-  
+
   return (
     <div className='mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8'>
       <div className='flex flex-col gap-12'>
@@ -154,7 +154,7 @@ export default function Profile() {
 
               <button
                 onClick={() => setIsOpenEditProfile(true)}
-                className="w-full rounded bg-primary px-4 py-2 text-sm font-bold text-white md:w-auto"
+                className='w-full rounded bg-primary px-4 py-2 text-sm font-bold text-white md:w-auto'
               >
                 Edit Profile
               </button>
@@ -344,7 +344,6 @@ export default function Profile() {
                       aria-label={`Edit ${item.title}`}
                     >
                       <span className='material-symbols-outlined text-primary/80 dark:text-primary/70'>
-
                         edit
                       </span>
                     </button>
@@ -451,7 +450,6 @@ export default function Profile() {
                   <th
                     className='px-6 py-3 text-left text-xs font-medium uppercase tracking-wider'
                     scope='col'
-
                   >
                     Gifter
                   </th>

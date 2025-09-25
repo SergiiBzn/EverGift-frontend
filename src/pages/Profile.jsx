@@ -3,10 +3,14 @@
 import { useState } from "react";
 import ReceivedGiftModal from "../components/ReceivedGiftModal.jsx";
 import useAuth from "../hooks/useAuth.jsx";
+import EditProfile from "../components/Modals/EditProfile.jsx";
 
 export default function Profile() {
   const [open, setOpen] = useState(false);
   const { user } = useAuth();
+  const { profil } = user;
+  const [isOpenEditProfile, setIsOpenEditProfile] = useState(false);
+
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
       <div className="flex flex-col gap-12">
@@ -21,7 +25,8 @@ export default function Profile() {
                   style={{
                     backgroundImage:
                       'url("https://lh3.googleusercontent.com/aida-public/AB6AXuBFU5zaCi1iCCqw80GwZMmSYuW3YLyivifjCUNBpYTkC2gXUWUA_86Dffq1D0Cqea8wupE0jh_jkdLC71LKPb_bRd6vMxWYwrCQKbKF8oh8Z47OR3XWWzLaQPZtYR_ObgVabRQdG0QDGI5qa8lDCBLF09OVseXkOcUdUotSD80ch9tU7mV6gVA3ahyJ1wGs2BKlOhqCtNuByLi3_3503rlZphbQ4NUJaAoe4US_NHzvtVsrRPOko7OhiaO7r8_LfTllcj4lkkT28hMx")',
-                  }}></div>
+                  }}
+                ></div>
               </div>
               <div className="flex-1 text-center md:text-left">
                 <h2 className="text-3xl font-bold">Sophia Bennett</h2>
@@ -38,9 +43,19 @@ export default function Profile() {
                   </span>
                 </div>
               </div>
-              <button className="w-full rounded bg-primary px-4 py-2 text-sm font-bold text-white md:w-auto">
+              <button
+                onClick={() => setIsOpenEditProfile(true)}
+                className="w-full rounded bg-primary px-4 py-2 text-sm font-bold text-white md:w-auto"
+              >
                 Edit Profile
               </button>
+              {isOpenEditProfile && (
+                <EditProfile
+                  profile={profil}
+                  isOpen={isOpenEditProfile}
+                  setIsOpen={setIsOpenEditProfile}
+                />
+              )}
             </div>
           </div>
         </section>
@@ -57,7 +72,8 @@ export default function Profile() {
                     className="h-5 w-5 text-primary/70"
                     fill="currentColor"
                     viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg">
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
                     <path
                       clipRule="evenodd"
                       d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
@@ -83,7 +99,8 @@ export default function Profile() {
                   strokeWidth="2"
                   viewBox="0 0 24 24"
                   width="20"
-                  xmlns="http://www.w3.org/2000/svg">
+                  xmlns="http://www.w3.org/2000/svg"
+                >
                   <path d="M5 12h14"></path>
                   <path d="M12 5v14"></path>
                 </svg>
@@ -123,12 +140,14 @@ export default function Profile() {
               ].map((contact) => (
                 <div
                   key={contact.name}
-                  className="flex flex-col items-center gap-2 flex-shrink-0">
+                  className="flex flex-col items-center gap-2 flex-shrink-0"
+                >
                   <div
                     className="h-24 w-24 rounded-full bg-cover bg-center"
                     style={{
                       backgroundImage: `url(${contact.imageUrl})`,
-                    }}></div>
+                    }}
+                  ></div>
                   <p className="text-sm font-medium">{contact.name}</p>
                 </div>
               ))}
@@ -136,7 +155,8 @@ export default function Profile() {
               <div className="absolute inset-y-0 left-0 flex items-center">
                 <button
                   className="p-2 rounded-full bg-background-light/80 dark:bg-background-dark/80 shadow-md ring-1 ring-black/5 dark:ring-white/10 hover:bg-background-light dark:hover:bg-background-dark btn btn-circle"
-                  aria-label="Previous Contacts">
+                  aria-label="Previous Contacts"
+                >
                   <span className="material-symbols-outlined text-primary">
                     chevron_left
                   </span>
@@ -144,8 +164,9 @@ export default function Profile() {
               </div>
               <div className="absolute inset-y-0 right-0 flex items-center">
                 <button
-                  className="p-2 rounded-full bg-background-light/80 dark:bg-background-dark/80 shadow-md ring-1 ring-black/5 dark:ring-white/10 hover:bg-background-light dark:hover:bg-background-dark btn btn-circle  "
-                  aria-label="Next Contacts">
+                  className="p-2 rounded-full bg-background-light/80 dark:bg-background-dark/80 shadow-md ring-1 ring-black/5 dark:ring-white/10 hover:bg-background-light dark:hover:bg-background-dark "
+                  aria-label="Next Contacts"
+                >
                   <span className="material-symbols-outlined text-primary  ">
                     chevron_right
                   </span>
@@ -162,7 +183,8 @@ export default function Profile() {
             <h2 className="text-2xl font-bold">Wishlist</h2>
             <button
               className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-bold text-white"
-              aria-label="Add Item to Wishlist">
+              aria-label="Add Item to Wishlist"
+            >
               <svg
                 className="lucide lucide-plus"
                 fill="none"
@@ -173,7 +195,8 @@ export default function Profile() {
                 strokeWidth="2"
                 viewBox="0 0 24 24"
                 width="20"
-                xmlns="http://www.w3.org/2000/svg">
+                xmlns="http://www.w3.org/2000/svg"
+              >
                 <path d="M5 12h14"></path>
                 <path d="M12 5v14"></path>
               </svg>
@@ -198,7 +221,8 @@ export default function Profile() {
               ].map((item) => (
                 <li
                   key={item.id}
-                  className="p-4 flex justify-between items-center">
+                  className="p-4 flex justify-between items-center"
+                >
                   <div>
                     <p className="font-semibold">{item.title}</p>
                     <p className="text-sm text-primary/80 dark:text-primary/70">
@@ -208,14 +232,16 @@ export default function Profile() {
                   <div className="flex items-center gap-2">
                     <button
                       className="p-2 rounded-full hover:bg-primary/10"
-                      aria-label={`Edit ${item.title}`}>
+                      aria-label={`Edit ${item.title}`}
+                    >
                       <span className="material-symbols-outlined text-primary/80 dark:text-primary/70">
                         edit
                       </span>
                     </button>
                     <button
                       className="p-2 rounded-full hover:bg-red-500/10"
-                      aria-label={`Delete ${item.title}`}>
+                      aria-label={`Delete ${item.title}`}
+                    >
                       <span className="material-symbols-outlined text-red-500">
                         delete
                       </span>
@@ -234,7 +260,8 @@ export default function Profile() {
             <button
               className="flex items-center gap-2 rounded-lg btn btn-primary px-4 py-2 text-sm font-bold text-white"
               aria-label="Add Gift"
-              onClick={() => setOpen(true)}>
+              onClick={() => setOpen(true)}
+            >
               <svg
                 className="lucide lucide-plus"
                 fill="none"
@@ -245,7 +272,8 @@ export default function Profile() {
                 strokeWidth="2"
                 viewBox="0 0 24 24"
                 width="20"
-                xmlns="http://www.w3.org/2000/svg">
+                xmlns="http://www.w3.org/2000/svg"
+              >
                 <path d="M5 12h14"></path>
                 <path d="M12 5v14"></path>
               </svg>
@@ -257,12 +285,14 @@ export default function Profile() {
             <div className="flex-1">
               <label
                 className="mb-1 block text-sm font-medium"
-                htmlFor="filter-year">
+                htmlFor="filter-year"
+              >
                 Filter by Year
               </label>
               <select
                 className="w-full rounded border-primary/20 bg-background-light px-3 py-2 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary dark:border-primary/30 dark:bg-background-dark dark:focus:border-primary"
-                id="filter-year">
+                id="filter-year"
+              >
                 {["2023", "2022", "2021"].map((year) => (
                   <option key={year} value={year}>
                     {year}
@@ -273,7 +303,8 @@ export default function Profile() {
             <div className="flex-1">
               <label
                 className="mb-1 block text-sm font-medium"
-                htmlFor="search-contact-history">
+                htmlFor="search-contact-history"
+              >
                 Search by Gifter
               </label>
               <div className="relative">
@@ -284,7 +315,8 @@ export default function Profile() {
                     height="20"
                     viewBox="0 0 20 20"
                     width="20"
-                    xmlns="http://www.w3.org/2000/svg">
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
                     <path
                       clipRule="evenodd"
                       d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
@@ -308,27 +340,32 @@ export default function Profile() {
                 <tr>
                   <th
                     className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
-                    scope="col">
+                    scope="col"
+                  >
                     Gifter
                   </th>
                   <th
                     className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
-                    scope="col">
+                    scope="col"
+                  >
                     Gift
                   </th>
                   <th
                     className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
-                    scope="col">
+                    scope="col"
+                  >
                     Description
                   </th>
                   <th
                     className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
-                    scope="col">
+                    scope="col"
+                  >
                     Date
                   </th>
                   <th
                     className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider"
-                    scope="col">
+                    scope="col"
+                  >
                     Actions
                   </th>
                 </tr>
@@ -367,14 +404,16 @@ export default function Profile() {
                       <div className="flex items-center justify-end gap-2">
                         <button
                           className="p-2 rounded-full hover:bg-primary/10"
-                          aria-label={`Edit gift from ${item.gifter}`}>
+                          aria-label={`Edit gift from ${item.gifter}`}
+                        >
                           <span className="material-symbols-outlined text-primary/80 dark:text-primary/70">
                             edit
                           </span>
                         </button>
                         <button
                           className="p-2 rounded-full hover:bg-red-500/10"
-                          aria-label={`Delete gift from ${item.gifter}`}>
+                          aria-label={`Delete gift from ${item.gifter}`}
+                        >
                           <span className="material-symbols-outlined text-red-500">
                             delete
                           </span>

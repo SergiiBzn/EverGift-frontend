@@ -135,7 +135,7 @@ export default function Profile() {
 
               <div className="absolute inset-y-0 left-0 flex items-center">
                 <button
-                  className="p-2 rounded-full bg-background-light/80 dark:bg-background-dark/80 shadow-md ring-1 ring-black/5 dark:ring-white/10 hover:bg-background-light dark:hover:bg-background-dark"
+                  className="p-2 rounded-full bg-background-light/80 dark:bg-background-dark/80 shadow-md ring-1 ring-black/5 dark:ring-white/10 hover:bg-background-light dark:hover:bg-background-dark btn btn-circle"
                   aria-label="Previous Contacts">
                   <span className="material-symbols-outlined text-primary">
                     chevron_left
@@ -144,7 +144,7 @@ export default function Profile() {
               </div>
               <div className="absolute inset-y-0 right-0 flex items-center">
                 <button
-                  className="p-2 rounded-full bg-background-light/80 dark:bg-background-dark/80 shadow-md ring-1 ring-black/5 dark:ring-white/10 hover:bg-background-light dark:hover:bg-background-dark "
+                  className="p-2 rounded-full bg-background-light/80 dark:bg-background-dark/80 shadow-md ring-1 ring-black/5 dark:ring-white/10 hover:bg-background-light dark:hover:bg-background-dark btn btn-circle  "
                   aria-label="Next Contacts">
                   <span className="material-symbols-outlined text-primary  ">
                     chevron_right

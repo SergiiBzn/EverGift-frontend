@@ -98,27 +98,27 @@ export default function Profile() {
                 {
                   name: "Olivia H.",
                   imageUrl:
-                    "https://lh3.googleusercontent.com/aida-public/AB6AXuACBvsw1ModUD-A_aOlFnqK7xNpdcr_-P_WpMaUPMtNtUgcQIkzKObh6nLo9Kzb_H5ZfrjD78orPgIPtBHQGd1zoCaICGKWmczM78uW-_U4OwITRXtOCIyj3BnotoLc_wWW_Ym7KgnAEXUbZs4TcQ8AwdDE-f5H33xb_7xBKA48k2qxrA6NlomyNcc9WrHU292DGW3yzVin7uRZfX6EbfaJwBxYkA_No6kgUo8DYPl-wj0A2CbJd5CtUK8iN-yzn2yunO6laTizvkaQ",
+                    "https://www.pngmart.com/files/22/User-Avatar-Profile-PNG.png",
                 },
                 {
                   name: "Liam W.",
                   imageUrl:
-                    "https://lh3.googleusercontent.com/aida-public/AB6AXuACBvsw1ModUD-A_aOlFnqK7xNpdcr_-P_WpMaUPMtNtUgcQIkzKObh6nLo9Kzb_H5ZfrjD78orPgIPtBHQGd1zoCaICGKWmczM78uW-_U4OwITRXtOCIyj3BnotoLc_wWW_Ym7KgnAEXUbZs4TcQ8AwdDE-f5H33xb_7xBKA48k2qxrA6NlomyNcc9WrHU292DGW3yzVin7uRZfX6EbfaJwBxYkA_No6kgUo8DYPl-wj0A2CbJd5CtUK8iN-yzn2yunO6laTizvkaQ",
+                    "https://www.svgrepo.com/show/384670/account-avatar-profile-user.svg",
                 },
                 {
                   name: "Ava B.",
                   imageUrl:
-                    "https://lh3.googleusercontent.com/aida-public/AB6AXuACBvsw1ModUD-A_aOlFnqK7xNpdcr_-P_WpMaUPMtNtUgcQIkzKObh6nLo9Kzb_H5ZfrjD78orPgIPtBHQGd1zoCaICGKWmczM78uW-_U4OwITRXtOCIyj3BnotoLc_wWW_Ym7KgnAEXUbZs4TcQ8AwdDE-f5H33xb_7xBKA48k2qxrA6NlomyNcc9WrHU292DGW3yzVin7uRZfX6EbfaJwBxYkA_No6kgUo8DYPl-wj0A2CbJd5CtUK8iN-yzn2yunO6laTizvkaQ",
+                    "https://static.vecteezy.com/ti/gratis-vektor/p1/5419157-weibliches-benutzerprofil-avatar-ist-eine-frau-ein-charakter-fur-einen-bildschirmschoner-mit-emotionenillustration-auf-einem-weissen-isolierten-hintergrund-vektor.jpg",
                 },
                 {
                   name: "Noah D.",
                   imageUrl:
-                    "https://lh3.googleusercontent.com/aida-public/AB6AXuACBvsw1ModUD-A_aOlFnqK7xNpdcr_-P_WpMaUPMtNtUgcQIkzKObh6nLo9Kzb_H5ZfrjD78orPgIPtBHQGd1zoCaICGKWmczM78uW-_U4OwITRXtOCIyj3BnotoLc_wWW_Ym7KgnAEXUbZs4TcQ8AwdDE-f5H33xb_7xBKA48k2qxrA6NlomyNcc9WrHU292DGW3yzVin7uRZfX6EbfaJwBxYkA_No6kgUo8DYPl-wj0A2CbJd5CtUK8iN-yzn2yunO6laTizvkaQ",
+                    "https://img.freepik.com/premium-vector/person-with-blue-shirt-that-says-name-person_1029948-7040.jpg?semt=ais_hybrid&w=740&q=80",
                 },
                 {
                   name: "Emma T.",
                   imageUrl:
-                    "https://lh3.googleusercontent.com/aida-public/AB6AXuACBvsw1ModUD-A_aOlFnqK7xNpdcr_-P_WpMaUPMtNtUgcQIkzKObh6nLo9Kzb_H5ZfrjD78orPgIPtBHQGd1zoCaICGKWmczM78uW-_U4OwITRXtOCIyj3BnotoLc_wWW_Ym7KgnAEXUbZs4TcQ8AwdDE-f5H33xb_7xBKA48k2qxrA6NlomyNcc9WrHU292DGW3yzVin7uRZfX6EbfaJwBxYkA_No6kgUo8DYPl-wj0A2CbJd5CtUK8iN-yzn2yunO6laTizvkaQ",
+                    "https://images.icon-icons.com/2643/PNG/512/female_woman_user_people_avatar_white_tone_icon_159354.png",
                 },
               ].map((contact) => (
                 <div

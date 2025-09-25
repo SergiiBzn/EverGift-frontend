@@ -8,7 +8,10 @@ import "react-toastify/dist/ReactToastify.css";
 
 const MainLayout = () => {
   return (
-    <div className="grid grid-rows-[auto_1fr_auto] min-h-screen font-inter text-base-content">
+    <div
+      className="grid grid-rows-[auto_1fr_auto] min-h-screen font-inter text-base-content"
+      data-theme="light"
+    >
       <div>
         <Navbar />
         <ToastContainer

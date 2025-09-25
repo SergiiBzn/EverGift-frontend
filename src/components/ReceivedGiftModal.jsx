@@ -15,21 +15,41 @@ export default function ReceivedGiftModal({
   onSave = () => {},
   fromOptions = [],
   onAddSender,
+  initialData = null,
 }) {
   const [from, setFrom] = useState('');
   const [name, setName] = useState('');
   const [date, setDate] = useState('');
   const [description, setDescription] = useState('');
 
-  // Reset fields when opening
+  // Reset fields when opening or populate with initialData for edit
   useEffect(() => {
     if (isOpen) {
-      setFrom('');
-      setName('');
-      setDate('');
-      setDescription('');
+      if (initialData) {
+        setFrom(initialData.from || initialData.fromName?.[0] || '');
+        setName(initialData.name || initialData.gift?.name || '');
+        // normalize date to yyyy-MM-dd for input[type=date]
+        const d = initialData.date || initialData.gift?.date;
+        if (d) {
+          const dt = new Date(d);
+          const y = dt.getFullYear();
+          const m = String(dt.getMonth() + 1).padStart(2, '0');
+          const day = String(dt.getDate()).padStart(2, '0');
+          setDate(`${y}-${m}-${day}`);
+        } else {
+          setDate('');
+        }
+        setDescription(
+          initialData.description || initialData.gift?.description || ''
+        );
+      } else {
+        setFrom('');
+        setName('');
+        setDate('');
+        setDescription('');
+      }
     }
-  }, [isOpen]);
+  }, [isOpen, initialData]);
 
   // Close on ESC
   useEffect(() => {
@@ -40,7 +60,7 @@ export default function ReceivedGiftModal({
   }, [isOpen, onClose]);
 
   const handleSave = (e) => {
-    e?.preventDefault?.();
+    e.preventDefault();
     onSave({ from, name, date, description });
   };
 

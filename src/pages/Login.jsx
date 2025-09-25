@@ -41,7 +41,7 @@ const Login = () => {
             Login
           </legend> */}
 
-          <div className="divider divider-primary text-3xl font-bold text-black mb-6 text-center">
+          <div className="divider divider-primary text-3xl font-bold text-black mb-6 text-center font-poppins">
             Login
           </div>
           <div className="flex flex-col gap-6">
@@ -75,7 +75,8 @@ const Login = () => {
               className={`btn btn-primary btn-lg w-full my-4   ${
                 isClicked && "cursor-not-allowed"
               }`}
-              disabled={isClicked}>
+              disabled={isClicked}
+            >
               {isClicked ? "Logging In..." : "Login"}
             </button>
             <p className="text-lg text-center ">

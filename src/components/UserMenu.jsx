@@ -3,10 +3,11 @@ import useAuth from "../hooks/useAuth";
 
 const UserMenu = ({ user }) => {
   const { logout } = useAuth();
+  // console.log(user);
 
   return (
     <div className="flex-none">
-      <button className="btn btn-ghost btn-circle">
+      <Link to="/Notifications" className="btn btn-ghost btn-circle">
         <div className="indicator">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -25,7 +26,7 @@ const UserMenu = ({ user }) => {
           </svg>
           {/* <span className="badge badge-xs badge-primary indicator-item"></span> */}
         </div>
-      </button>
+      </Link>
       <div className="dropdown dropdown-end">
         <div
           tabIndex={0}
@@ -50,7 +51,7 @@ const UserMenu = ({ user }) => {
             <Link to="/dashboard">dashboard</Link>
           </li>
           <li>
-            <Link onClick={logout}>Logout</Link>
+            <button onClick={logout}>Logout</button>
           </li>
         </ul>
       </div>

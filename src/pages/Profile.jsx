@@ -1,11 +1,12 @@
 /** @format */
 
-import React, { useState } from "react";
+import { useState } from "react";
 import ReceivedGiftModal from "../components/ReceivedGiftModal.jsx";
+import useAuth from "../hooks/useAuth.jsx";
 
 export default function Profile() {
   const [open, setOpen] = useState(false);
-
+  const { user } = useAuth();
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
       <div className="flex flex-col gap-12">

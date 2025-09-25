@@ -24,13 +24,16 @@ const Login = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     setIsClicked(true);
 
-    login(formState);
-    setIsClicked(false);
+    try {
+      await login(formState);
+    } finally {
+      setIsClicked(false);
+    }
   };
 
   return (
@@ -72,12 +75,18 @@ const Login = () => {
               required
             />
             <button
-              className={`btn btn-primary btn-lg w-full my-4   ${
-                isClicked && "cursor-not-allowed"
-              }`}
-              disabled={isClicked}
-            >
-              {isClicked ? "Logging In..." : "Login"}
+              className={`btn  btn-lg w-full my-4   ${
+                isClicked ? "btn-secondary  cursor-not-allowed" : "btn-primary"
+              }`}>
+              {isClicked ? (
+                <>
+                  <span className="loading loading-spinner"></span>
+                  Logging In...
+                </>
+              ) : (
+                "Login"
+              )}
+              {/*  {isClicked ? "Logging In..." : "Login"} */}
             </button>
             <p className="text-lg text-center ">
               Don't Have An Account?{"  "}

@@ -1,27 +1,36 @@
 /** @format */
-
 import React, { useState } from "react";
-import useContacts from "../../hooks/useContacts";
-import useAuth from "../../hooks/useAuth";
+import useContacts from "../../hooks/useContacts.jsx";
+import useAuth from "../../hooks/useAuth.jsx";
 
-const AddContact = ({ profile = {}, isOpen, setIsOpen }) => {
+const AddContact = ({ isOpen, setIsOpen }) => {
+  const { user, allUsers } = useAuth();
+  const profile = user?.profile;
   const [formData, setFormData] = useState({
     name: profile.name || "",
-    avatar: profile.avatar || "",
+    avatar: profile.avatar,
     birthday: profile.birthday || "",
     gender: profile.gender || "",
     tags: profile.tags || [],
   });
+
   const [newTag, setNewTag] = useState("");
+  const [openEditAvatar, setOpenEditAvatar] = useState(false);
   const { createContact, isLoading } = useContacts();
 
-  const { user, allUsers } = useAuth();
-
-  console.log("hallo user Contacts", user.contacts);
+  const [error, setError] = useState({});
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+
+    if (error[name]) {
+      setError((prev) => {
+        const newError = { ...prev };
+        delete newError[name];
+        return newError;
+      });
+    }
   };
 
   const addTag = () => {
@@ -53,8 +62,54 @@ const AddContact = ({ profile = {}, isOpen, setIsOpen }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    await createContact({ contactType: "custom", customProfil: formData });
-    setIsOpen(false); // Close modal on save
+    // Decide whether to create a custom contact or link a user
+    const isExistingUser = profile && profile._id;
+
+    const contactData = isExistingUser
+      ? { contactType: "user", linkedUserId: profile._id }
+      : {
+          contactType: "custom",
+          customProfile: {
+            ...formData,
+            avatar:
+              formData.avatar ||
+              "https://www.pngplay.com/wp-content/uploads/12/User-Avatar-Profile-PNG-Pic-Clip-Art-Background.png",
+          },
+        };
+
+    const newErrors = {};
+    if (!formData.name || formData.name.trim() === "") {
+      newErrors.name = "Name cannot be empty.";
+    }
+
+    if (!formData.birthday || formData.birthday.trim() === "") {
+      newErrors.birthday = "Birthday must be filled";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setError(newErrors);
+      return;
+    }
+    setError({});
+
+    try {
+      await createContact(contactData);
+      setIsOpen(false); // Close modal on save
+
+      // Reset form data to initial state
+      setFormData({
+        name: "",
+        avatar:
+          "https://www.pngplay.com/wp-content/uploads/12/User-Avatar-Profile-PNG-Pic-Clip-Art-Background.png",
+        birthday: "",
+        gender: "",
+        tags: [],
+      });
+      setNewTag("");
+    } catch (error) {
+      console.error("Failed to create contact:", error);
+      // Here you could add a state to show an error message to the user
+    }
   };
 
   if (!isOpen) return null;
@@ -70,8 +125,8 @@ const AddContact = ({ profile = {}, isOpen, setIsOpen }) => {
       />
       <div className="w-full relative max-w-lg rounded-xl bg-base-100 p-6 shadow-xl dark:bg-background-dark dark:ring-1 dark:ring-primary/30">
         <div className="flex items-start justify-between">
-          <h2 className="text-2xl font-bold ">
-            {profile.name ? "Edit Contact" : "Add Contact"}
+          <h2 className="text-2xl font-bold text-center w-full ">
+            Add Contact
           </h2>
           <button
             className="btn btn-sm btn-ghost rounded-full"
@@ -82,28 +137,47 @@ const AddContact = ({ profile = {}, isOpen, setIsOpen }) => {
           </button>
         </div>
         <form className="mt-6 space-y-6" onSubmit={handleSubmit}>
-          <div className="mt-4">
-            <label
-              htmlFor="users"
-              className="block text-sm font-medium text-gray-700">
-              Existing Contacts
-            </label>
-            <select
-              id="users"
-              className="select select-primary mt-1 block w-full rounded-md sm:text-sm input input-lg">
-              <option value="">Select a contact</option>
+          {/* Avatar section */}
+          <div className="flex gap-4 items-center ">
+            <div className="relative avatar">
+              <div className="w-24 rounded-xl">
+                {formData.avatar ? (
+                  <img src={formData.avatar} alt="User Avatar" />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center">
+                    <span className="material-symbols-outlined text-5xl text-base-content/30">
+                      person
+                    </span>
+                  </div>
+                )}
+              </div>
+              <button
+                type="button"
+                onClick={() => setOpenEditAvatar(!openEditAvatar)}
+                className="absolute bottom-0 right-0 btn bg-primary btn-sm rounded-2xl">
+                <span className="material-symbols-outlined text-sm">edit</span>
+              </button>
+            </div>
 
-              {/*TODO: should be the name of the user ( so the user need a username) */}
-              {allUsers.map((contact) => {
-                return (
-                  <option key={contact._id} value={contact.email}>
-                    {contact.email}
-                  </option>
-                );
-              })}
-            </select>
+            {openEditAvatar && (
+              <div className="w-full flex flex-col gap-2 justify-center">
+                <div className="flex-1 flex-col ">
+                  <input
+                    className="input input-primary w-full"
+                    type="text"
+                    name="avatar"
+                    value={formData.avatar}
+                    onChange={handleChange}
+                  />
+                </div>
+                <label className="btn btn-outline btn-neutral btn-sm rounded-2xl w-16">
+                  . . .
+                  <input type="file" className="hidden" name="avatar" />
+                </label>
+              </div>
+            )}
           </div>
-
+          {/* name section */}
           <div>
             <label className="block text-sm font-medium">
               Name
@@ -115,39 +189,66 @@ const AddContact = ({ profile = {}, isOpen, setIsOpen }) => {
                 onChange={handleChange}
               />
             </label>
+            {error.name && (
+              <p className="text-error text-sm mt-1">{error.name}</p>
+            )}
           </div>
 
+          {/* Gender Selection */}
           <div>
-            <label
-              htmlFor="gender"
-              className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-neutral-content">
               Gender
             </label>
-            <select
-              id="gender"
-              name="gender"
-              value={formData.gender}
-              onChange={handleChange}
-              className="w-full rounded-xl bg-white/95 p-3 text-gray-900 outline-none ring-0 focus:ring-2 focus:ring-orange-400 select select-primary">
-              <option value="" disabled>
-                Select Gender
-              </option>
-              <option value="female">Female</option>
-              <option value="male">Male</option>
-            </select>
+            <div className="mt-2 flex items-center gap-x-6 text-base-content">
+              <div className="flex gap-2 items-center">
+                <input
+                  className="radio radio-xs radio-primary"
+                  type="radio"
+                  name="gender"
+                  value="male"
+                  onChange={handleChange}
+                  defaultChecked={formData.gender === "male"}
+                />
+                <span className=" material-symbols-outlined ">Male</span>
+              </div>
+              <div className="flex gap-2 items-center">
+                <input
+                  className="radio radio-xs radio-primary"
+                  type="radio"
+                  name="gender"
+                  value="female"
+                  onChange={handleChange}
+                  defaultChecked={formData.gender === "female"}
+                />
+                <span className="material-symbols-outlined ">Female</span>
+              </div>
+              <div className="flex gap-2 items-center">
+                <input
+                  className="radio radio-xs radio-primary"
+                  type="radio"
+                  name="gender"
+                  value="other"
+                  onChange={handleChange}
+                  defaultChecked={formData.gender === "other"}
+                />
+                <span className="">Other</span>
+              </div>
+            </div>
           </div>
-
           <div>
             <label className="block text-sm font-medium">
               Birthday
               <input
-                className="mt-1 w-full rounded-lg border-primary/20 bg-background-light py-2 px-4 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary dark:border-primary/30 dark:bg-background-dark dark:focus:border-primary input input-primary"
+                className="mt-1 w-full rounded-lg  input input-primary"
                 name="birthday"
                 type="date"
                 value={formData.birthday}
                 onChange={handleChange}
               />
             </label>
+            {error.birthday && (
+              <p className="text-error text-sm mt-1">{error.birthday}</p>
+            )}
           </div>
           <div>
             <label className="block text-sm font-medium">
@@ -170,8 +271,8 @@ const AddContact = ({ profile = {}, isOpen, setIsOpen }) => {
               </div>
             </label>
             <input
-              className="mt-2 w-full rounded-lg border-primary/20 bg-background-light py-2 px-4 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary dark:border-primary/30 dark:bg-background-dark dark:focus:border-primary input input-primary"
-              name="tags"
+              className="mt-1 w-full rounded-lg  input input-primary"
+              name="newTag"
               placeholder="Add a tag..."
               type="text"
               value={newTag}

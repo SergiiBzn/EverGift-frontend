@@ -1,11 +1,17 @@
+/** @format */
+
 import Logo from "./Logo";
 import UserMenu from "./UserMenu";
 import GuestMenu from "./GuestMenu";
-import useAuth from "../hooks/useAuth";
+import useAuth from "../hooks/useAuth.jsx";
 
 const Navbar = () => {
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
   console.log(user);
+
+  /*  if (isLoading) {
+    return <div className="skeleton h-32 w-32"></div>;
+  } */
 
   return (
     <div className="navbar bg-base-100 shadow-sm">

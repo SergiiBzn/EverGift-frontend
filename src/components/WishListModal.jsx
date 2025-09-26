@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 
-export default function WishListModal({
+export default function WishlistModal({
   isOpen = false,
   onClose = () => {},
   onSave = () => {},

@@ -1,4 +1,6 @@
-import { useState } from "react";
+
+import { useEffect, useState } from "react";
+
 import { toast } from "react-toastify";
 import useAuth from "../../hooks/useAuth";
 
@@ -109,8 +111,7 @@ const EditProfile = ({ isOpen, setIsOpen }) => {
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
       role="dialog"
-      aria-modal="true"
-    >
+      aria-modal="true">
       <div
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
         onClick={() => setIsOpen(false)}
@@ -121,8 +122,7 @@ const EditProfile = ({ isOpen, setIsOpen }) => {
           <button
             className="btn btn-sm btn-ghost rounded-full"
             type="button"
-            onClick={() => setIsOpen(false)}
-          >
+            onClick={() => setIsOpen(false)}>
             <span className="material-symbols-outlined text-primary/80 dark:text-primary/70">
               close
             </span>
@@ -145,8 +145,7 @@ const EditProfile = ({ isOpen, setIsOpen }) => {
               <button
                 type="button"
                 onClick={() => setOpenEditAvatar(!openEditAvatar)}
-                className="absolute bottom-0 right-0 btn bg-primary btn-sm rounded-2xl"
-              >
+                className="absolute bottom-0 right-0 btn bg-primary btn-sm rounded-2xl">
                 <span className="material-symbols-outlined text-sm">edit</span>
               </button>
             </div>
@@ -251,8 +250,7 @@ const EditProfile = ({ isOpen, setIsOpen }) => {
                       <button
                         type="button"
                         className="ml-2 text-primary/50 hover:text-primary"
-                        onClick={() => handleRemoveTag(tag)}
-                      >
+                        onClick={() => handleRemoveTag(tag)}>
                         ×
                       </button>
                     </span>
@@ -274,15 +272,13 @@ const EditProfile = ({ isOpen, setIsOpen }) => {
             <button
               type="button"
               className="btn btn-outline  hover:bg-primary/10 rounded-xl "
-              onClick={() => setIsOpen(false)}
-            >
+              onClick={() => setIsOpen(false)}>
               Cancel
             </button>
             <button
               className="btn btn-primary rounded-xl"
               disabled={isSubmitting}
-              type="submit"
-            >
+              type="submit">
               {isSubmitting ? "Saving..." : "Save Changes"}
             </button>
           </div>

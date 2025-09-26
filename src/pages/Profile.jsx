@@ -1,12 +1,15 @@
 /** @format */
 
-import { useState, useEffect } from 'react';
+
+import { useState, useEffect, useRef } from "react";
+
 import ReceivedGiftModal from '../components/ReceivedGiftModal.jsx';
 import useAuth from '../hooks/useAuth.jsx';
 import EditProfile from '../components/Modals/EditProfile.jsx';
 import AddContact from '../components/Modals/AddContact.jsx';
 
 const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
 
 export default function Profile() {
   const [open, setOpen] = useState(false);
@@ -19,11 +22,21 @@ export default function Profile() {
   const { user, allUsers } = useAuth();
   const { profile } = user;
 
-  console.log('all not custom users', allUsers);
-  console.log('all users contacts', user.contacts);
 
-  const defaultAvatar =
-    'https://www.pngplay.com/wp-content/uploads/12/User-Avatar-Profile-PNG-Pic-Clip-Art-Background.png';
+  const scrollContainer = useRef(null);
+
+  console.log("all not custom users", allUsers);
+  console.log("all users contacts", user.contacts);
+
+  const scroll = (scrollOffset) => {
+    if (scrollContainer.current) {
+      scrollContainer.current.scrollBy({
+        left: scrollOffset,
+        behavior: "smooth",
+      });
+    }
+  };
+
 
   // Fetch received gifts from the backend
   const fetchReceivedGifts = async () => {
@@ -132,9 +145,11 @@ export default function Profile() {
                 <div
                   className='h-32 w-32 rounded-full bg-cover bg-center'
                   style={{
+
                     backgroundImage: `url(${profile.avatar})`,
                   }}
                 ></div>
+
               </div>
               <div className='flex-1 text-center md:text-left'>
                 <div className='flex items-center gap-6'>
@@ -164,8 +179,10 @@ export default function Profile() {
 
               <button
                 onClick={() => setIsOpenEditProfile(true)}
+
                 className='btn btn-sm btn-primary'
               >
+
                 Edit Profile
               </button>
               {isOpenEditProfile && (
@@ -187,11 +204,13 @@ export default function Profile() {
               <div className='relative w-full sm:w-64'>
                 <span className='absolute inset-y-0 left-0 flex items-center pl-3'>
                   <svg
+
                     className='h-5 w-5 text-primary/70'
                     fill='currentColor'
                     viewBox='0 0 20 20'
                     xmlns='http://www.w3.org/2000/svg'
                   >
+
                     <path
                       clipRule='evenodd'
                       d='M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z'
@@ -208,36 +227,41 @@ export default function Profile() {
               </div>
               <button
                 onClick={() => setIsOpenAddContact(true)}
-                className='flex w-full sm:w-auto items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-bold text-white'
-              >
+
+                className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-bold text-white">
                 <svg
-                  className='lucide lucide-plus'
-                  fill='none'
-                  height='20'
-                  stroke='currentColor'
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  strokeWidth='2'
-                  viewBox='0 0 24 24'
-                  width='20'
-                  xmlns='http://www.w3.org/2000/svg'
-                >
-                  <path d='M5 12h14'></path>
-                  <path d='M12 5v14'></path>
+                  className="lucide lucide-plus"
+                  fill="none"
+                  height="20"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                  width="20"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path d="M5 12h14"></path>
+                  <path d="M12 5v14"></path>
+
                 </svg>
                 <span>Add Contact</span>
               </button>
             </div>
           </div>
 
-          <div className='relative'>
-            <div className='flex items-center gap-4 overflow-x-auto  py-[2rem] px-[4rem]'>
+
+          <div className="relative">
+            <div
+              ref={scrollContainer}
+              className="flex items-center gap-4 overflow-x-auto  py-[2rem] px-[4rem]">
+
               {user.contacts && user.contacts.length > 0 ? (
                 user.contacts.map((contact) => (
                   <div
                     key={contact._id}
-                    className='flex flex-col items-center justify-center gap-2 flex-shrink-0'
-                  >
+
+                    className="flex flex-col items-center justify-center gap-2 flex-shrink-0">
+
                     {/* <div
                       className="h-24 w-24 rounded-full bg-cover bg-center border border-primary"
                       style={{
@@ -249,18 +273,15 @@ export default function Profile() {
                       }}></div> */}
                     <div>
                       <img
-                        className='h-24 w-24 rounded-full bg-cover bg-center border border-primary'
-                        src={`${
-                          contact.contactType === 'user'
-                            ? contact.linkedUserId?.profil?.avatar
-                            : contact.profil?.avatar
-                        }`}
+
+                        className="h-24 w-24 rounded-full bg-cover bg-center border border-primary"
+                        src={`
+                          ${contact.avatar}`}
                         alt={contact._id}
                       />
-                      <p className='text-sm font-medium text-center'>
-                        {contact.contactType === 'user'
-                          ? contact.linkedUserId?.profil?.name
-                          : contact.profil?.name}
+                      <p className="text-sm font-medium text-center">
+                        {contact.name}
+
                       </p>
                     </div>
                   </div>
@@ -275,20 +296,24 @@ export default function Profile() {
               />
               <div className='absolute inset-y-0 left-0 flex items-center'>
                 <button
-                  className='p-2 rounded-full bg-background-light/80 dark:bg-background-dark/80 shadow-md ring-1 ring-black/5 dark:ring-white/10 hover:bg-background-light dark:hover:bg-background-dark btn btn-circle'
-                  aria-label='Previous Contacts'
-                >
-                  <span className='material-symbols-outlined text-primary'>
+
+                  className="p-2 rounded-full bg-background-light/80 dark:bg-background-dark/80 shadow-md ring-1 ring-black/5 dark:ring-white/10 hover:bg-background-light dark:hover:bg-background-dark btn btn-circle"
+                  aria-label="Previous Contacts"
+                  onClick={() => scroll(-300)}>
+                  <span className="material-symbols-outlined text-primary">
+
                     chevron_left
                   </span>
                 </button>
               </div>
               <div className='absolute inset-y-0 right-0 flex items-center'>
                 <button
-                  className='p-2 rounded-full bg-background-light/80 dark:bg-background-dark/80 shadow-md ring-1 ring-black/5 dark:ring-white/10 hover:bg-background-light dark:hover:bg-background-dark btn btn-circle  '
-                  aria-label='Next Contacts'
-                >
-                  <span className='material-symbols-outlined text-primary  '>
+
+                  className="p-2 rounded-full bg-background-light/80 dark:bg-background-dark/80 shadow-md ring-1 ring-black/5 dark:ring-white/10 hover:bg-background-light dark:hover:bg-background-dark btn btn-circle  "
+                  aria-label="Next Contacts"
+                  onClick={() => scroll(300)}>
+                  <span className="material-symbols-outlined text-primary  ">
+
                     chevron_right
                   </span>
                 </button>
@@ -303,6 +328,7 @@ export default function Profile() {
           <div className='flex items-center justify-between'>
             <h2 className='text-2xl font-bold'>Wishlist</h2>
             <button
+
               className='flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-bold text-white'
               aria-label='Add Item to Wishlist'
             >
@@ -320,6 +346,7 @@ export default function Profile() {
               >
                 <path d='M5 12h14'></path>
                 <path d='M12 5v14'></path>
+
               </svg>
               <span>Add Item</span>
             </button>
@@ -342,8 +369,10 @@ export default function Profile() {
               ].map((item) => (
                 <li
                   key={item.id}
+
                   className='p-4 flex justify-between items-center'
                 >
+
                   <div>
                     <p className='font-semibold'>{item.title}</p>
                     <p className='text-sm text-primary/80 dark:text-primary/70'>
@@ -352,18 +381,22 @@ export default function Profile() {
                   </div>
                   <div className='flex items-center gap-2'>
                     <button
+
                       className='p-2 rounded-full hover:bg-primary/10'
                       aria-label={`Edit ${item.title}`}
                     >
                       <span className='material-symbols-outlined text-primary/80 dark:text-primary/70'>
+
                         edit
                       </span>
                     </button>
                     <button
+
                       className='p-2 rounded-full hover:bg-red-500/10'
                       aria-label={`Delete ${item.title}`}
                     >
                       <span className='material-symbols-outlined text-red-500'>
+
                         delete
                       </span>
                     </button>
@@ -379,6 +412,7 @@ export default function Profile() {
           <div className='flex items-center justify-between'>
             <h2 className='text-2xl font-bold'>Received Gift History</h2>
             <button
+
               className='flex items-center gap-2 rounded-lg btn btn-primary px-4 py-2 text-sm font-bold text-white'
               aria-label='Add Gift'
               onClick={() => setOpen(true)}
@@ -397,6 +431,7 @@ export default function Profile() {
               >
                 <path d='M5 12h14'></path>
                 <path d='M12 5v14'></path>
+
               </svg>
               <span>Add</span>
             </button>
@@ -405,6 +440,7 @@ export default function Profile() {
           <div className='flex flex-col gap-4 sm:flex-row'>
             <div className='flex-1'>
               <label
+
                 className='mb-1 block text-sm font-medium'
                 htmlFor='filter-year'
               >
@@ -415,6 +451,7 @@ export default function Profile() {
                 id='filter-year'
               >
                 {['2023', '2022', '2021'].map((year) => (
+
                   <option key={year} value={year}>
                     {year}
                   </option>
@@ -423,14 +460,17 @@ export default function Profile() {
             </div>
             <div className='flex-1'>
               <label
+
                 className='mb-1 block text-sm font-medium'
                 htmlFor='search-contact-history'
               >
+
                 Search by Gifter
               </label>
               <div className='relative'>
                 <span className='absolute inset-y-0 left-0 flex items-center pl-3'>
                   <svg
+
                     className='text-primary/70'
                     fill='currentColor'
                     height='20'
@@ -438,6 +478,7 @@ export default function Profile() {
                     width='20'
                     xmlns='http://www.w3.org/2000/svg'
                   >
+
                     <path
                       clipRule='evenodd'
                       d='M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z'
@@ -460,6 +501,7 @@ export default function Profile() {
               <thead className='bg-primary/5 dark:bg-primary/10'>
                 <tr>
                   <th
+
                     className='px-6 py-3 text-left text-xs font-medium uppercase tracking-wider'
                     scope='col'
                   >
@@ -487,6 +529,7 @@ export default function Profile() {
                     className='px-6 py-3 text-right text-xs font-medium uppercase tracking-wider'
                     scope='col'
                   >
+
                     Actions
                   </th>
                 </tr>
@@ -496,8 +539,10 @@ export default function Profile() {
                   <tr>
                     <td
                       colSpan={5}
+
                       className='px-6 py-4 text-center text-sm text-primary/80'
                     >
+
                       No received gifts yet.
                     </td>
                   </tr>
@@ -533,18 +578,22 @@ export default function Profile() {
                               onClick={() => {
                                 setEditingGift(r);
                                 setOpen(true);
+
                               }}
                             >
                               <span className='material-symbols-outlined text-primary/80 dark:text-primary/70'>
+
                                 edit
                               </span>
                             </button>
                             <button
                               className='p-2 rounded-full hover:bg-red-500/10'
                               aria-label={`Delete gift from ${gifter}`}
+
                               onClick={() => deleteReceivedGift(r._id)}
                             >
                               <span className='material-symbols-outlined text-red-500'>
+
                                 delete
                               </span>
                             </button>

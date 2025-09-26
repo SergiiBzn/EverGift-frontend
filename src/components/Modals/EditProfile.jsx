@@ -1,12 +1,8 @@
-<<<<<<< HEAD
 /** @format */
 
-import { useState } from "react";
-=======
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import useAuth from "../../hooks/useAuth";
->>>>>>> 05edeb7ed0f763aff9964df109f88d343b189cfa
 
 const EditProfile = ({ isOpen, setIsOpen }) => {
   const { baseUrl, setUser, user } = useAuth();
@@ -118,13 +114,8 @@ const EditProfile = ({ isOpen, setIsOpen }) => {
           <h2 className="text-2xl font-bold ">Edit Profile</h2>
           <button
             className="btn btn-sm btn-ghost rounded-full"
-<<<<<<< HEAD
-            onClick={() => setIsOpen(false)}>
-=======
             type="button"
-            onClick={() => setIsOpen(false)}
-          >
->>>>>>> 05edeb7ed0f763aff9964df109f88d343b189cfa
+            onClick={() => setIsOpen(false)}>
             <span className="material-symbols-outlined text-primary/80 dark:text-primary/70">
               close
             </span>
@@ -147,8 +138,7 @@ const EditProfile = ({ isOpen, setIsOpen }) => {
               <button
                 type="button"
                 onClick={() => setOpenEditAvatar(!openEditAvatar)}
-                className="absolute bottom-0 right-0 btn bg-primary btn-sm rounded-2xl"
-              >
+                className="absolute bottom-0 right-0 btn bg-primary btn-sm rounded-2xl">
                 <span className="material-symbols-outlined text-sm">edit</span>
               </button>
             </div>
@@ -268,8 +258,7 @@ const EditProfile = ({ isOpen, setIsOpen }) => {
             <button
               className="btn btn-primary rounded-xl"
               disabled={isSubmitting}
-              type="submit"
-            >
+              type="submit">
               {isSubmitting ? "Saving..." : "Save Changes"}
             </button>
           </div>

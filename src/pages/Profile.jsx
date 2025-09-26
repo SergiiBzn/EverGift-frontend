@@ -15,6 +15,7 @@ export default function Profile() {
 
   const [isOpenEditProfile, setIsOpenEditProfile] = useState(false);
   const { user, allUsers } = useAuth();
+  const { profile } = user;
 
   console.log("all not custom users", allUsers);
   console.log("all users contacts", user.contacts);
@@ -140,24 +141,33 @@ export default function Profile() {
                 <div
                   className="h-32 w-32 rounded-full bg-cover bg-center"
                   style={{
-                    backgroundImage:
-                      'url("https://lh3.googleusercontent.com/aida-public/AB6AXuBFU5zaCi1iCCqw80GwZMmSYuW3YLyivifjCUNBpYTkC2gXUWUA_86Dffq1D0Cqea8wupE0jh_jkdLC71LKPb_bRd6vMxWYwrCQKbKF8oh8Z47OR3XWWzLaQPZtYR_ObgVabRQdG0QDGI5qa8lDCBLF09OVseXkOcUdUotSD80ch9tU7mV6gVA3ahyJ1wGs2BKlOhqCtNuByLi3_3503rlZphbQ4NUJaAoe4US_NHzvtVsrRPOko7OhiaO7r8_LfTllcj4lkkT28hMx")',
+                    backgroundImage: `url(${profile.avatar})`,
                   }}
                 ></div>
               </div>
               <div className="flex-1 text-center md:text-left">
-                <h2 className="text-3xl font-bold">Sophia Bennett</h2>
-                <p className="text-primary/80 dark:text-primary/70">Age: 30</p>
+                <div className="flex items-center gap-6">
+                  <h2 className="text-3xl font-bold">{profile.name}</h2>{" "}
+                  {profile.gender == "male" && (
+                    <span className="material-symbols-outlined text-shadow-cyan-600 dark:text-primary/70">
+                      Male
+                    </span>
+                  )}
+                  {profile.gender == "female" && (
+                    <span className="material-symbols-outlined text-pink-500">
+                      Female
+                    </span>
+                  )}
+                </div>{" "}
+                <p className="text-neutral ">
+                  Age: {profile.age >= 0 ? profile.age : "N/A"}
+                </p>
                 <div className="mt-4 flex flex-wrap justify-center gap-2 md:justify-start">
-                  <span className="rounded-full bg-primary/10 px-3 py-1 text-sm text-primary dark:bg-primary/20">
-                    Fashion
-                  </span>
-                  <span className="rounded-full bg-primary/10 px-3 py-1 text-sm text-primary dark:bg-primary/20">
-                    Travel
-                  </span>
-                  <span className="rounded-full bg-primary/10 px-3 py-1 text-sm text-primary dark:bg-primary/20">
-                    Photography
-                  </span>
+                  {profile?.tags?.map((tag) => (
+                    <span className="rounded-full bg-primary/10 px-3 py-1 text-sm text-primary dark:bg-primary/20">
+                      {tag}
+                    </span>
+                  ))}
                 </div>
               </div>
 

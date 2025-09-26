@@ -163,7 +163,7 @@ export default function Profile() {
 
               <button
                 onClick={() => setIsOpenEditProfile(true)}
-                className="w-full rounded bg-primary px-4 py-2 text-sm font-bold text-white md:w-auto"
+                className="btn btn-sm btn-primary"
               >
                 Edit Profile
               </button>

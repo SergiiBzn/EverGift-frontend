@@ -1,6 +1,6 @@
-/** @format */
 
 import { useEffect, useState } from "react";
+
 import { toast } from "react-toastify";
 import useAuth from "../../hooks/useAuth";
 
@@ -18,10 +18,19 @@ const EditProfile = ({ isOpen, setIsOpen }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [newTag, setNewTag] = useState("");
 
+  const [error, setError] = useState({});
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
+  if (error[name]) {
+    setError((prev) => {
+      const newError = { ...prev };
+      delete newError[name];
+      return newError;
+    });
+  }
 
   const addTag = () => {
     const newTagTrimmed = newTag.trim();
@@ -51,21 +60,30 @@ const EditProfile = ({ isOpen, setIsOpen }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.name && !formData.birthday) {
-      toast.error("Please fill in at least one field");
-      return;
+
+    const newErrors = {};
+    if (!formData.name || formData.name.trim() === "") {
+      newErrors.name = "Name cannot be empty.";
     }
-    if (!formData.avatar) {
-      formData.avatar = profile.avatar;
-    }
-    if (formData.birthday) {
+    if (!formData.birthday) {
+      newErrors.birthday = "Birthday must be filled";
+    } else {
       // check birthday is not in the future
       const birthday = new Date(formData.birthday);
       const today = new Date();
       if (birthday > today) {
-        toast.error("Validate birthday");
-        return;
+        newErrors.birthday = "Birthday must be in the past";
       }
+    }
+    if (Object.keys(newErrors).length > 0) {
+      setError(newErrors);
+      return;
+    }
+
+    setError({});
+
+    if (!formData.avatar) {
+      formData.avatar = profile.avatar;
     }
     try {
       setIsSubmitting(true);
@@ -161,6 +179,9 @@ const EditProfile = ({ isOpen, setIsOpen }) => {
                 onChange={handleChange}
               />
             </label>
+            {error.name && (
+              <p className="text-error text-sm mt-1">{error.name}</p>
+            )}
           </div>
           <div>
             <label className="block text-sm font-medium text-neutral-content">
@@ -173,6 +194,9 @@ const EditProfile = ({ isOpen, setIsOpen }) => {
                 onChange={handleChange}
               />
             </label>
+            {error.birthday && (
+              <p className="text-error text-sm mt-1">{error.birthday}</p>
+            )}
           </div>
           {/* Gender Selection */}
           <div>

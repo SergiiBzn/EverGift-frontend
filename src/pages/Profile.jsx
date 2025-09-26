@@ -17,8 +17,6 @@ export default function Profile() {
 
   const { user, allUsers } = useAuth();
 
-  const scrollContainer = useRef(null);
-
   console.log("all not custom users", allUsers);
   console.log("all users contacts", user.contacts);
 

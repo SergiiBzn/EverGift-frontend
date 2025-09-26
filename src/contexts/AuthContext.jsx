@@ -4,11 +4,7 @@ import { createContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 
-<<<<<<< HEAD
 const AuthContext = createContext();
-=======
-export const AuthContext = createContext();
->>>>>>> 05edeb7ed0f763aff9964df109f88d343b189cfa
 
 const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
@@ -218,17 +214,14 @@ export const AuthContextProvider = ({ children }) => {
         setIsRefreshing,
         error,
         setError,
-<<<<<<< HEAD
+
         allContacts,
         setAllContacts,
         allUsers,
         setAllUsers,
-      }}>
-=======
+
         baseUrl,
-      }}
-    >
->>>>>>> 05edeb7ed0f763aff9964df109f88d343b189cfa
+      }}>
       {children}
     </AuthContext.Provider>
   );

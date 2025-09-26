@@ -7,6 +7,7 @@ import useAuth from "../hooks/useAuth.jsx";
 
 import ProfileSection from "../components/profile-page/ProfileSection.jsx";
 import ContactSection from "../components/profile-page/ContactSection.jsx";
+import WishListModal from '../components/WishListModal.jsx';
 
 const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
@@ -19,6 +20,10 @@ export default function Profile() {
 
   console.log("all not custom users", allUsers);
   console.log("all users contacts", user.contacts);
+
+  const [isWishModalOpen, setIsWishModalOpen] = useState(false);
+  const [wishList, setWishList] = useState(user?.wishList || []);
+  const [savingWish, setSavingWish] = useState(false);
 
   // Fetch received gifts from the backend
   const fetchReceivedGifts = async () => {
@@ -111,6 +116,28 @@ export default function Profile() {
     }
   };
 
+  const addWishItem = async ({ name, description }) => {
+    try {
+      setSavingWish(true);
+      const newList = [...wishList, { item: name, description }];
+      setWishList(newList); // optimistic
+      const res = await fetch(`${baseUrl}/users/wishList`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(newList),
+      });
+      if (!res.ok) throw new Error('Failed to update wishlist');
+      const updatedUser = await res.json();
+      setWishList(updatedUser.wishList || newList);
+      setIsWishModalOpen(false);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setSavingWish(false);
+    }
+  };
+
   useEffect(() => {
     fetchReceivedGifts();
   }, []);
@@ -131,8 +158,10 @@ export default function Profile() {
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold">Wishlist</h2>
             <button
-              className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-bold text-white"
-              aria-label="Add Item to Wishlist">
+              className='flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-bold text-white'
+              aria-label='Add Item to Wishlist'
+              onClick={() => setIsWishModalOpen(true)}
+            >
               <svg
                 className="lucide lucide-plus"
                 fill="none"
@@ -151,48 +180,47 @@ export default function Profile() {
             </button>
           </div>
 
-          <div className="rounded-lg bg-background-light shadow-sm ring-1 ring-primary/20 dark:bg-background-dark dark:ring-primary/30">
-            <ul className="divide-y divide-primary/20 dark:divide-primary/30">
-              {[
-                {
-                  id: 1,
-                  title: "Vintage Camera",
-                  description:
-                    "A classic film camera for my photography hobby.",
-                },
-                {
-                  id: 2,
-                  title: "Travel Guide to Japan",
-                  description: "To help plan my next big adventure.",
-                },
-              ].map((item) => (
-                <li
-                  key={item.id}
-                  className="p-4 flex justify-between items-center">
-                  <div>
-                    <p className="font-semibold">{item.title}</p>
-                    <p className="text-sm text-primary/80 dark:text-primary/70">
-                      {item.description}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <button
-                      className="p-2 rounded-full hover:bg-primary/10"
-                      aria-label={`Edit ${item.title}`}>
-                      <span className="material-symbols-outlined text-primary/80 dark:text-primary/70">
-                        edit
-                      </span>
-                    </button>
-                    <button
-                      className="p-2 rounded-full hover:bg-red-500/10"
-                      aria-label={`Delete ${item.title}`}>
-                      <span className="material-symbols-outlined text-red-500">
-                        delete
-                      </span>
-                    </button>
-                  </div>
-                </li>
-              ))}
+          <div className='rounded-lg bg-background-light shadow-sm ring-1 ring-primary/20 dark:bg-background-dark dark:ring-primary/30'>
+            <ul className='divide-y divide-primary/20 dark:divide-primary/30'>
+              {wishList && wishList.length > 0 ? (
+                wishList.map((item, idx) => (
+                  <li
+                    key={idx}
+                    className='p-4 flex justify-between items-center'
+                  >
+                    <div>
+                      <p className='font-semibold'>{item.item}</p>
+                      {item.description && (
+                        <p className='text-sm text-primary/80 dark:text-primary/70'>
+                          {item.description}
+                        </p>
+                      )}
+                    </div>
+                    <div className='flex items-center gap-2'>
+                      <button
+                        className='p-2 rounded-full hover:bg-primary/10'
+                        aria-label={`Edit ${item.item}`}
+                        disabled
+                      >
+                        <span className='material-symbols-outlined text-primary/80 dark:text-primary/70'>
+                          edit
+                        </span>
+                      </button>
+                      <button
+                        className='p-2 rounded-full hover:bg-red-500/10'
+                        aria-label={`Delete ${item.item}`}
+                        disabled
+                      >
+                        <span className='material-symbols-outlined text-red-500'>
+                          delete
+                        </span>
+                      </button>
+                    </div>
+                  </li>
+                ))
+              ) : (
+                <li className='p-4 text-sm text-primary/70'>No wishes yet.</li>
+              )}
             </ul>
           </div>
         </section>
@@ -219,7 +247,7 @@ export default function Profile() {
                 <path d="M5 12h14"></path>
                 <path d="M12 5v14"></path>
               </svg>
-              <span>Add</span>
+              <span>Add Item</span>
             </button>
           </div>
 
@@ -369,24 +397,29 @@ export default function Profile() {
         </section>
 
         {/* add received gift */}
-        <section>
-          <ReceivedGiftModal
-            isOpen={open}
-            onClose={() => {
-              setOpen(false);
-              setEditingGift(null);
-            }}
-            onSave={(data) => {
-              if (editingGift) {
-                editReceivedGift(editingGift._id, data);
-              } else {
-                addReceivedGift(data);
-              }
-            }}
-            fromOptions={["Alice", "Bob", "Charlie"]}
-            initialData={editingGift}
-          />
-        </section>
+        <ReceivedGiftModal
+          isOpen={open}
+          onClose={() => {
+            setOpen(false);
+            setEditingGift(null);
+          }}
+          onSave={(data) => {
+            if (editingGift) {
+              editReceivedGift(editingGift._id, data);
+            } else {
+              addReceivedGift(data);
+            }
+          }}
+          fromOptions={['Alice', 'Bob', 'Charlie']}
+          initialData={editingGift}
+        />
+        {/* wishlist modal */}
+        <WishListModal
+          isOpen={isWishModalOpen}
+          onClose={() => setIsWishModalOpen(false)}
+          onSave={addWishItem}
+          loading={savingWish}
+        />
       </div>
     </div>
   );

@@ -1,3 +1,5 @@
+/** @format */
+
 import { useState } from "react";
 
 const EditProfile = ({ profile, isOpen, setIsOpen }) => {
@@ -48,8 +50,7 @@ const EditProfile = ({ profile, isOpen, setIsOpen }) => {
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
       role="dialog"
-      aria-modal="true"
-    >
+      aria-modal="true">
       <div
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
         onClick={() => setIsOpen(false)}
@@ -59,8 +60,7 @@ const EditProfile = ({ profile, isOpen, setIsOpen }) => {
           <h2 className="text-2xl font-bold ">Edit Profile</h2>
           <button
             className="btn btn-sm btn-ghost rounded-full"
-            onClick={() => setIsOpen(false)}
-          >
+            onClick={() => setIsOpen(false)}>
             <span className="material-symbols-outlined text-primary/80 dark:text-primary/70">
               close
             </span>
@@ -113,8 +113,7 @@ const EditProfile = ({ profile, isOpen, setIsOpen }) => {
                       {tag}
                       <button
                         className="ml-2 text-primary/50 hover:text-primary"
-                        onClick={() => handleRemoveTag(tag)}
-                      >
+                        onClick={() => handleRemoveTag(tag)}>
                         ×
                       </button>
                     </span>
@@ -135,8 +134,7 @@ const EditProfile = ({ profile, isOpen, setIsOpen }) => {
           <div className="flex justify-end gap-4 pt-4">
             <button
               className="btn btn-outline  hover:bg-primary/10 rounded-xl "
-              onClick={() => setIsOpen(false)}
-            >
+              onClick={() => setIsOpen(false)}>
               Cancel
             </button>
             <button className="btn btn-primary rounded-xl" type="submit">

@@ -13,6 +13,7 @@ const AddContact = ({ profile = {}, isOpen, setIsOpen }) => {
     tags: profile.tags || [],
   });
   const [newTag, setNewTag] = useState("");
+   const [openEditAvatar, setOpenEditAvatar] = useState(false);
   const { createContact, isLoading } = useContacts();
 
   const { user, allUsers } = useAuth();
@@ -50,16 +51,28 @@ const AddContact = ({ profile = {}, isOpen, setIsOpen }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const contactData = {
-      ...formData,
-      avatar:
-        formData.avatar ||
-        "https://www.pngplay.com/wp-content/uploads/12/User-Avatar-Profile-PNG-Pic-Clip-Art-Background.png",
-    };
-    console.log("form:", contactData);
 
-    await createContact({ contactType: "custom", customProfile: contactData });
+    // Decide whether to create a custom contact or link a user
+    const isExistingUser = profile && profile._id;
+
+    const contactData = isExistingUser
+      ? { contactType: "user", linkedUserId: profile._id }
+      : {
+          contactType: "custom",
+          customProfile: {
+            ...formData,
+            avatar:
+              formData.avatar ||
+              "https://www.pngplay.com/wp-content/uploads/12/User-Avatar-Profile-PNG-Pic-Clip-Art-Background.png",
+          },
+        };
+
+    await createContact(contactData);
     setIsOpen(false); // Close modal on save
+
+    // Reset form data to initial state
+    setFormData({ name: "", avatar: "", birthday: "", gender: "", tags: [] });
+    setNewTag("");
   };
 
   if (!isOpen) return null;
@@ -87,6 +100,54 @@ const AddContact = ({ profile = {}, isOpen, setIsOpen }) => {
           </button>
         </div>
         <form className="mt-6 space-y-6" onSubmit={handleSubmit}>
+
+
+    <div className="relative avatar">
+              <div className="w-24 rounded-xl">
+                {formData.avatar ? (
+                  <img src={formData.avatar} alt="User Avatar" />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center">
+                    <span className="material-symbols-outlined text-5xl text-base-content/30">
+                      person
+                    </span>
+                  </div>
+                )}
+              </div>
+              <button
+                type="button"
+                onClick={() => setOpenEditAvatar(!openEditAvatar)}
+                className="absolute bottom-0 right-0 btn bg-primary btn-sm rounded-2xl"
+              >
+                <span className="material-symbols-outlined text-sm">edit</span>
+              </button>
+            </div>
+
+            {openEditAvatar && (
+              <div className="w-full flex flex-col gap-2 justify-center">
+                <div className="flex-1 flex-col ">
+                  <input
+                    className="input input-primary w-full"
+                    type="text"
+                    name="avatar"
+                    value={formData.avatar}
+                    onChange={handleChange}
+                  />
+                </div>
+                <label className="btn btn-outline btn-neutral btn-sm rounded-2xl w-16">
+                  . . .
+                  <input type="file" className="hidden" name="avatar" />
+                </label>
+              </div>
+            )}
+          </div>
+
+          </div>
+
+
+
+
+
           <div>
             <label className="block text-sm font-medium">
               Name
@@ -100,7 +161,7 @@ const AddContact = ({ profile = {}, isOpen, setIsOpen }) => {
             </label>
           </div>
 
-          <div>
+          {/*    <div>
             <label
               htmlFor="gender"
               className="block text-sm font-medium text-gray-700">
@@ -119,7 +180,49 @@ const AddContact = ({ profile = {}, isOpen, setIsOpen }) => {
               <option value="male">Male</option>
             </select>
           </div>
+ */}
 
+          {/* Gender Selection */}
+          <div>
+            <label className="block text-sm font-medium text-neutral-content">
+              Gender
+            </label>
+            <div className="mt-2 flex items-center gap-x-6 text-base-content">
+              <div className="flex gap-2 items-center">
+                <input
+                  className="radio radio-xs radio-primary"
+                  type="radio"
+                  name="gender"
+                  value="male"
+                  onChange={handleChange}
+                  defaultChecked={formData.gender === "male"}
+                />
+                <span className=" material-symbols-outlined ">Male</span>
+              </div>
+              <div className="flex gap-2 items-center">
+                <input
+                  className="radio radio-xs radio-primary"
+                  type="radio"
+                  name="gender"
+                  value="female"
+                  onChange={handleChange}
+                  defaultChecked={formData.gender === "female"}
+                />
+                <span className="material-symbols-outlined ">Female</span>
+              </div>
+              <div className="flex gap-2 items-center">
+                <input
+                  className="radio radio-xs radio-primary"
+                  type="radio"
+                  name="gender"
+                  value="other"
+                  onChange={handleChange}
+                  defaultChecked={formData.gender === "other"}
+                />
+                <span className="">Other</span>
+              </div>
+            </div>
+          </div>
           <div>
             <label className="block text-sm font-medium">
               Birthday
@@ -154,7 +257,7 @@ const AddContact = ({ profile = {}, isOpen, setIsOpen }) => {
             </label>
             <input
               className="mt-2 w-full rounded-lg border-primary/20 bg-background-light py-2 px-4 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary dark:border-primary/30 dark:bg-background-dark dark:focus:border-primary input input-primary"
-              name="tags"
+              name="newTag"
               placeholder="Add a tag..."
               type="text"
               value={newTag}

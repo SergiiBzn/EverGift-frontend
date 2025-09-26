@@ -48,11 +48,18 @@ const useContacts = () => {
         console.log(error);
         toast.error(error);
       } else {
+        /*   {id: '68d6403b9e3c19836e85f36d', contactType: 'custom', givenGifts: Array(0), events: Array(0), profil: {…},} */
+
         console.log("newContact", data);
-        setUser((prevUser) => ({
-          ...prevUser,
-          contacts: [...prevUser.contacts, data], // Replace the old list with the new one
-        }));
+        const updatedContact = {
+          _id: data.id,
+          name: data.profile.name,
+          avatar: data.profile.avatar,
+        };
+        setUser((prevUser) => {
+          const updatedContacts = [...prevUser.contacts, updatedContact];
+          return { ...prevUser, contacts: updatedContacts };
+        });
 
         setAllContacts(data);
         toast.success("Contact added successfully!");

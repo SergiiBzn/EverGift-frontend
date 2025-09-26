@@ -17,8 +17,6 @@ const AddContact = ({ profile = {}, isOpen, setIsOpen }) => {
 
   const { user, allUsers } = useAuth();
 
-  console.log("hallo user Contacts", user.contacts);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -52,8 +50,15 @@ const AddContact = ({ profile = {}, isOpen, setIsOpen }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const contactData = {
+      ...formData,
+      avatar:
+        formData.avatar ||
+        "https://www.pngplay.com/wp-content/uploads/12/User-Avatar-Profile-PNG-Pic-Clip-Art-Background.png",
+    };
+    console.log("form:", contactData);
 
-    await createContact({ contactType: "custom", customProfil: formData });
+    await createContact({ contactType: "custom", customProfile: contactData });
     setIsOpen(false); // Close modal on save
   };
 
@@ -82,28 +87,6 @@ const AddContact = ({ profile = {}, isOpen, setIsOpen }) => {
           </button>
         </div>
         <form className="mt-6 space-y-6" onSubmit={handleSubmit}>
-          <div className="mt-4">
-            <label
-              htmlFor="users"
-              className="block text-sm font-medium text-gray-700">
-              Existing Contacts
-            </label>
-            <select
-              id="users"
-              className="select select-primary mt-1 block w-full rounded-md sm:text-sm input input-lg">
-              <option value="">Select a contact</option>
-
-              {/*TODO: should be the name of the user ( so the user need a username) */}
-              {allUsers.map((contact) => {
-                return (
-                  <option key={contact._id} value={contact.email}>
-                    {contact.email}
-                  </option>
-                );
-              })}
-            </select>
-          </div>
-
           <div>
             <label className="block text-sm font-medium">
               Name

@@ -244,17 +244,12 @@ export default function Profile() {
                     <div>
                       <img
                         className="h-24 w-24 rounded-full bg-cover bg-center border border-primary"
-                        src={`${
-                          contact.contactType === "user"
-                            ? contact.linkedUserId?.profil?.avatar
-                            : contact.profil?.avatar
-                        }`}
+                        src={`
+                          ${contact.avatar}`}
                         alt={contact._id}
                       />
                       <p className="text-sm font-medium text-center">
-                        {contact.contactType === "user"
-                          ? contact.linkedUserId?.profil?.name
-                          : contact.profil?.name}
+                        {contact.name}
                       </p>
                     </div>
                   </div>

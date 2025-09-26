@@ -118,7 +118,7 @@ export const AuthContextProvider = ({ children }) => {
 
         console.log("new userData", userData);
         setUser(userData);
-        getAllUsers(userData);
+        // getAllUsers(userData);
       } catch (error) {
         console.error("Error fetching user:", error);
         setUser(null);
@@ -131,7 +131,7 @@ export const AuthContextProvider = ({ children }) => {
 
   // set for get contacts
 
-  const getContacts = async () => {
+  /*   const getContacts = async () => {
     try {
       const response = await fetch(`${baseUrl}/contacts`, {
         credentials: "include", // Include cookies for authentication
@@ -154,10 +154,10 @@ export const AuthContextProvider = ({ children }) => {
     } catch (error) {
       toast.error(error.message || "Failed to add contact.");
     }
-  };
+  }; */
 
   // get all not custom users
-  const getAllUsers = async (currentUser) => {
+  /*   const getAllUsers = async (currentUser) => {
     // Receive the user object as an argument
     if (!currentUser) return; // Don't run if there's no user
 
@@ -185,7 +185,7 @@ export const AuthContextProvider = ({ children }) => {
     } catch (error) {
       console.log(error);
     }
-  };
+  }; */
   const improveErrorMessage = async (error) => {
     const errorArray = error
       .split("✖")

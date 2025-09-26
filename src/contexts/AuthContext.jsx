@@ -85,7 +85,7 @@ export const AuthContextProvider = ({ children }) => {
   };
 
   const logout = async () => {
-    setUser(null);
+    setIsRefreshing(true);
     try {
       const response = await fetch(`${baseUrl}/users/logout`, {
         method: "DELETE",
@@ -94,20 +94,23 @@ export const AuthContextProvider = ({ children }) => {
       if (!response.ok) {
         const { error } = await response.json();
         await improveErrorMessage(error);
-        // throw new Error(" Logout Failed");
+
+        return;
       }
-      const { message } = await response.json();
+      // const { message } = await response.json();
       setUser(null);
       navigate("/login");
     } catch (error) {
       toast.error(error);
+    } finally {
+      setIsRefreshing(false);
     }
   };
 
   useEffect(() => {
     const refreshUser = async () => {
       try {
-        const response = await fetch("http://localhost:3000/users/me", {
+        const response = await fetch(`${baseUrl}/users/me`, {
           method: "GET",
           credentials: "include",
         });
@@ -129,63 +132,6 @@ export const AuthContextProvider = ({ children }) => {
     refreshUser();
   }, [navigate]);
 
-  // set for get contacts
-
-  /*   const getContacts = async () => {
-    try {
-      const response = await fetch(`${baseUrl}/contacts`, {
-        credentials: "include", // Include cookies for authentication
-      });
-
-      const data = await response.json();
-
-      console.log("data from create use contact", data);
-
-      if (!response.ok) {
-        const error = data.error || "An error occurred.";
-        // await improveErrorMessage(error);
-        console.log(error);
-        toast.error(error);
-      } else {
-        console.log("newContact", data);
-
-        setAllContacts(data);
-      }
-    } catch (error) {
-      toast.error(error.message || "Failed to add contact.");
-    }
-  }; */
-
-  // get all not custom users
-  /*   const getAllUsers = async (currentUser) => {
-    // Receive the user object as an argument
-    if (!currentUser) return; // Don't run if there's no user
-
-    try {
-      const response = await fetch("http://localhost:3000/users/allUsers", {
-        credentials: "include", // Include cookies for authentication
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        const error = data.error || "An error occurred.";
-        // await improveErrorMessage(error);
-        console.log(error);
-        toast.error(error);
-      } else {
-        const filteredUser = data.filter(
-          (singleUser) => singleUser._id !== currentUser._id // Use the passed-in user object
-        );
-
-        console.log("all not custom users", filteredUser);
-
-        setAllUsers(filteredUser);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }; */
   const improveErrorMessage = async (error) => {
     const errorArray = error
       .split("✖")

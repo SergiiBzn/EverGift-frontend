@@ -1,22 +1,23 @@
 /** @format */
 
 import React, { useState } from "react";
-import useContacts from "../../hooks/useContacts";
+import useContacts from "../../hooks/useContacts.jsx";
 import useAuth from "../../hooks/useAuth";
 
-const AddContact = ({ profile = {}, isOpen, setIsOpen }) => {
+const AddContact = ({ isOpen, setIsOpen }) => {
+  const { user, allUsers } = useAuth();
+  const profile = user?.profile;
   const [formData, setFormData] = useState({
     name: profile.name || "",
-    avatar: profile.avatar || "",
+    avatar: profile.avatar,
     birthday: profile.birthday || "",
     gender: profile.gender || "",
     tags: profile.tags || [],
   });
-  const [newTag, setNewTag] = useState("");
-   const [openEditAvatar, setOpenEditAvatar] = useState(false);
-  const { createContact, isLoading } = useContacts();
 
-  const { user, allUsers } = useAuth();
+  const [newTag, setNewTag] = useState("");
+  const [openEditAvatar, setOpenEditAvatar] = useState(false);
+  const { createContact, isLoading } = useContacts();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -67,12 +68,24 @@ const AddContact = ({ profile = {}, isOpen, setIsOpen }) => {
           },
         };
 
-    await createContact(contactData);
-    setIsOpen(false); // Close modal on save
+    try {
+      await createContact(contactData);
+      setIsOpen(false); // Close modal on save
 
-    // Reset form data to initial state
-    setFormData({ name: "", avatar: "", birthday: "", gender: "", tags: [] });
-    setNewTag("");
+      // Reset form data to initial state
+      setFormData({
+        name: "",
+        avatar:
+          "https://www.pngplay.com/wp-content/uploads/12/User-Avatar-Profile-PNG-Pic-Clip-Art-Background.png",
+        birthday: "",
+        gender: "",
+        tags: [],
+      });
+      setNewTag("");
+    } catch (error) {
+      console.error("Failed to create contact:", error);
+      // Here you could add a state to show an error message to the user
+    }
   };
 
   if (!isOpen) return null;
@@ -88,7 +101,7 @@ const AddContact = ({ profile = {}, isOpen, setIsOpen }) => {
       />
       <div className="w-full relative max-w-lg rounded-xl bg-base-100 p-6 shadow-xl dark:bg-background-dark dark:ring-1 dark:ring-primary/30">
         <div className="flex items-start justify-between">
-          <h2 className="text-2xl font-bold ">
+          <h2 className="text-2xl font-bold text-center w-full ">
             {profile.name ? "Edit Contact" : "Add Contact"}
           </h2>
           <button
@@ -100,9 +113,9 @@ const AddContact = ({ profile = {}, isOpen, setIsOpen }) => {
           </button>
         </div>
         <form className="mt-6 space-y-6" onSubmit={handleSubmit}>
-
-
-    <div className="relative avatar">
+          {/* Avatar section */}
+          <div className="flex gap-4 items-center ">
+            <div className="relative avatar">
               <div className="w-24 rounded-xl">
                 {formData.avatar ? (
                   <img src={formData.avatar} alt="User Avatar" />
@@ -117,8 +130,7 @@ const AddContact = ({ profile = {}, isOpen, setIsOpen }) => {
               <button
                 type="button"
                 onClick={() => setOpenEditAvatar(!openEditAvatar)}
-                className="absolute bottom-0 right-0 btn bg-primary btn-sm rounded-2xl"
-              >
+                className="absolute bottom-0 right-0 btn bg-primary btn-sm rounded-2xl">
                 <span className="material-symbols-outlined text-sm">edit</span>
               </button>
             </div>
@@ -141,13 +153,7 @@ const AddContact = ({ profile = {}, isOpen, setIsOpen }) => {
               </div>
             )}
           </div>
-
-          </div>
-
-
-
-
-
+          {/* name section */}
           <div>
             <label className="block text-sm font-medium">
               Name
@@ -160,27 +166,6 @@ const AddContact = ({ profile = {}, isOpen, setIsOpen }) => {
               />
             </label>
           </div>
-
-          {/*    <div>
-            <label
-              htmlFor="gender"
-              className="block text-sm font-medium text-gray-700">
-              Gender
-            </label>
-            <select
-              id="gender"
-              name="gender"
-              value={formData.gender}
-              onChange={handleChange}
-              className="w-full rounded-xl bg-white/95 p-3 text-gray-900 outline-none ring-0 focus:ring-2 focus:ring-orange-400 select select-primary">
-              <option value="" disabled>
-                Select Gender
-              </option>
-              <option value="female">Female</option>
-              <option value="male">Male</option>
-            </select>
-          </div>
- */}
 
           {/* Gender Selection */}
           <div>
@@ -227,7 +212,7 @@ const AddContact = ({ profile = {}, isOpen, setIsOpen }) => {
             <label className="block text-sm font-medium">
               Birthday
               <input
-                className="mt-1 w-full rounded-lg border-primary/20 bg-background-light py-2 px-4 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary dark:border-primary/30 dark:bg-background-dark dark:focus:border-primary input input-primary"
+                className="mt-1 w-full rounded-lg  input input-primary"
                 name="birthday"
                 type="date"
                 value={formData.birthday}
@@ -256,7 +241,7 @@ const AddContact = ({ profile = {}, isOpen, setIsOpen }) => {
               </div>
             </label>
             <input
-              className="mt-2 w-full rounded-lg border-primary/20 bg-background-light py-2 px-4 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary dark:border-primary/30 dark:bg-background-dark dark:focus:border-primary input input-primary"
+              className="mt-1 w-full rounded-lg  input input-primary"
               name="newTag"
               placeholder="Add a tag..."
               type="text"

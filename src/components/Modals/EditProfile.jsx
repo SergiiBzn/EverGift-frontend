@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "react-toastify";
 import useAuth from "../../hooks/useAuth";
 
@@ -6,26 +6,15 @@ const EditProfile = ({ isOpen, setIsOpen }) => {
   const { baseUrl, setUser, user } = useAuth();
   const profile = user?.profile;
   const [formData, setFormData] = useState({
-    name: "",
-    avatar: "",
-    birthday: "",
-    gender: "",
-    tags: [],
+    name: profile.name || "",
+    avatar: profile.avatar || "",
+    birthday: new Date(profile.birthday).toISOString().split("T")[0] || "",
+    gender: profile.gender || "",
+    tags: profile.tags || [],
   });
   const [openEditAvatar, setOpenEditAvatar] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [newTag, setNewTag] = useState("");
-  useEffect(() => {
-    if (profile) {
-      setFormData({
-        name: profile.name || "",
-        avatar: profile.avatar || "",
-        birthday: new Date(profile.birthday).toISOString().split("T")[0] || "",
-        gender: profile.gender || "",
-        tags: profile.tags || [],
-      });
-    }
-  }, [profile]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -143,15 +132,22 @@ const EditProfile = ({ isOpen, setIsOpen }) => {
                 <span className="material-symbols-outlined text-sm">edit</span>
               </button>
             </div>
+
             {openEditAvatar && (
-              <div className="flex-1 flex-col ">
-                <input
-                  className="input input-primary w-full"
-                  type="text"
-                  name="avatar"
-                  value={formData.avatar}
-                  onChange={handleChange}
-                />
+              <div className="w-full flex flex-col gap-2 justify-center">
+                <div className="flex-1 flex-col ">
+                  <input
+                    className="input input-primary w-full"
+                    type="text"
+                    name="avatar"
+                    value={formData.avatar}
+                    onChange={handleChange}
+                  />
+                </div>
+                <label className="btn btn-outline btn-neutral btn-sm rounded-2xl w-16">
+                  . . .
+                  <input type="file" className="hidden" name="avatar" />
+                </label>
               </div>
             )}
           </div>

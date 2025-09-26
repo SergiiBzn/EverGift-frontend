@@ -4,14 +4,23 @@ import { useState, useEffect } from "react";
 import ReceivedGiftModal from "../components/ReceivedGiftModal.jsx";
 import useAuth from "../hooks/useAuth.jsx";
 import EditProfile from "../components/Modals/EditProfile.jsx";
+import AddContact from "../components/Modals/AddContact.jsx";
 
 export default function Profile() {
   const [open, setOpen] = useState(false);
   const [receivedGifts, setReceivedGifts] = useState([]);
   const [editingGift, setEditingGift] = useState(null);
+
+  const [isOpenAddContact, setIsOpenAddContact] = useState(false);
+
   const [isOpenEditProfile, setIsOpenEditProfile] = useState(false);
-  const { user } = useAuth();
-  const { profile } = user;
+  const { user, allUsers } = useAuth();
+
+  console.log("all not custom users", allUsers);
+  console.log("all users contacts", user.contacts);
+
+  const defaultAvatar =
+    "https://www.pngplay.com/wp-content/uploads/12/User-Avatar-Profile-PNG-Pic-Clip-Art-Background.png";
 
   // Fetch received gifts from the backend
   const fetchReceivedGifts = async () => {
@@ -131,40 +140,30 @@ export default function Profile() {
                 <div
                   className="h-32 w-32 rounded-full bg-cover bg-center"
                   style={{
-                    backgroundImage: `url(${profile.avatar})`,
+                    backgroundImage:
+                      'url("https://lh3.googleusercontent.com/aida-public/AB6AXuBFU5zaCi1iCCqw80GwZMmSYuW3YLyivifjCUNBpYTkC2gXUWUA_86Dffq1D0Cqea8wupE0jh_jkdLC71LKPb_bRd6vMxWYwrCQKbKF8oh8Z47OR3XWWzLaQPZtYR_ObgVabRQdG0QDGI5qa8lDCBLF09OVseXkOcUdUotSD80ch9tU7mV6gVA3ahyJ1wGs2BKlOhqCtNuByLi3_3503rlZphbQ4NUJaAoe4US_NHzvtVsrRPOko7OhiaO7r8_LfTllcj4lkkT28hMx")',
                   }}
                 ></div>
               </div>
               <div className="flex-1 text-center md:text-left">
-                <div className="flex items-center gap-6">
-                  <h2 className="text-3xl font-bold">{profile.name}</h2>{" "}
-                  {profile.gender == "male" && (
-                    <span className="material-symbols-outlined text-shadow-cyan-600 dark:text-primary/70">
-                      Male
-                    </span>
-                  )}
-                  {profile.gender == "female" && (
-                    <span className="material-symbols-outlined text-pink-500">
-                      Female
-                    </span>
-                  )}
-                </div>
-
-                <p className="text-neutral ">
-                  Age: {profile.age >= 0 ? profile.age : "N/A"}
-                </p>
+                <h2 className="text-3xl font-bold">Sophia Bennett</h2>
+                <p className="text-primary/80 dark:text-primary/70">Age: 30</p>
                 <div className="mt-4 flex flex-wrap justify-center gap-2 md:justify-start">
-                  {profile?.tags?.map((tag) => (
-                    <span className="rounded-full bg-primary/10 px-3 py-1 text-sm text-primary dark:bg-primary/20">
-                      {tag}
-                    </span>
-                  ))}
+                  <span className="rounded-full bg-primary/10 px-3 py-1 text-sm text-primary dark:bg-primary/20">
+                    Fashion
+                  </span>
+                  <span className="rounded-full bg-primary/10 px-3 py-1 text-sm text-primary dark:bg-primary/20">
+                    Travel
+                  </span>
+                  <span className="rounded-full bg-primary/10 px-3 py-1 text-sm text-primary dark:bg-primary/20">
+                    Photography
+                  </span>
                 </div>
               </div>
 
               <button
                 onClick={() => setIsOpenEditProfile(true)}
-                className="btn btn-primary btn-sm md:w-auto"
+                className="w-full rounded bg-primary px-4 py-2 text-sm font-bold text-white md:w-auto"
               >
                 Edit Profile
               </button>
@@ -206,7 +205,10 @@ export default function Profile() {
                   type="text"
                 />
               </div>
-              <button className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-bold text-white">
+              <button
+                onClick={() => setIsOpenAddContact(true)}
+                className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-bold text-white"
+              >
                 <svg
                   className="lucide lucide-plus"
                   fill="none"
@@ -229,47 +231,47 @@ export default function Profile() {
 
           <div className="relative">
             <div className="flex items-center gap-4 overflow-x-auto  py-[2rem] px-[4rem]">
-              {[
-                {
-                  name: "Olivia H.",
-                  imageUrl:
-                    "https://www.pngmart.com/files/22/User-Avatar-Profile-PNG.png",
-                },
-                {
-                  name: "Liam W.",
-                  imageUrl:
-                    "https://www.svgrepo.com/show/384670/account-avatar-profile-user.svg",
-                },
-                {
-                  name: "Ava B.",
-                  imageUrl:
-                    "https://static.vecteezy.com/ti/gratis-vektor/p1/5419157-weibliches-benutzerprofil-avatar-ist-eine-frau-ein-charakter-fur-einen-bildschirmschoner-mit-emotionenillustration-auf-einem-weissen-isolierten-hintergrund-vektor.jpg",
-                },
-                {
-                  name: "Noah D.",
-                  imageUrl:
-                    "https://img.freepik.com/premium-vector/person-with-blue-shirt-that-says-name-person_1029948-7040.jpg?semt=ais_hybrid&w=740&q=80",
-                },
-                {
-                  name: "Emma T.",
-                  imageUrl:
-                    "https://images.icon-icons.com/2643/PNG/512/female_woman_user_people_avatar_white_tone_icon_159354.png",
-                },
-              ].map((contact) => (
-                <div
-                  key={contact.name}
-                  className="flex flex-col items-center gap-2 flex-shrink-0"
-                >
+              {user.contacts && user.contacts.length > 0 ? (
+                user.contacts.map((contact) => (
                   <div
-                    className="h-24 w-24 rounded-full bg-cover bg-center"
-                    style={{
-                      backgroundImage: `url(${contact.imageUrl})`,
-                    }}
-                  ></div>
-                  <p className="text-sm font-medium">{contact.name}</p>
-                </div>
-              ))}
+                    key={contact._id}
+                    className="flex flex-col items-center justify-center gap-2 flex-shrink-0"
+                  >
+                    {/* <div
+                      className="h-24 w-24 rounded-full bg-cover bg-center border border-primary"
+                      style={{
+                        backgroundImage: `url(${
+                          contact.contactType === "user"
+                            ? contact.linkedUserId?.profil?.avatar
+                            : contact.customProfil?.avatar||defaultAvatar
+                        })`,
+                      }}></div> */}
+                    <div>
+                      <img
+                        className="h-24 w-24 rounded-full bg-cover bg-center border border-primary"
+                        src={`${
+                          contact.contactType === "user"
+                            ? contact.linkedUserId?.profil?.avatar
+                            : contact.profil?.avatar
+                        }`}
+                        alt={contact._id}
+                      />
+                      <p className="text-sm font-medium text-center">
+                        {contact.contactType === "user"
+                          ? contact.linkedUserId?.profil?.name
+                          : contact.profil?.name}
+                      </p>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p>No contacts yet.</p>
+              )}
 
+              <AddContact
+                isOpen={isOpenAddContact}
+                setIsOpen={setIsOpenAddContact}
+              />
               <div className="absolute inset-y-0 left-0 flex items-center">
                 <button
                   className="p-2 rounded-full bg-background-light/80 dark:bg-background-dark/80 shadow-md ring-1 ring-black/5 dark:ring-white/10 hover:bg-background-light dark:hover:bg-background-dark btn btn-circle"

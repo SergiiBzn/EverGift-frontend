@@ -1,8 +1,7 @@
 /** @format */
-
 import React, { useState } from "react";
 import useContacts from "../../hooks/useContacts.jsx";
-import useAuth from "../../hooks/useAuth";
+import useAuth from "../../hooks/useAuth.jsx";
 
 const AddContact = ({ isOpen, setIsOpen }) => {
   const { user, allUsers } = useAuth();
@@ -19,9 +18,19 @@ const AddContact = ({ isOpen, setIsOpen }) => {
   const [openEditAvatar, setOpenEditAvatar] = useState(false);
   const { createContact, isLoading } = useContacts();
 
+  const [error, setError] = useState({});
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+
+    if (error[name]) {
+      setError((prev) => {
+        const newError = { ...prev };
+        delete newError[name];
+        return newError;
+      });
+    }
   };
 
   const addTag = () => {
@@ -68,6 +77,21 @@ const AddContact = ({ isOpen, setIsOpen }) => {
           },
         };
 
+    const newErrors = {};
+    if (!formData.name || formData.name.trim() === "") {
+      newErrors.name = "Name cannot be empty.";
+    }
+
+    if (!formData.birthday || formData.birthday.trim() === "") {
+      newErrors.birthday = "Birthday must be filled";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setError(newErrors);
+      return;
+    }
+    setError({});
+
     try {
       await createContact(contactData);
       setIsOpen(false); // Close modal on save
@@ -102,7 +126,7 @@ const AddContact = ({ isOpen, setIsOpen }) => {
       <div className="w-full relative max-w-lg rounded-xl bg-base-100 p-6 shadow-xl dark:bg-background-dark dark:ring-1 dark:ring-primary/30">
         <div className="flex items-start justify-between">
           <h2 className="text-2xl font-bold text-center w-full ">
-            {profile.name ? "Edit Contact" : "Add Contact"}
+            Add Contact
           </h2>
           <button
             className="btn btn-sm btn-ghost rounded-full"
@@ -165,6 +189,9 @@ const AddContact = ({ isOpen, setIsOpen }) => {
                 onChange={handleChange}
               />
             </label>
+            {error.name && (
+              <p className="text-error text-sm mt-1">{error.name}</p>
+            )}
           </div>
 
           {/* Gender Selection */}
@@ -219,6 +246,9 @@ const AddContact = ({ isOpen, setIsOpen }) => {
                 onChange={handleChange}
               />
             </label>
+            {error.birthday && (
+              <p className="text-error text-sm mt-1">{error.birthday}</p>
+            )}
           </div>
           <div>
             <label className="block text-sm font-medium">

@@ -5,7 +5,7 @@ import MainLayout from "./layouts/MainLayout.jsx";
 import ProtectedLayout from "./layouts/ProtectedLayout.jsx";
 
 import {
-  Contacts,
+  ContactDetails,
   Dashboard,
   Login,
   NotFound,
@@ -27,7 +27,8 @@ const App = () => {
             <Route index element={<Dashboard />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/contacts" element={<Contacts />} />
+            {/* <Route path="/contact/:contactId" element={<ContactDetails />} /> */}
+            <Route path="/contact" element={<ContactDetails />} />
             <Route path="/notifications" element={<Notifications />} />
           </Route>
           {/* Not found Page */}

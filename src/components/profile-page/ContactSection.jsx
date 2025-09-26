@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import useAuth from "../../hooks/useAuth.jsx";
 
 import AddContact from "../Modals/AddContact.jsx";
+import { Link } from "react-router";
 const ContactSection = () => {
   const [isOpenAddContact, setIsOpenAddContact] = useState(false);
 
@@ -27,7 +28,8 @@ const ContactSection = () => {
                 className="h-5 w-5 text-primary/70"
                 fill="currentColor"
                 viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg">
+                xmlns="http://www.w3.org/2000/svg"
+              >
                 <path
                   clipRule="evenodd"
                   d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
@@ -44,7 +46,8 @@ const ContactSection = () => {
           </div>
           <button
             onClick={() => setIsOpenAddContact(true)}
-            className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-bold text-white">
+            className="btn btn-sm btn-primary"
+          >
             <svg
               className="lucide lucide-plus"
               fill="none"
@@ -55,7 +58,8 @@ const ContactSection = () => {
               strokeWidth="2"
               viewBox="0 0 24 24"
               width="20"
-              xmlns="http://www.w3.org/2000/svg">
+              xmlns="http://www.w3.org/2000/svg"
+            >
               <path d="M5 12h14"></path>
               <path d="M12 5v14"></path>
             </svg>
@@ -67,12 +71,15 @@ const ContactSection = () => {
       <div className="relative">
         <div
           ref={scrollContainer}
-          className="flex items-center gap-4 overflow-x-auto  py-[2rem] px-[4rem]">
+          className="flex items-center gap-4 overflow-x-auto  py-[2rem] px-[4rem]"
+        >
           {user.contacts && user.contacts.length > 0 ? (
             user.contacts.map((contact) => (
-              <div
+              <Link
+                to={`/contact/${contact.slug}`}
                 key={contact._id}
-                className="flex flex-col items-center justify-center gap-2 flex-shrink-0">
+                className="flex flex-col items-center justify-center gap-2 flex-shrink-0"
+              >
                 {/* <div
            className="h-24 w-24 rounded-full bg-cover bg-center border border-primary"
            style={{
@@ -93,7 +100,7 @@ const ContactSection = () => {
                     {contact.name}
                   </p>
                 </div>
-              </div>
+              </Link>
             ))
           ) : (
             <p>No contacts yet.</p>
@@ -107,7 +114,8 @@ const ContactSection = () => {
             <button
               className="p-2 rounded-full bg-background-light/80 dark:bg-background-dark/80 shadow-md ring-1 ring-black/5 dark:ring-white/10 hover:bg-background-light dark:hover:bg-background-dark btn btn-circle"
               aria-label="Previous Contacts"
-              onClick={() => scroll(-300)}>
+              onClick={() => scroll(-300)}
+            >
               <span className="material-symbols-outlined text-primary">
                 chevron_left
               </span>
@@ -117,7 +125,8 @@ const ContactSection = () => {
             <button
               className="p-2 rounded-full bg-background-light/80 dark:bg-background-dark/80 shadow-md ring-1 ring-black/5 dark:ring-white/10 hover:bg-background-light dark:hover:bg-background-dark btn btn-circle  "
               aria-label="Next Contacts"
-              onClick={() => scroll(300)}>
+              onClick={() => scroll(300)}
+            >
               <span className="material-symbols-outlined text-primary  ">
                 chevron_right
               </span>

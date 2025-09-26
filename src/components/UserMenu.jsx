@@ -4,6 +4,11 @@ import useAuth from "../hooks/useAuth";
 const UserMenu = ({ user }) => {
   const { logout } = useAuth();
   // console.log(user);
+  const handleClose = () => {
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+  };
 
   return (
     <div className="flex-none">
@@ -27,6 +32,7 @@ const UserMenu = ({ user }) => {
           {/* <span className="badge badge-xs badge-primary indicator-item"></span> */}
         </div>
       </Link>
+
       <div className="dropdown dropdown-end">
         <div
           tabIndex={0}
@@ -41,16 +47,16 @@ const UserMenu = ({ user }) => {
           tabIndex={0}
           className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
         >
-          <li>
+          <li onClick={handleClose}>
             <Link to="/profile" className="justify-between">
               Profile
               {/* <span className="badge">New</span> */}
             </Link>
           </li>
-          <li>
+          <li onClick={handleClose}>
             <Link to="/">dashboard</Link>
           </li>
-          <li>
+          <li onClick={handleClose}>
             <button onClick={logout}>Logout</button>
           </li>
         </ul>

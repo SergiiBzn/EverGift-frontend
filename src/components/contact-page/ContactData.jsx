@@ -1,5 +1,3 @@
-import React from "react";
-
 const ContactData = () => {
   return (
     <div className="rounded-xl bg-white shadow-sm p-6">

@@ -34,7 +34,7 @@ const UserMenu = ({ user }) => {
           className="btn btn-ghost btn-circle avatar"
         >
           <div className="w-10 rounded-full">
-            <img alt="user avatar" src={user?.profil?.avatar} />
+            <img alt="user avatar" src={user?.profile?.avatar} />
           </div>
         </div>
         <ul

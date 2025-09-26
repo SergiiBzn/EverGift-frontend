@@ -3,6 +3,9 @@
 import { useState, useEffect } from "react";
 import ReceivedGiftModal from "../components/ReceivedGiftModal.jsx";
 import useAuth from "../hooks/useAuth.jsx";
+import { useState, useEffect } from "react";
+import ReceivedGiftModal from "../components/ReceivedGiftModal.jsx";
+import useAuth from "../hooks/useAuth.jsx";
 import EditProfile from "../components/Modals/EditProfile.jsx";
 import AddContact from "../components/Modals/AddContact.jsx";
 
@@ -27,10 +30,13 @@ export default function Profile() {
     try {
       const response = await fetch(
         "http://localhost:3000/users/receivedGifts",
+        "http://localhost:3000/users/receivedGifts",
         {
+          credentials: "include", // Include cookies for authentication
           credentials: "include", // Include cookies for authentication
         }
       );
+      if (!response.ok) throw new Error("Failed to fetch received gifts");
       if (!response.ok) throw new Error("Failed to fetch received gifts");
       const data = await response.json();
       setReceivedGifts(data);
@@ -57,13 +63,18 @@ export default function Profile() {
 
       const response = await fetch(
         "http://localhost:3000/users/receivedGifts",
+        "http://localhost:3000/users/receivedGifts",
         {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
           method: "POST",
           headers: { "Content-Type": "application/json" },
           credentials: "include",
           body: JSON.stringify(body),
         }
       );
+      if (!response.ok) throw new Error("Failed to add received gift");
       if (!response.ok) throw new Error("Failed to add received gift");
       const newGift = await response.json();
       setReceivedGifts((prev) => [...prev, newGift]);
@@ -92,9 +103,13 @@ export default function Profile() {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           credentials: "include",
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
           body: JSON.stringify(body),
         }
       );
+      if (!response.ok) throw new Error("Failed to edit received gift");
       if (!response.ok) throw new Error("Failed to edit received gift");
       const updated = await response.json();
       setReceivedGifts((prev) =>
@@ -115,8 +130,11 @@ export default function Profile() {
         {
           method: "DELETE",
           credentials: "include",
+          method: "DELETE",
+          credentials: "include",
         }
       );
+      if (!response.ok) throw new Error("Failed to delete received gift");
       if (!response.ok) throw new Error("Failed to delete received gift");
       setReceivedGifts((prev) => prev.filter((gift) => gift._id !== id));
     } catch (error) {
@@ -128,7 +146,10 @@ export default function Profile() {
     fetchReceivedGifts();
   }, []);
 
+
   return (
+    <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+      <div className="flex flex-col gap-12">
     <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
       <div className="flex flex-col gap-12">
         {/* profile */}
@@ -137,7 +158,12 @@ export default function Profile() {
           <div className="rounded-xl bg-background-light p-6 shadow-sm ring-1 ring-primary/20 dark:bg-background-dark dark:ring-primary/30 container">
             <div className="flex flex-col items-center gap-6 md:flex-row">
               <div className="relative">
+          <h1 className="text-3xl font-bold mb-4">Profile</h1>
+          <div className="rounded-xl bg-background-light p-6 shadow-sm ring-1 ring-primary/20 dark:bg-background-dark dark:ring-primary/30 container">
+            <div className="flex flex-col items-center gap-6 md:flex-row">
+              <div className="relative">
                 <div
+                  className="h-32 w-32 rounded-full bg-cover bg-center"
                   className="h-32 w-32 rounded-full bg-cover bg-center"
                   style={{
                     backgroundImage:
@@ -167,7 +193,6 @@ export default function Profile() {
               </button>
               {isOpenEditProfile && (
                 <EditProfile
-                  profile={profil}
                   isOpen={isOpenEditProfile}
                   setIsOpen={setIsOpenEditProfile}
                 />
@@ -184,6 +209,12 @@ export default function Profile() {
             <div className="w-full sm:w-auto flex flex-col sm:flex-row items-start sm:items-center gap-4">
               <div className="relative w-full sm:w-64">
                 <span className="absolute inset-y-0 left-0 flex items-center pl-3">
+        <section className="flex flex-col gap-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <h2 className="text-2xl font-bold">Contacts</h2>
+            <div className="w-full sm:w-auto flex flex-col sm:flex-row items-start sm:items-center gap-4">
+              <div className="relative w-full sm:w-64">
+                <span className="absolute inset-y-0 left-0 flex items-center pl-3">
                   <svg
                     className="h-5 w-5 text-primary/70"
                     fill="currentColor"
@@ -193,10 +224,17 @@ export default function Profile() {
                       clipRule="evenodd"
                       d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
                       fillRule="evenodd"
+                      clipRule="evenodd"
+                      d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                      fillRule="evenodd"
                     />
                   </svg>
                 </span>
                 <input
+                  className="w-full rounded-lg border-primary/20 bg-background-light py-2 pl-10 pr-4 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary dark:border-primary/30 dark:bg-background-dark dark:focus:border-primary"
+                  id="search-contact"
+                  placeholder="Search contacts"
+                  type="text"
                   className="w-full rounded-lg border-primary/20 bg-background-light py-2 pl-10 pr-4 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary dark:border-primary/30 dark:bg-background-dark dark:focus:border-primary"
                   id="search-contact"
                   placeholder="Search contacts"
@@ -277,6 +315,7 @@ export default function Profile() {
                 </button>
               </div>
               <div className="absolute inset-y-0 right-0 flex items-center">
+              <div className="absolute inset-y-0 right-0 flex items-center">
                 <button
                   className="p-2 rounded-full bg-background-light/80 dark:bg-background-dark/80 shadow-md ring-1 ring-black/5 dark:ring-white/10 hover:bg-background-light dark:hover:bg-background-dark btn btn-circle  "
                   aria-label="Next Contacts">
@@ -291,6 +330,9 @@ export default function Profile() {
 
         {/* whishlist */}
 
+        <section className="flex flex-col gap-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-bold">Wishlist</h2>
         <section className="flex flex-col gap-6">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold">Wishlist</h2>
@@ -317,15 +359,21 @@ export default function Profile() {
 
           <div className="rounded-lg bg-background-light shadow-sm ring-1 ring-primary/20 dark:bg-background-dark dark:ring-primary/30">
             <ul className="divide-y divide-primary/20 dark:divide-primary/30">
+          <div className="rounded-lg bg-background-light shadow-sm ring-1 ring-primary/20 dark:bg-background-dark dark:ring-primary/30">
+            <ul className="divide-y divide-primary/20 dark:divide-primary/30">
               {[
                 {
                   id: 1,
                   title: "Vintage Camera",
+                  title: "Vintage Camera",
                   description:
+                    "A classic film camera for my photography hobby.",
                     "A classic film camera for my photography hobby.",
                 },
                 {
                   id: 2,
+                  title: "Travel Guide to Japan",
+                  description: "To help plan my next big adventure.",
                   title: "Travel Guide to Japan",
                   description: "To help plan my next big adventure.",
                 },
@@ -336,9 +384,12 @@ export default function Profile() {
                   <div>
                     <p className="font-semibold">{item.title}</p>
                     <p className="text-sm text-primary/80 dark:text-primary/70">
+                    <p className="font-semibold">{item.title}</p>
+                    <p className="text-sm text-primary/80 dark:text-primary/70">
                       {item.description}
                     </p>
                   </div>
+                  <div className="flex items-center gap-2">
                   <div className="flex items-center gap-2">
                     <button
                       className="p-2 rounded-full hover:bg-primary/10"
@@ -362,6 +413,9 @@ export default function Profile() {
         </section>
 
         {/* Received gift history */}
+        <section className="flex flex-col gap-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-bold">Received Gift History</h2>
         <section className="flex flex-col gap-6">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold">Received Gift History</h2>
@@ -389,6 +443,8 @@ export default function Profile() {
 
           <div className="flex flex-col gap-4 sm:flex-row">
             <div className="flex-1">
+          <div className="flex flex-col gap-4 sm:flex-row">
+            <div className="flex-1">
               <label
                 className="mb-1 block text-sm font-medium"
                 htmlFor="filter-year">
@@ -405,11 +461,14 @@ export default function Profile() {
               </select>
             </div>
             <div className="flex-1">
+            <div className="flex-1">
               <label
                 className="mb-1 block text-sm font-medium"
                 htmlFor="search-contact-history">
                 Search by Gifter
               </label>
+              <div className="relative">
+                <span className="absolute inset-y-0 left-0 flex items-center pl-3">
               <div className="relative">
                 <span className="absolute inset-y-0 left-0 flex items-center pl-3">
                   <svg
@@ -423,10 +482,17 @@ export default function Profile() {
                       clipRule="evenodd"
                       d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
                       fillRule="evenodd"
+                      clipRule="evenodd"
+                      d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                      fillRule="evenodd"
                     />
                   </svg>
                 </span>
                 <input
+                  className="w-full rounded border-primary/20 bg-background-light py-2 pl-10 pr-4 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary dark:border-primary/30 dark:bg-background-dark dark:focus:border-primary"
+                  id="search-contact-history"
+                  placeholder="Search by gifter"
+                  type="text"
                   className="w-full rounded border-primary/20 bg-background-light py-2 pl-10 pr-4 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary dark:border-primary/30 dark:bg-background-dark dark:focus:border-primary"
                   id="search-contact-history"
                   placeholder="Search by gifter"
@@ -436,6 +502,9 @@ export default function Profile() {
             </div>
           </div>
 
+          <div className="overflow-x-auto rounded-lg shadow-sm ring-1 ring-primary/20 dark:ring-primary/30">
+            <table className="min-w-full divide-y divide-primary/20 dark:divide-primary/30">
+              <thead className="bg-primary/5 dark:bg-primary/10">
           <div className="overflow-x-auto rounded-lg shadow-sm ring-1 ring-primary/20 dark:ring-primary/30">
             <table className="min-w-full divide-y divide-primary/20 dark:divide-primary/30">
               <thead className="bg-primary/5 dark:bg-primary/10">
@@ -468,6 +537,7 @@ export default function Profile() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-primary/20 bg-background-light dark:divide-primary/30 dark:bg-background-dark">
+              <tbody className="divide-y divide-primary/20 bg-background-light dark:divide-primary/30 dark:bg-background-dark">
                 {receivedGifts.length === 0 ? (
                   <tr>
                     <td
@@ -483,26 +553,35 @@ export default function Profile() {
                       r.fromName && r.fromName.length
                         ? r.fromName[0]
                         : r.from || r.fromName || "—";
+                        : r.from || r.fromName || "—";
                     const date = gift?.date
                       ? new Date(gift.date).toLocaleDateString()
+                      : "";
                       : "";
                     return (
                       <tr key={r._id || r.id}>
                         <td className="whitespace-nowrap px-6 py-4">
+                        <td className="whitespace-nowrap px-6 py-4">
                           {gifter}
                         </td>
+                        <td className="whitespace-nowrap px-6 py-4 text-primary/80 dark:text-primary/70">
                         <td className="whitespace-nowrap px-6 py-4 text-primary/80 dark:text-primary/70">
                           {gift?.name}
                         </td>
                         <td className="whitespace-nowrap px-6 py-4 text-primary/80 dark:text-primary/70">
+                        <td className="whitespace-nowrap px-6 py-4 text-primary/80 dark:text-primary/70">
                           {gift?.description}
                         </td>
+                        <td className="whitespace-nowrap px-6 py-4 text-primary/80 dark:text-primary/70">
                         <td className="whitespace-nowrap px-6 py-4 text-primary/80 dark:text-primary/70">
                           {date}
                         </td>
                         <td className="whitespace-nowrap px-6 py-4 text-right">
                           <div className="flex items-center justify-end gap-2">
+                        <td className="whitespace-nowrap px-6 py-4 text-right">
+                          <div className="flex items-center justify-end gap-2">
                             <button
+                              className="p-2 rounded-full hover:bg-primary/10"
                               className="p-2 rounded-full hover:bg-primary/10"
                               aria-label={`Edit gift from ${gifter}`}
                               onClick={() => {
@@ -514,6 +593,7 @@ export default function Profile() {
                               </span>
                             </button>
                             <button
+                              className="p-2 rounded-full hover:bg-red-500/10"
                               className="p-2 rounded-full hover:bg-red-500/10"
                               aria-label={`Delete gift from ${gifter}`}
                               onClick={() => deleteReceivedGift(r._id)}>
@@ -547,6 +627,7 @@ export default function Profile() {
                 addReceivedGift(data);
               }
             }}
+            fromOptions={["Alice", "Bob", "Charlie"]}
             fromOptions={["Alice", "Bob", "Charlie"]}
             initialData={editingGift}
           />

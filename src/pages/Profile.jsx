@@ -6,6 +6,8 @@ import useAuth from "../hooks/useAuth.jsx";
 import EditProfile from "../components/Modals/EditProfile.jsx";
 import AddContact from "../components/Modals/AddContact.jsx";
 
+const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
 export default function Profile() {
   const [open, setOpen] = useState(false);
   const [receivedGifts, setReceivedGifts] = useState([]);
@@ -27,7 +29,7 @@ export default function Profile() {
   const fetchReceivedGifts = async () => {
     try {
       const response = await fetch(
-        "http://localhost:3000/users/receivedGifts",
+        `${baseUrl}/users/receivedGifts`,
         {
           credentials: "include", // Include cookies for authentication
         }
@@ -57,7 +59,7 @@ export default function Profile() {
       };
 
       const response = await fetch(
-        "http://localhost:3000/users/receivedGifts",
+        `${baseUrl}/users/receivedGifts`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -88,7 +90,7 @@ export default function Profile() {
       };
 
       const response = await fetch(
-        `http://localhost:3000/users/receivedGifts/${id}`,
+        `${baseUrl}/users/receivedGifts/${id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -112,7 +114,7 @@ export default function Profile() {
   const deleteReceivedGift = async (id) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/users/receivedGifts/${id}`,
+        `${baseUrl}/users/receivedGifts/${id}`,
         {
           method: "DELETE",
           credentials: "include",

@@ -27,8 +27,8 @@ const App = () => {
             <Route index element={<Dashboard />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/profile" element={<Profile />} />
-            {/* <Route path="/contact/:contactId" element={<ContactDetails />} /> */}
-            <Route path="/contact" element={<ContactDetails />} />
+            <Route path="/contact/:contactSlug" element={<ContactDetails />} />
+            {/* <Route path="/contact" element={<ContactDetails />} /> */}
             <Route path="/notifications" element={<Notifications />} />
           </Route>
           {/* Not found Page */}

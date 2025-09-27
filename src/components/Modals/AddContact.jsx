@@ -3,15 +3,17 @@ import React, { useState } from "react";
 import useContacts from "../../hooks/useContacts.jsx";
 import useAuth from "../../hooks/useAuth.jsx";
 
-const AddContact = ({ isOpen, setIsOpen }) => {
-  const { user, allUsers } = useAuth();
+const AddContact = ({ user, isOpen, setIsOpen }) => {
+  const { allUsers } = useAuth();
   const profile = user?.profile;
+  const defaultAvatar =
+    "https://www.pngplay.com/wp-content/uploads/12/User-Avatar-Profile-PNG-Pic-Clip-Art-Background.png";
   const [formData, setFormData] = useState({
-    name: profile.name || "",
-    avatar: profile.avatar,
-    birthday: profile.birthday || "",
-    gender: profile.gender || "",
-    tags: profile.tags || [],
+    name: profile?.name || "",
+    avatar: profile?.avatar || defaultAvatar,
+    birthday: profile?.birthday || "",
+    gender: profile?.gender || "",
+    tags: profile?.tags || [],
   });
 
   const [newTag, setNewTag] = useState("");
@@ -71,9 +73,7 @@ const AddContact = ({ isOpen, setIsOpen }) => {
           contactType: "custom",
           customProfile: {
             ...formData,
-            avatar:
-              formData.avatar ||
-              "https://www.pngplay.com/wp-content/uploads/12/User-Avatar-Profile-PNG-Pic-Clip-Art-Background.png",
+            avatar: formData.avatar || defaultAvatar,
           },
         };
 
@@ -99,8 +99,7 @@ const AddContact = ({ isOpen, setIsOpen }) => {
       // Reset form data to initial state
       setFormData({
         name: "",
-        avatar:
-          "https://www.pngplay.com/wp-content/uploads/12/User-Avatar-Profile-PNG-Pic-Clip-Art-Background.png",
+        avatar: defaultAvatar,
         birthday: "",
         gender: "",
         tags: [],
@@ -118,7 +117,8 @@ const AddContact = ({ isOpen, setIsOpen }) => {
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
       role="dialog"
-      aria-modal="true">
+      aria-modal="true"
+    >
       <div
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
         onClick={() => setIsOpen(false)}
@@ -130,7 +130,8 @@ const AddContact = ({ isOpen, setIsOpen }) => {
           </h2>
           <button
             className="btn btn-sm btn-ghost rounded-full"
-            onClick={() => setIsOpen(false)}>
+            onClick={() => setIsOpen(false)}
+          >
             <span className="material-symbols-outlined text-primary/80 dark:text-primary/70">
               close
             </span>
@@ -154,7 +155,8 @@ const AddContact = ({ isOpen, setIsOpen }) => {
               <button
                 type="button"
                 onClick={() => setOpenEditAvatar(!openEditAvatar)}
-                className="absolute bottom-0 right-0 btn bg-primary btn-sm rounded-2xl">
+                className="absolute bottom-0 right-0 btn bg-primary btn-sm rounded-2xl"
+              >
                 <span className="material-symbols-outlined text-sm">edit</span>
               </button>
             </div>
@@ -258,11 +260,13 @@ const AddContact = ({ isOpen, setIsOpen }) => {
                   return (
                     <span
                       key={tag}
-                      className="flex items-center rounded-full bg-primary/10 px-3 py-1 text-sm text-primary dark:bg-primary/20">
+                      className="flex items-center rounded-full bg-primary/10 px-3 py-1 text-sm text-primary dark:bg-primary/20"
+                    >
                       {tag}
                       <button
                         className="ml-2 text-primary/50 hover:text-primary"
-                        onClick={() => handleRemoveTag(tag)}>
+                        onClick={() => handleRemoveTag(tag)}
+                      >
                         ×
                       </button>
                     </span>
@@ -284,7 +288,8 @@ const AddContact = ({ isOpen, setIsOpen }) => {
             <button
               type="button"
               className="btn btn-outline  hover:bg-primary/10 rounded-xl "
-              onClick={() => setIsOpen(false)}>
+              onClick={() => setIsOpen(false)}
+            >
               Cancel
             </button>
             <button
@@ -292,7 +297,8 @@ const AddContact = ({ isOpen, setIsOpen }) => {
                 isLoading ? "cursor-not-allowed" : ""
               }`}
               type="submit"
-              disabled={isLoading}>
+              disabled={isLoading}
+            >
               {isLoading ? (
                 <>
                   <span className="loading loading-spinner"></span>

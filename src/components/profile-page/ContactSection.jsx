@@ -107,6 +107,7 @@ const ContactSection = () => {
           )}
 
           <AddContact
+            user={user}
             isOpen={isOpenAddContact}
             setIsOpen={setIsOpenAddContact}
           />

@@ -5,9 +5,9 @@ const UserMenu = ({ user }) => {
   const { logout } = useAuth();
   // console.log(user);
   const handleClose = () => {
-    if (document.activeElement instanceof HTMLElement) {
-      document.activeElement.blur();
-    }
+    // if (document.activeElement instanceof HTMLElement) {
+    document.activeElement.blur();
+    // }
   };
 
   return (

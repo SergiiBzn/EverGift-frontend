@@ -1,6 +1,8 @@
+import { Link } from "react-router-dom";
+
 const Logo = () => {
   return (
-    <div className="flex items-center gap-8">
+    <Link to="/" className="flex items-center gap-8">
       <div className="flex items-center gap-3 text-primary">
         <svg
           className="text-primary"
@@ -14,7 +16,7 @@ const Logo = () => {
         </svg>
         <h2 className="text-xl font-bold">EverGift</h2>
       </div>
-    </div>
+    </Link>
   );
 };
 

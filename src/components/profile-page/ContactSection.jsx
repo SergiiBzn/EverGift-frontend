@@ -38,7 +38,7 @@ const ContactSection = () => {
         <div className="w-full sm:w-auto flex flex-col sm:flex-row items-start sm:items-center gap-4">
           <div className="w-full sm:w-64">
             <label
-              className="input input-primary input-sm "
+              className="input input-primary input-sm"
               htmlFor="search-contact">
               <svg
                 className="h-[1em] opacity-50"
@@ -68,7 +68,7 @@ const ContactSection = () => {
 
           <button
             onClick={() => setIsOpenAddContact(true)}
-            className="btn btn-sm btn-primary">
+            className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-bold text-white">
             <svg
               className="lucide lucide-plus"
               fill="none"

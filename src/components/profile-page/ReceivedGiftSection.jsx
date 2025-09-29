@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 
 import ReceivedGiftModal from '../ReceivedGiftModal.jsx';
 
@@ -8,6 +8,8 @@ export default function ReceivedGiftSection() {
   const [open, setOpen] = useState(false);
   const [receivedGifts, setReceivedGifts] = useState([]);
   const [editingGift, setEditingGift] = useState(null);
+  const [filterYear, setFilterYear] = useState('All');
+  const [searchTerm, setSearchTerm] = useState('');
 
   // Fetch received gifts from the backend
   const fetchReceivedGifts = async () => {
@@ -104,6 +106,45 @@ export default function ReceivedGiftSection() {
     fetchReceivedGifts();
   }, []);
 
+  const years = useMemo(() => {
+    const set = new Set();
+    receivedGifts.forEach((r) => {
+      const gift = r.gift || r;
+      if (gift?.date) {
+        const d = new Date(gift.date);
+        if (!isNaN(d)) set.add(d.getFullYear());
+      }
+    });
+    return ['All', ...Array.from(set).sort((a, b) => b - a)];
+  }, [receivedGifts]);
+
+  const filteredGifts = useMemo(() => {
+    return receivedGifts.filter((r) => {
+      const gift = r.gift || r;
+      const gifter =
+        r.fromName && r.fromName.length
+          ? r.fromName[0]
+          : r.from || r.fromName || '';
+
+      let passYear = true;
+      if (filterYear !== 'All') {
+        const y =
+          gift?.date && !isNaN(new Date(gift.date))
+            ? new Date(gift.date).getFullYear().toString()
+            : '';
+        passYear = y === filterYear;
+      }
+
+      let passSearch = true;
+      if (searchTerm.trim()) {
+        passSearch = gifter
+          .toLowerCase()
+          .includes(searchTerm.trim().toLowerCase());
+      }
+      return passYear && passSearch;
+    });
+  }, [receivedGifts, filterYear, searchTerm]);
+
   return (
     <section className='flex flex-col gap-6'>
       <div className='flex items-center justify-between'>
@@ -141,12 +182,14 @@ export default function ReceivedGiftSection() {
             Filter by Year
           </label>
           <select
-            className='w-full rounded border-primary/20 bg-background-light px-3 py-2 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary dark:border-primary/30 dark:bg-background-dark dark:focus:border-primary'
             id='filter-year'
+            className='w-full rounded border-primary/20 bg-background-light px-3 py-2 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary dark:border-primary/30 dark:bg-background-dark dark:focus:border-primary'
+            value={filterYear}
+            onChange={(e) => setFilterYear(e.target.value)}
           >
-            {['2023', '2022', '2021'].map((year) => (
-              <option key={year} value={year}>
-                {year}
+            {years.map((y) => (
+              <option key={y} value={y}>
+                {y}
               </option>
             ))}
           </select>
@@ -176,10 +219,12 @@ export default function ReceivedGiftSection() {
               </svg>
             </span>
             <input
-              className='w-full rounded border-primary/20 bg-background-light py-2 pl-10 pr-4 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary dark:border-primary/30 dark:bg-background-dark dark:focus:border-primary'
               id='search-contact-history'
+              className='w-full rounded border-primary/20 bg-background-light py-2 pl-10 pr-4 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary dark:border-primary/30 dark:bg-background-dark dark:focus:border-primary'
               placeholder='Search by gifter'
               type='text'
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
         </div>
@@ -222,17 +267,19 @@ export default function ReceivedGiftSection() {
             </tr>
           </thead>
           <tbody className='divide-y divide-primary/20 bg-background-light dark:divide-primary/30 dark:bg-background-dark'>
-            {receivedGifts.length === 0 ? (
+            {filteredGifts.length === 0 ? (
               <tr>
                 <td
                   colSpan={5}
                   className='px-6 py-4 text-center text-sm text-primary/80'
                 >
-                  No received gifts yet.
+                  {receivedGifts.length === 0
+                    ? 'No received gifts yet.'
+                    : 'No gifts match current filters.'}
                 </td>
               </tr>
             ) : (
-              receivedGifts.map((r) => {
+              filteredGifts.map((r) => {
                 const gift = r.gift || r;
                 const gifter =
                   r.fromName && r.fromName.length

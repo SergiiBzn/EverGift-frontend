@@ -1,19 +1,22 @@
 /** @format */
 
 import { useState } from "react";
-
+import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import useAuth from "../../hooks/useAuth";
 
-const EditProfile = ({ isOpen, setIsOpen }) => {
+const EditProfile = ({ contact, isOpen, setIsOpen }) => {
   const { baseUrl, setUser, user } = useAuth();
-  const profile = user?.profile;
+  let profile = contact?.profile || user?.profile;
+  let fetchUrl = `${baseUrl}/users/profile`;
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
-    name: profile.name || "",
-    avatar: profile.avatar || "",
+    name: profile?.name || "",
+    avatar: profile?.avatar || "",
     birthday: new Date(profile.birthday).toISOString().split("T")[0] || "",
-    gender: profile.gender || "",
-    tags: profile.tags || [],
+    gender: profile?.gender || "",
+    tags: profile?.tags || [],
   });
   const [imageFile, setImageFile] = useState(null);
   const [previewAvatar, setPreviewAvatar] = useState(profile.avatar || "");
@@ -109,20 +112,28 @@ const EditProfile = ({ isOpen, setIsOpen }) => {
     profileFormData.append("gender", formData.gender);
     profileFormData.append("tags", JSON.stringify(formData.tags));
 
-    for (let [key, value] of profileFormData.entries()) {
-      console.log(key, value);
+    if (contact?.contactType === "custom") {
+      profileFormData.append("contactType", "custom");
+      fetchUrl = `${baseUrl}/contacts/${contact.slug}/profile`;
     }
+
+    // for (let [key, value] of profileFormData.entries()) {
+    //   console.log(key, value);
+    // }
     try {
       setIsSubmitting(true);
-      const res = await fetch(`${baseUrl}/users/profile`, {
+      const res = await fetch(fetchUrl, {
         method: "PUT",
         body: profileFormData,
         credentials: "include",
       });
       if (!res.ok) throw new Error("Error updating profile");
       const updatedProfile = await res.json();
-      console.log("updatedProfile", updatedProfile);
-      setUser((prev) => ({ ...prev, profile: updatedProfile }));
+      if (updatedProfile?.contactType === "custom") {
+        navigate(`/contact/${updatedProfile.slug}`);
+      } else {
+        setUser((prev) => ({ ...prev, profile: updatedProfile }));
+      }
       toast.success("Profile updated successfully");
       setIsSubmitting(false);
       setIsOpen(false);
@@ -138,7 +149,8 @@ const EditProfile = ({ isOpen, setIsOpen }) => {
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
       role="dialog"
-      aria-modal="true">
+      aria-modal="true"
+    >
       <div
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
         onClick={() => setIsOpen(false)}
@@ -149,7 +161,8 @@ const EditProfile = ({ isOpen, setIsOpen }) => {
           <button
             className="btn btn-sm btn-ghost rounded-full"
             type="button"
-            onClick={() => setIsOpen(false)}>
+            onClick={() => setIsOpen(false)}
+          >
             <span className="material-symbols-outlined text-primary/80 dark:text-primary/70">
               close
             </span>
@@ -172,7 +185,8 @@ const EditProfile = ({ isOpen, setIsOpen }) => {
               <button
                 type="button"
                 onClick={() => setOpenEditAvatar(!openEditAvatar)}
-                className="absolute bottom-0 right-0 btn bg-primary btn-sm rounded-2xl">
+                className="absolute bottom-0 right-0 btn bg-primary btn-sm rounded-2xl"
+              >
                 <span className="material-symbols-outlined text-sm">edit</span>
               </button>
             </div>
@@ -182,7 +196,8 @@ const EditProfile = ({ isOpen, setIsOpen }) => {
                 <div className="flex-1 flex-col ">
                   <label
                     htmlFor="avatar"
-                    className="label block text-sm font-medium">
+                    className="label block text-sm font-medium"
+                  >
                     Paste Avatar Url
                   </label>
                   <input
@@ -199,7 +214,8 @@ const EditProfile = ({ isOpen, setIsOpen }) => {
                 <div>
                   <label
                     className="block font-medium text-neutral-content "
-                    htmlFor="avatarFile">
+                    htmlFor="avatarFile"
+                  >
                     Pick a file
                   </label>
                   <input
@@ -284,7 +300,7 @@ const EditProfile = ({ isOpen, setIsOpen }) => {
             </div>
           </div>
           <div>
-            <label className=" text-sm font-medium text-neutral-content flex flex-col gap-2">
+            <div className=" text-sm font-medium text-neutral-content flex flex-col gap-2">
               Tags
               <div className="flex flex-wrap gap-2">
                 {formData.tags.map((tag) => {
@@ -294,7 +310,8 @@ const EditProfile = ({ isOpen, setIsOpen }) => {
                       <button
                         type="button"
                         className="ml-2 text-primary/50 hover:text-primary"
-                        onClick={() => handleRemoveTag(tag)}>
+                        onClick={() => handleRemoveTag(tag)}
+                      >
                         ×
                       </button>
                     </span>
@@ -310,19 +327,21 @@ const EditProfile = ({ isOpen, setIsOpen }) => {
                 onChange={(e) => setNewTag(e.target.value)}
                 onKeyDown={handleKeyDown}
               />
-            </label>
+            </div>
           </div>
           <div className="flex justify-end gap-4 pt-4">
             <button
               type="button"
               className="btn btn-outline  hover:bg-primary/10 rounded-xl "
-              onClick={() => setIsOpen(false)}>
+              onClick={() => setIsOpen(false)}
+            >
               Cancel
             </button>
             <button
               className="btn btn-primary rounded-xl"
               disabled={isSubmitting}
-              type="submit">
+              type="submit"
+            >
               {isSubmitting ? "Saving..." : "Save Changes"}
             </button>
           </div>

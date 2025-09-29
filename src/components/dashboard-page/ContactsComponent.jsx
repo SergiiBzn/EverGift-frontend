@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { AddContact } from "../index.js";
+import useAuth from "../../hooks/useAuth.jsx";
+import { Link } from "react-router-dom";
 
 const ContactsComponent = () => {
   const [isOpenAddContact, setIsOpenAddContact] = useState(false);
-
+  const { user } = useAuth();
   return (
-    <div className="h-full p-4 rounded-xl flex flex-col bg-base-200 shadow-md">
+    <div className=" p-4 rounded-xl flex flex-col bg-base-200 shadow-md">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-bold">Contacts</h3>
         <button
@@ -39,12 +41,25 @@ const ContactsComponent = () => {
         </div>
       </div>
       <div className="space-y-4 flex-1 overflow-y-auto">
-        <div className="flex items-center gap-4 p-4 rounded-lg bg-white shadow-sm">
-          <div className="w-12 h-12 bg-center bg-no-repeat bg-cover rounded-full bg-[url('https://lh3.googleusercontent.com/aida-public/AB6AXuCvPSQKPGXCnWbLY35gfN4kooPIpbnyxt-oaqWBmhjmLdxdvXhGqJbKlB8PxPcnbcNWEUdFBf8y8n5u2kWlMRgO56AOe95_eJ2AFig4rG2TmLZDdZtEJzL8Py9h1fu9HA0SP7SJLL7gX5v-7rsyCqzyE6ocNnQBFNXrqcR0TDTnZoKeFi9wXy7N27TJ29XpdTjB6YFnulgCba2kXXU2CejP7fD-5o_7p8exurdt8obuep_pKXhoDca0Etzb52CaMlFoqCqO4pmTTYPh')]"></div>
-          <div className="flex-1">
-            <p className="font-bold">Anna Smith</p>
-          </div>
-        </div>
+        {user.contacts?.map((contact) => {
+          return (
+            <Link
+              to={`/contact/${contact.slug}`}
+              className="flex items-center gap-4 p-4 rounded-lg bg-white shadow-sm"
+            >
+              <div
+                className="w-12 h-12 bg-center bg-no-repeat bg-cover rounded-full "
+                style={{
+                  backgroundImage: `url(${contact.avatar})`,
+                }}
+              ></div>
+              <div className="flex-1">
+                <p className="font-bold">{contact.name}</p>
+              </div>
+            </Link>
+          );
+        })}
+
         {/* <div className="flex items-center gap-4 p-4 rounded-lg bg-background-light dark:bg-background-dark shadow-sm">
           <div className="w-12 h-12 bg-center bg-no-repeat bg-cover rounded-full bg-[url('https://lh3.googleusercontent.com/aida-public/AB6AXuCvPSQKPGXCnWbLY35gfN4kooPIpbnyxt-oaqWBmhjmLdxdvXhGqJbKlB8PxPcnbcNWEUdFBf8y8n5u2kWlMRgO56AOe95_eJ2AFig4rG2TmLZDdZtEJzL8Py9h1fu9HA0SP7SJLL7gX5v-7rsyCqzyE6ocNnQBFNXrqcR0TDTnZoKeFi9wXy7N27TJ29XpdTjB6YFnulgCba2kXXU2CejP7fD-5o_7p8exurdt8obuep_pKXhoDca0Etzb52CaMlFoqCqO4pmTTYPh')]"></div>
           <div className="flex-1">

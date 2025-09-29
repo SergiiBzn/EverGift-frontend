@@ -35,7 +35,10 @@ const ProfileSection = ({ profile }) => {
             </p>
             <div className="mt-4 flex flex-wrap justify-center gap-2 md:justify-start">
               {profile?.tags?.map((tag) => (
-                <span className="rounded-full bg-primary/10 px-3 py-1 text-sm text-primary dark:bg-primary/20">
+                <span
+                  key={tag}
+                  className="rounded-full bg-primary/10 px-3 py-1 text-sm text-primary dark:bg-primary/20"
+                >
                   {tag}
                 </span>
               ))}

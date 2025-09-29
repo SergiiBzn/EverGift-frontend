@@ -1,5 +1,5 @@
 /** @format */
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import useAuth from "../../hooks/useAuth.jsx";
 
 import AddContact from "../Modals/AddContact.jsx";

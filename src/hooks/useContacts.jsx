@@ -40,12 +40,9 @@ const useContacts = () => {
         // NO 'Content-Type' header here!
       });
 
-      console.log("response from create contact", response);
       if (!response.ok) {
         const { error } = await response.json();
         await improveErrorMessage(error);
-        console.log(response);
-
         return;
       }
       /*   const data = await response.json();
@@ -53,11 +50,11 @@ const useContacts = () => {
       console.log("data from create use contact", data);
 
       console.log("newContact", data);
-      const updatedContact = {
-        _id: data.id,
-        name: data.profile.name,
-        avatar: data.profile.avatar,
-      };
+      // const updatedContact = {
+      //   _id: data.id,
+      //   name: data.profile.name,
+      //   avatar: data.profile.avatar,
+      // };
       setUser((prevUser) => {
         const updatedContacts = [...prevUser.contacts, updatedContact];
         return { ...prevUser, contacts: updatedContacts };
@@ -84,9 +81,15 @@ const useContacts = () => {
           return prevUser; // Return the existing state (null or undefined)
         }
         // If user exists, update their contacts list
+        const updatedContact = {
+          _id: newContact._id,
+          name: newContact.profile.name,
+          avatar: newContact.profile.avatar,
+          slug: newContact.slug,
+        };
         return {
           ...prevUser,
-          contacts: [...(prevUser.contacts || []), newContact.contact],
+          contacts: [...(prevUser.contacts || []), updatedContact],
         };
       });
 

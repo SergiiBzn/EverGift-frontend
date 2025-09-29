@@ -1,5 +1,4 @@
-
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { toast } from "react-toastify";
 import useAuth from "../../hooks/useAuth";
@@ -14,6 +13,9 @@ const EditProfile = ({ isOpen, setIsOpen }) => {
     gender: profile.gender || "",
     tags: profile.tags || [],
   });
+  const [imageFile, setImageFile] = useState(null);
+  const [previewAvatar, setPreviewAvatar] = useState(profile.avatar || "");
+
   const [openEditAvatar, setOpenEditAvatar] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [newTag, setNewTag] = useState("");
@@ -23,6 +25,10 @@ const EditProfile = ({ isOpen, setIsOpen }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    if (name === "avatar") {
+      setPreviewAvatar(value);
+      if (imageFile) setImageFile(null);
+    }
   };
   if (error[name]) {
     setError((prev) => {
@@ -31,6 +37,13 @@ const EditProfile = ({ isOpen, setIsOpen }) => {
       return newError;
     });
   }
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageFile(file);
+      setPreviewAvatar(URL.createObjectURL(file));
+    }
+  };
 
   const addTag = () => {
     const newTagTrimmed = newTag.trim();
@@ -82,15 +95,26 @@ const EditProfile = ({ isOpen, setIsOpen }) => {
 
     setError({});
 
-    if (!formData.avatar) {
-      formData.avatar = profile.avatar;
+    const profileFormData = new FormData();
+    if (imageFile) {
+      profileFormData.append("avatar", imageFile);
+    } else if (formData.avatar) {
+      profileFormData.append("avatar", formData.avatar);
+    }
+
+    profileFormData.append("name", formData.name);
+    profileFormData.append("birthday", formData.birthday);
+    profileFormData.append("gender", formData.gender);
+    profileFormData.append("tags", JSON.stringify(formData.tags));
+
+    for (let [key, value] of profileFormData.entries()) {
+      console.log(key, value);
     }
     try {
       setIsSubmitting(true);
       const res = await fetch(`${baseUrl}/users/profile`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: profileFormData,
         credentials: "include",
       });
       if (!res.ok) throw new Error("Error updating profile");
@@ -111,7 +135,8 @@ const EditProfile = ({ isOpen, setIsOpen }) => {
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
       role="dialog"
-      aria-modal="true">
+      aria-modal="true"
+    >
       <div
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
         onClick={() => setIsOpen(false)}
@@ -122,7 +147,8 @@ const EditProfile = ({ isOpen, setIsOpen }) => {
           <button
             className="btn btn-sm btn-ghost rounded-full"
             type="button"
-            onClick={() => setIsOpen(false)}>
+            onClick={() => setIsOpen(false)}
+          >
             <span className="material-symbols-outlined text-primary/80 dark:text-primary/70">
               close
             </span>
@@ -132,8 +158,8 @@ const EditProfile = ({ isOpen, setIsOpen }) => {
           <div className="flex gap-4 items-center ">
             <div className="relative avatar">
               <div className="w-24 rounded-xl">
-                {formData.avatar ? (
-                  <img src={formData.avatar} alt="User Avatar" />
+                {previewAvatar ? (
+                  <img src={previewAvatar} alt="User Avatar" />
                 ) : (
                   <div className="flex h-full w-full items-center justify-center">
                     <span className="material-symbols-outlined text-5xl text-base-content/30">
@@ -145,7 +171,8 @@ const EditProfile = ({ isOpen, setIsOpen }) => {
               <button
                 type="button"
                 onClick={() => setOpenEditAvatar(!openEditAvatar)}
-                className="absolute bottom-0 right-0 btn bg-primary btn-sm rounded-2xl">
+                className="absolute bottom-0 right-0 btn bg-primary btn-sm rounded-2xl"
+              >
                 <span className="material-symbols-outlined text-sm">edit</span>
               </button>
             </div>
@@ -153,18 +180,37 @@ const EditProfile = ({ isOpen, setIsOpen }) => {
             {openEditAvatar && (
               <div className="w-full flex flex-col gap-2 justify-center">
                 <div className="flex-1 flex-col ">
+                  <label
+                    htmlFor="avatar"
+                    className="label block text-sm font-medium"
+                  >
+                    Paste Avatar Url
+                  </label>
                   <input
                     className="input input-primary w-full"
                     type="text"
                     name="avatar"
                     value={formData.avatar}
                     onChange={handleChange}
+                    placeholder="Enter avatar url"
+                    id="avatar"
                   />
                 </div>
-                <label className="btn btn-outline btn-neutral btn-sm rounded-2xl w-16">
-                  . . .
-                  <input type="file" className="hidden" name="avatar" />
-                </label>
+                <div className="divider divider-primary">OR</div>
+                <div>
+                  <label
+                    className="block font-medium text-neutral-content "
+                    htmlFor="avatarFile"
+                  >
+                    Pick a file
+                  </label>
+                  <input
+                    type="file"
+                    name="avatar"
+                    onChange={handleFileChange}
+                    className="mt-1 w-full file-input file-input-primary file-input-lg rounded-lg "
+                  />
+                </div>
               </div>
             )}
           </div>
@@ -250,7 +296,8 @@ const EditProfile = ({ isOpen, setIsOpen }) => {
                       <button
                         type="button"
                         className="ml-2 text-primary/50 hover:text-primary"
-                        onClick={() => handleRemoveTag(tag)}>
+                        onClick={() => handleRemoveTag(tag)}
+                      >
                         ×
                       </button>
                     </span>
@@ -272,13 +319,15 @@ const EditProfile = ({ isOpen, setIsOpen }) => {
             <button
               type="button"
               className="btn btn-outline  hover:bg-primary/10 rounded-xl "
-              onClick={() => setIsOpen(false)}>
+              onClick={() => setIsOpen(false)}
+            >
               Cancel
             </button>
             <button
               className="btn btn-primary rounded-xl"
               disabled={isSubmitting}
-              type="submit">
+              type="submit"
+            >
               {isSubmitting ? "Saving..." : "Save Changes"}
             </button>
           </div>

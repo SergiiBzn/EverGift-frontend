@@ -3,7 +3,11 @@ import useAuth from "../hooks/useAuth.jsx";
 
 import ProfileSection from "../components/profile-page/ProfileSection.jsx";
 import ContactSection from "../components/profile-page/ContactSection.jsx";
+<<<<<<< HEAD
 import WishlistSection from "../components/profile-page/WishlistSection.jsx";
+=======
+import WishlistSection from "../components/profile-page/WishListSection.jsx";
+>>>>>>> main
 import ReceivedGiftSection from "../components/profile-page/ReceivedGiftSection.jsx";
 
 export default function Profile() {

@@ -59,6 +59,22 @@ export default function ReceivedGiftModal({
     return () => window.removeEventListener('keydown', onKey);
   }, [isOpen, onClose]);
 
+  const handleSelectChange = (e) => {
+    const val = e.target.value;
+    if (val === '__ADD_NEW__') {
+      const newName = window.prompt('Enter new sender name');
+      if (newName && newName.trim()) {
+        onAddSender && onAddSender(newName.trim());
+        setFrom(newName.trim());
+      } else {
+        // если отмена — сбрасываем
+        setFrom('');
+      }
+      return;
+    }
+    setFrom(val);
+  };
+
   const handleSave = (e) => {
     e.preventDefault();
     onSave({ from, name, date, description });
@@ -99,20 +115,23 @@ export default function ReceivedGiftModal({
                   id='from'
                   className='w-full rounded-xl bg-white/95 p-3 text-gray-900 outline-none ring-0 focus:ring-2 focus:ring-orange-400'
                   value={from}
-                  onChange={(e) => setFrom(e.target.value)}
+                  onChange={handleSelectChange}
                   required
                 >
                   <option value='' disabled>
                     Select sender
                   </option>
-                  {fromOptions.map((opt) => (
-                    <option
-                      key={typeof opt === 'string' ? opt : opt.value}
-                      value={typeof opt === 'string' ? opt : opt.value}
-                    >
-                      {typeof opt === 'string' ? opt : opt.label}
-                    </option>
-                  ))}
+                  {fromOptions.map((opt) => {
+                    const value = typeof opt === 'string' ? opt : opt.value;
+                    const label = typeof opt === 'string' ? opt : opt.label;
+                    return (
+                      <option key={value} value={value}>
+                        {label}
+                      </option>
+                    );
+                  })}
+                  <option value='__ADD_NEW__'>+ Add new sender…</option>{' '}
+                  {/* NEW */}
                 </select>
                 {/* <button
                   type='button'

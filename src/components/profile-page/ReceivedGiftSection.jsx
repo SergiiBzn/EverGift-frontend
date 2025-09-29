@@ -10,6 +10,8 @@ export default function ReceivedGiftSection() {
   const [editingGift, setEditingGift] = useState(null);
   const [filterYear, setFilterYear] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
+  const [extraSenders, setExtraSenders] = useState([]);
+  const [contacts, setContacts] = useState([]);
 
   // Fetch received gifts from the backend
   const fetchReceivedGifts = async () => {
@@ -102,9 +104,65 @@ export default function ReceivedGiftSection() {
     }
   };
 
+  const fetchContacts = async () => {
+    try {
+      const res = await fetch(`${baseUrl}/contacts`, {
+        credentials: 'include',
+      });
+      if (!res.ok) throw new Error('Failed to load contacts');
+      const data = await res.json();
+      setContacts(data);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   useEffect(() => {
     fetchReceivedGifts();
+    fetchContacts();
   }, []);
+
+  const contactDisplayName = (c) => {
+    if (!c) return '';
+    const p = c.profile || {};
+    const first = p.firstName || '';
+    const last = p.lastName || '';
+    const combined = `${first} ${last}`.trim();
+    if (combined) return combined;
+    return p.name || p.nickname || p.fullName || c.slug || '';
+  };
+
+  const contactNames = useMemo(
+    () => contacts.map(contactDisplayName).filter(Boolean),
+    [contacts]
+  );
+
+  const existingGiftSenders = useMemo(() => {
+    const s = new Set();
+    receivedGifts.forEach((r) => {
+      const gifter = (r.fromName && r.fromName[0]) || r.from || '';
+      if (gifter) s.add(gifter);
+    });
+    return Array.from(s);
+  }, [receivedGifts]);
+
+  const fromOptions = useMemo(() => {
+    const set = new Set([
+      ...contactNames,
+      ...existingGiftSenders,
+      ...extraSenders,
+    ]);
+    return Array.from(set)
+      .filter(Boolean)
+      .sort((a, b) => a.localeCompare(b, 'en'));
+  }, [contactNames, existingGiftSenders, extraSenders]);
+
+  const handleAddSender = (newName) => {
+    if (!newName) return;
+    setExtraSenders((prev) =>
+      prev.includes(newName) ? prev : [...prev, newName]
+    );
+  };
 
   const years = useMemo(() => {
     const set = new Set();
@@ -334,7 +392,7 @@ export default function ReceivedGiftSection() {
       </div>
 
       {/* add received gift */}
-      <ReceivedGiftModal
+       <ReceivedGiftModal
         isOpen={open}
         onClose={() => {
           setOpen(false);
@@ -347,7 +405,8 @@ export default function ReceivedGiftSection() {
             addReceivedGift(data);
           }
         }}
-        fromOptions={['Alice', 'Bob', 'Charlie']}
+        fromOptions={fromOptions}
+        onAddSender={handleAddSender}
         initialData={editingGift}
       />
     </section>

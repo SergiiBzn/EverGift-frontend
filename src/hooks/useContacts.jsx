@@ -11,6 +11,7 @@ const useContacts = () => {
   const [allContacts, setAllContacts] = useState([]);
 
   const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
+  /*  const baseUrl = "http://localhost:3000"; */
 
   const improveErrorMessage = async (error) => {
     const errorArray = error
@@ -33,19 +34,21 @@ const useContacts = () => {
     try {
       const response = await fetch(`${baseUrl}/contacts`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(contactData),
+
+        body: contactData, // Pass FormData directly
         credentials: "include", // Include cookies for authentication
+        // NO 'Content-Type' header here!
       });
 
+      console.log("response from create contact", response);
       if (!response.ok) {
         const { error } = await response.json();
         await improveErrorMessage(error);
-        console.log(error);
+        console.log(response);
 
         return;
       }
-      const data = await response.json();
+      /*   const data = await response.json();
 
       console.log("data from create use contact", data);
 
@@ -61,13 +64,59 @@ const useContacts = () => {
       });
 
       setAllContacts(data);
-      toast.success("Contact added successfully!");
+      toast.success(
+        <div className="text-center">
+          Contact {updatedContact.name} created successfully.
+        </div>
+      ); */
+
+      const newContact = await response.json();
+
+      console.log("newContact", newContact);
+
+      // Update the local contacts state
+      setAllContacts((prev) => [...prev, newContact.contact]);
+
+      // Also update the user object in the AuthContext
+      setUser((prevUser) => {
+        // Guard against null/undefined user state
+        if (!prevUser) {
+          return prevUser; // Return the existing state (null or undefined)
+        }
+        // If user exists, update their contacts list
+        return {
+          ...prevUser,
+          contacts: [...(prevUser.contacts || []), newContact.contact],
+        };
+      });
+
+      toast.success(
+        <div className="text-center">
+          Contact {newContact.profile.name} created successfully.
+        </div>
+      );
     } catch (error) {
       toast.error(error);
     } finally {
       setIsLoading(false);
     }
   };
+
+  /*    const updateContactInState = (updatedContact) => {
+    // To update a contact, you should map over the existing contacts
+    const updatedContacts = allContacts.map((contact) =>
+      contact.id === updatedContact.id ? updatedContact : contact
+    );
+    setAllContacts(updatedContacts);
+
+    // And similarly update the user's contacts array
+    setUser((prevUser) => ({
+      ...prevUser,
+      contacts: prevUser.contacts.map((contact) =>
+        contact.id === updatedContact.id ? updatedContact : contact
+      ),
+    }));
+  }; */
 
   return { createContact, isLoading };
 };

@@ -48,9 +48,9 @@ const Footer = () => {
   //   © {new Date().getFullYear()} GiftApp. All rights reserved.
   // </div>
   return (
-    <footer className="bg-base-200 text-base-content">
+    <footer className="bg-[#332E2B] text-base-content">
       {/* Bottom bar */}
-      <div className="border-t py-4 text-sm text-base-content/70 text-center">
+      <div className="border-t py-4 text-sm text-[#f5ede8] text-center">
         © {new Date().getFullYear()} EverGift. All rights reserved.
       </div>
     </footer>

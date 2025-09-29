@@ -3,9 +3,11 @@ import React, { useState } from "react";
 import useContacts from "../../hooks/useContacts.jsx";
 import useAuth from "../../hooks/useAuth.jsx";
 
-const AddContact = ({ isOpen, setIsOpen }) => {
-  const { user, allUsers } = useAuth();
+const AddContact = ({ user, isOpen, setIsOpen }) => {
+  const { allUsers } = useAuth();
   const profile = user?.profile;
+  const defaultAvatar =
+    "https://www.pngplay.com/wp-content/uploads/12/User-Avatar-Profile-PNG-Pic-Clip-Art-Background.png";
   const [formData, setFormData] = useState({
     name: "",
     //dispplay default avatar if no avatar is set
@@ -99,9 +101,7 @@ const AddContact = ({ isOpen, setIsOpen }) => {
           contactType: "custom",
           customProfile: {
             ...formData,
-            avatar:
-              formData.avatar ||
-              "https://www.pngplay.com/wp-content/uploads/12/User-Avatar-Profile-PNG-Pic-Clip-Art-Background.png",
+            avatar: formData.avatar || defaultAvatar,
           },
         };
  */

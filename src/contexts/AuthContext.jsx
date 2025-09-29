@@ -19,6 +19,7 @@ export const AuthContextProvider = ({ children }) => {
   const [allUsers, setAllUsers] = useState([]);
   const navigate = useNavigate();
 
+  //********** register **********
   const register = async (formState) => {
     try {
       const response = await fetch(`${baseUrl}/auth/register`, {
@@ -51,6 +52,7 @@ export const AuthContextProvider = ({ children }) => {
     }
   };
 
+  //********** login **********
   const login = async (formState) => {
     try {
       const response = await fetch(`${baseUrl}/auth/login`, {
@@ -73,7 +75,11 @@ export const AuthContextProvider = ({ children }) => {
       const userData = await response.json();
       setUser(userData);
 
-      toast.success(`welcome ${userData.profil?.name || ""}`);
+      toast.success(
+        <div className="text-center">
+          welcome {userData.profile?.name || ""}
+        </div>
+      );
       navigate("/dashboard");
     } catch (error) {
       console.log(error);

@@ -1,11 +1,8 @@
 /** @format */
-import React, { useState } from "react";
-import useContacts from "../../hooks/useContacts.jsx";
-import useAuth from "../../hooks/useAuth.jsx";
+import { useState } from "react";
+import { useContacts } from "../../hooks/useContacts.jsx";
 
-const AddContact = ({ user, isOpen, setIsOpen }) => {
-  const { allUsers } = useAuth();
-  const profile = user?.profile;
+const AddContact = ({ isOpen, setIsOpen }) => {
   const defaultAvatar =
     "https://www.pngplay.com/wp-content/uploads/12/User-Avatar-Profile-PNG-Pic-Clip-Art-Background.png";
   const [formData, setFormData] = useState({
@@ -83,28 +80,6 @@ const AddContact = ({ user, isOpen, setIsOpen }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    /*  const contactFormData = new FormData();
-
-    if (formData.avatar) {
-      contactFormData.append("avatar", formData.avatar);
-    }
-
-    imageformData.append("image", contactFormData);
-
-    console.log("formData", contactFormData);
-    // Decide whether to create a custom contact or link a user
-    const isExistingUser = profile && profile._id;
-
-    const contactData = isExistingUser
-      ? { contactType: "user", linkedUserId: profile._id }
-      : {
-          contactType: "custom",
-          customProfile: {
-            ...formData,
-            avatar: formData.avatar || defaultAvatar,
-          },
-        };
- */
     const newErrors = {};
     if (!formData.name || formData.name.trim() === "") {
       newErrors.name = "Name cannot be empty.";

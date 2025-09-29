@@ -1,12 +1,18 @@
 import { ContactData, ContactEvent, ContactRest } from "../components/index.js";
+import { useContact } from "../hooks/useContacts.jsx";
+import { useParams } from "react-router";
 const ContactDetails = () => {
-  // const { contactId } = useParams();
+  const { contactSlug } = useParams();
+  const { contact, isLoading } = useContact(contactSlug);
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
   return (
     <main className="flex-1 px-4 py-8 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl space-y-8">
-        <ContactData />
-        <ContactEvent />
-        <ContactRest />
+        <ContactData contact={contact} />
+        <ContactEvent contact={contact} />
+        <ContactRest contact={contact} />
       </div>
     </main>
   );

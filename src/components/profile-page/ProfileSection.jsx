@@ -1,8 +1,11 @@
 import { useState } from "react";
 import EditProfile from "../Modals/EditProfile";
-
+import useAuth from "../../hooks/useAuth";
 const ProfileSection = ({ profile }) => {
   const [isOpenEditProfile, setIsOpenEditProfile] = useState(false);
+  const user = useAuth();
+  console.log(user);
+
   return (
     <section>
       <h1 className="text-3xl font-bold mb-4">Profile</h1>
@@ -20,7 +23,7 @@ const ProfileSection = ({ profile }) => {
             <div className="flex items-center gap-6">
               <h2 className="text-3xl font-bold">{profile.name}</h2>{" "}
               {profile.gender == "male" && (
-                <span className="material-symbols-outlined text-shadow-cyan-600 dark:text-primary/70">
+                <span className="material-symbols-outlined text-cyan-600 ">
                   Male
                 </span>
               )}
@@ -29,7 +32,7 @@ const ProfileSection = ({ profile }) => {
                   Female
                 </span>
               )}
-            </div>{" "}
+            </div>
             <p className="text-neutral ">
               Age: {profile.age >= 0 ? profile.age : "N/A"}
             </p>
@@ -53,6 +56,7 @@ const ProfileSection = ({ profile }) => {
           </button>
           {isOpenEditProfile && (
             <EditProfile
+              user={user}
               isOpen={isOpenEditProfile}
               setIsOpen={setIsOpenEditProfile}
             />

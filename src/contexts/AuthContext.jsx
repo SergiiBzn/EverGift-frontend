@@ -38,7 +38,6 @@ export const AuthContextProvider = ({ children }) => {
       }
       const userData = await response.json();
 
-      console.log("userData", userData);
       setUser(userData);
 
       navigate("/login");
@@ -118,8 +117,6 @@ export const AuthContextProvider = ({ children }) => {
           throw new Error("Please Login");
         }
         const userData = await response.json();
-
-        console.log("new userData", userData);
         setUser(userData);
         // getAllUsers(userData);
       } catch (error) {
@@ -167,7 +164,8 @@ export const AuthContextProvider = ({ children }) => {
         setAllUsers,
 
         baseUrl,
-      }}>
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

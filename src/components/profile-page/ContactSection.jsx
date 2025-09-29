@@ -9,7 +9,6 @@ const ContactSection = () => {
 
   const { user, allUsers } = useAuth();
 
-  console.log(" User contacts", user.contacts);
   const scrollContainer = useRef(null);
   const scroll = (scrollOffset) => {
     if (scrollContainer.current) {
@@ -20,7 +19,7 @@ const ContactSection = () => {
     }
   };
   return (
-    <section className="flex flex-col gap-6">
+    <section className="flex flex-col gap-6  ">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <h2 className="text-2xl font-bold">Contacts</h2>
         <div className="w-full sm:w-auto flex flex-col sm:flex-row items-start sm:items-center gap-4">
@@ -73,7 +72,7 @@ const ContactSection = () => {
       <div className="relative">
         <div
           ref={scrollContainer}
-          className="flex items-center gap-4 overflow-x-auto  py-[2rem] px-[4rem]"
+          className=" flex items-center gap-4 overflow-x-auto py-[2rem] px-[4rem]"
         >
           {user.contacts && user.contacts.length > 0 ? (
             user.contacts.map((contact) => (
@@ -82,15 +81,6 @@ const ContactSection = () => {
                 key={contact._id}
                 className="flex flex-col items-center justify-center gap-2 flex-shrink-0"
               >
-                {/* <div
-           className="h-24 w-24 rounded-full bg-cover bg-center border border-primary"
-           style={{
-             backgroundImage: `url(${
-               contact.contactType === "user"
-                 ? contact.linkedUserId?.profil?.avatar
-                 : contact.customProfil?.avatar||defaultAvatar
-             })`,
-           }}></div> */}
                 <div>
                   <img
                     className="h-24 w-24 rounded-full bg-cover bg-center border border-primary"

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { GivenGiftModal } from "../Modals";
-const ContactRest = () => {
+const ContactRest = ({ contact }) => {
   const [openAddGivenGift, setOpenAddGivenGift] = useState(false);
 
   return (

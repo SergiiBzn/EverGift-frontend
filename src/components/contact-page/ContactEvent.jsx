@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 
-const ContactEvent = () => {
+const ContactEvent = ({ contact }) => {
   // --- State Management ---
   // Placeholder for events data, should be fetched from an API
   const [events, setEvents] = useState(
@@ -52,7 +52,7 @@ const ContactEvent = () => {
   };
 
   return (
-    <div className="rounded-xl bg-white shadow-sm p-6">
+    <div className="h-full flex flex-col rounded-xl bg-white shadow-sm p-6">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-bold text-zinc-900 ">Gift Events</h3>
         <div className="flex items-center gap-2">

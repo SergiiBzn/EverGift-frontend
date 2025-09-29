@@ -1,17 +1,15 @@
 /** @format */
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { toast } from "react-toastify";
 import useAuth from "./useAuth";
+const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
-const useContacts = () => {
+export const useContacts = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { setUser } = useAuth();
   const [allContacts, setAllContacts] = useState([]);
-
-  const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
-  /*  const baseUrl = "http://localhost:3000"; */
 
   const improveErrorMessage = async (error) => {
     const errorArray = error
@@ -34,7 +32,6 @@ const useContacts = () => {
     try {
       const response = await fetch(`${baseUrl}/contacts`, {
         method: "POST",
-
         body: contactData, // Pass FormData directly
         credentials: "include", // Include cookies for authentication
         // NO 'Content-Type' header here!
@@ -45,31 +42,10 @@ const useContacts = () => {
         await improveErrorMessage(error);
         return;
       }
-      /*   const data = await response.json();
-
-      console.log("data from create use contact", data);
-
-      console.log("newContact", data);
-      // const updatedContact = {
-      //   _id: data.id,
-      //   name: data.profile.name,
-      //   avatar: data.profile.avatar,
-      // };
-      setUser((prevUser) => {
-        const updatedContacts = [...prevUser.contacts, updatedContact];
-        return { ...prevUser, contacts: updatedContacts };
-      });
-
-      setAllContacts(data);
-      toast.success(
-        <div className="text-center">
-          Contact {updatedContact.name} created successfully.
-        </div>
-      ); */
 
       const newContact = await response.json();
 
-      console.log("newContact", newContact);
+      // console.log("newContact", newContact);
 
       // Update the local contacts state
       setAllContacts((prev) => [...prev, newContact.contact]);
@@ -105,23 +81,43 @@ const useContacts = () => {
     }
   };
 
-  /*    const updateContactInState = (updatedContact) => {
-    // To update a contact, you should map over the existing contacts
-    const updatedContacts = allContacts.map((contact) =>
-      contact.id === updatedContact.id ? updatedContact : contact
-    );
-    setAllContacts(updatedContacts);
-
-    // And similarly update the user's contacts array
-    setUser((prevUser) => ({
-      ...prevUser,
-      contacts: prevUser.contacts.map((contact) =>
-        contact.id === updatedContact.id ? updatedContact : contact
-      ),
-    }));
-  }; */
-
-  return { createContact, isLoading };
+  return { createContact, isLoading, allContacts };
 };
 
-export default useContacts;
+export const useContact = (contactSlug) => {
+  const [contact, setContact] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      if (!contactSlug) {
+        return <div>Contact not found</div>;
+      }
+      setIsLoading(true);
+
+      try {
+        const response = await fetch(`${baseUrl}/contacts/${contactSlug}`, {
+          method: "GET",
+          credentials: "include", // Include cookies for authentication
+          // NO 'Content-Type' header here!
+        });
+
+        if (!response.ok) {
+          const { error } = await response.json();
+          console.log("error", error);
+          return;
+        }
+
+        const data = await response.json();
+        setContact(data);
+      } catch (error) {
+        toast.error(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, [contactSlug]);
+  return { contact, isLoading };
+};

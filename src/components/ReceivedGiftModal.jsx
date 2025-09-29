@@ -114,14 +114,14 @@ export default function ReceivedGiftModal({
                     </option>
                   ))}
                 </select>
-                <button
+                {/* <button
                   type='button'
                   onClick={onAddSender}
                   title='Add sender'
                   className='inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-amber-700 transition hover:bg-white'
                 >
                   +
-                </button>
+                </button> */}
               </div>
             </div>
 

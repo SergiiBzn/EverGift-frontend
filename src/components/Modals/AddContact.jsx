@@ -171,8 +171,7 @@ const AddContact = ({ user, isOpen, setIsOpen }) => {
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
       role="dialog"
-      aria-modal="true"
-    >
+      aria-modal="true">
       <div
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
         onClick={() => setIsOpen(false)}
@@ -184,8 +183,7 @@ const AddContact = ({ user, isOpen, setIsOpen }) => {
           </h2>
           <button
             className="btn btn-sm btn-ghost rounded-full"
-            onClick={() => setIsOpen(false)}
-          >
+            onClick={() => setIsOpen(false)}>
             <span className="material-symbols-outlined text-primary/80 dark:text-primary/70">
               close
             </span>
@@ -211,8 +209,7 @@ const AddContact = ({ user, isOpen, setIsOpen }) => {
               <button
                 type="button"
                 onClick={() => setOpenEditAvatar(!openEditAvatar)}
-                className="absolute bottom-0 right-0 btn bg-primary btn-sm rounded-2xl"
-              >
+                className="absolute bottom-0 right-0 btn bg-primary btn-sm rounded-2xl">
                 <span className="material-symbols-outlined text-sm">edit</span>
               </button>
             </div>
@@ -223,8 +220,7 @@ const AddContact = ({ user, isOpen, setIsOpen }) => {
                 <div className="flex-1 flex-col ">
                   <label
                     htmlFor="avatar"
-                    className="label block text-sm font-medium"
-                  >
+                    className="block font-medium text-neutral-content">
                     Paste Avatar Url
                   </label>
                   <input
@@ -243,8 +239,7 @@ const AddContact = ({ user, isOpen, setIsOpen }) => {
                 <div>
                   <label
                     className="block font-medium text-neutral-content "
-                    htmlFor="avatarFile"
-                  >
+                    htmlFor="avatarFile">
                     Pick a file
                   </label>
                   <input
@@ -339,13 +334,11 @@ const AddContact = ({ user, isOpen, setIsOpen }) => {
                   return (
                     <span
                       key={tag}
-                      className="flex items-center rounded-full bg-primary/10 px-3 py-1 text-sm text-primary dark:bg-primary/20"
-                    >
+                      className="flex items-center rounded-full bg-primary/10 px-3 py-1 text-sm text-primary dark:bg-primary/20">
                       {tag}
                       <button
                         className="ml-2 text-primary/50 hover:text-primary"
-                        onClick={() => handleRemoveTag(tag)}
-                      >
+                        onClick={() => handleRemoveTag(tag)}>
                         ×
                       </button>
                     </span>
@@ -367,8 +360,7 @@ const AddContact = ({ user, isOpen, setIsOpen }) => {
             <button
               type="button"
               className="btn btn-outline  hover:bg-primary/10 rounded-xl "
-              onClick={() => setIsOpen(false)}
-            >
+              onClick={() => setIsOpen(false)}>
               Cancel
             </button>
             <button
@@ -376,8 +368,7 @@ const AddContact = ({ user, isOpen, setIsOpen }) => {
                 isLoading ? "cursor-not-allowed" : ""
               }`}
               type="submit"
-              disabled={isLoading}
-            >
+              disabled={isLoading}>
               {isLoading ? (
                 <>
                   <span className="loading loading-spinner"></span>

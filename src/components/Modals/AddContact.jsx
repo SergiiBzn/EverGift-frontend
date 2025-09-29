@@ -9,13 +9,17 @@ const AddContact = ({ user, isOpen, setIsOpen }) => {
   const defaultAvatar =
     "https://www.pngplay.com/wp-content/uploads/12/User-Avatar-Profile-PNG-Pic-Clip-Art-Background.png";
   const [formData, setFormData] = useState({
-    name: profile?.name || "",
-    avatar: profile?.avatar || defaultAvatar,
-    birthday: profile?.birthday || "",
-    gender: profile?.gender || "",
-    tags: profile?.tags || [],
+    name: "",
+    //dispplay default avatar if no avatar is set
+    avatar: "",
+    birthday: "",
+    gender: "",
+    tags: [],
   });
 
+  const [imageFile, setImageFile] = useState(null);
+
+  const [preview, setPreview] = useState(null);
   const [newTag, setNewTag] = useState("");
   const [openEditAvatar, setOpenEditAvatar] = useState(false);
   const { createContact, isLoading } = useContacts();
@@ -23,9 +27,7 @@ const AddContact = ({ user, isOpen, setIsOpen }) => {
   const [error, setError] = useState({});
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-
+    const { name, value, type, files } = e.target;
     if (error[name]) {
       setError((prev) => {
         const newError = { ...prev };
@@ -33,8 +35,24 @@ const AddContact = ({ user, isOpen, setIsOpen }) => {
         return newError;
       });
     }
+    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    if (name === "avatar") {
+      setPreview(value);
+      if (imageFile) {
+        setImageFile(null);
+      }
+    }
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageFile(file);
+      setPreview(URL.createObjectURL(file));
+      setFormData((prev) => ({ ...prev, avatar: "" }));
+    }
+  };
   const addTag = () => {
     const newTagTrimmed = newTag.trim();
     if (newTagTrimmed !== "" && !formData.tags.includes(newTagTrimmed)) {
@@ -61,9 +79,19 @@ const AddContact = ({ user, isOpen, setIsOpen }) => {
     });
   };
 
+  //********** add contact *************
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    /*  const contactFormData = new FormData();
+
+    if (formData.avatar) {
+      contactFormData.append("avatar", formData.avatar);
+    }
+
+    imageformData.append("image", contactFormData);
+
+    console.log("formData", contactFormData);
     // Decide whether to create a custom contact or link a user
     const isExistingUser = profile && profile._id;
 
@@ -76,7 +104,7 @@ const AddContact = ({ user, isOpen, setIsOpen }) => {
             avatar: formData.avatar || defaultAvatar,
           },
         };
-
+ */
     const newErrors = {};
     if (!formData.name || formData.name.trim() === "") {
       newErrors.name = "Name cannot be empty.";
@@ -92,19 +120,44 @@ const AddContact = ({ user, isOpen, setIsOpen }) => {
     }
     setError({});
 
+    const contactFormData = new FormData();
+    // Append the image file if it exists
+    if (imageFile) {
+      contactFormData.append("imageFile", imageFile);
+    } else if (formData.avatar) {
+      // If the user provided a URL instead of a file
+      contactFormData.append("avatar", formData.avatar);
+    }
+
+    // Append all other form fields
+    contactFormData.append("name", formData.name);
+    contactFormData.append("birthday", formData.birthday);
+    contactFormData.append("gender", formData.gender);
+    // Stringify the tags array to send it
+    contactFormData.append("tags", JSON.stringify(formData.tags));
+
+    contactFormData.append("contactType", "custom");
+
+    // Debug: Log FormData entries
+    for (const [key, value] of contactFormData.entries()) {
+      console.log(`FormData Key: ${key}, Value: ${value}`);
+    }
+
     try {
-      await createContact(contactData);
+      await createContact(contactFormData);
       setIsOpen(false); // Close modal on save
 
       // Reset form data to initial state
       setFormData({
         name: "",
-        avatar: defaultAvatar,
+        avatar: "",
         birthday: "",
         gender: "",
         tags: [],
       });
       setNewTag("");
+      setImageFile(null);
+      setPreview(null);
     } catch (error) {
       console.error("Failed to create contact:", error);
       // Here you could add a state to show an error message to the user
@@ -117,8 +170,7 @@ const AddContact = ({ user, isOpen, setIsOpen }) => {
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
       role="dialog"
-      aria-modal="true"
-    >
+      aria-modal="true">
       <div
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
         onClick={() => setIsOpen(false)}
@@ -130,58 +182,78 @@ const AddContact = ({ user, isOpen, setIsOpen }) => {
           </h2>
           <button
             className="btn btn-sm btn-ghost rounded-full"
-            onClick={() => setIsOpen(false)}
-          >
+            onClick={() => setIsOpen(false)}>
             <span className="material-symbols-outlined text-primary/80 dark:text-primary/70">
               close
             </span>
           </button>
         </div>
         <form className="mt-6 space-y-6" onSubmit={handleSubmit}>
-          {/* Avatar section */}
+          {/* ****** Avatar section ***** */}
+
           <div className="flex gap-4 items-center ">
             <div className="relative avatar">
               <div className="w-24 rounded-xl">
-                {formData.avatar ? (
-                  <img src={formData.avatar} alt="User Avatar" />
+                {preview ? (
+                  <img src={preview} alt="preview" />
                 ) : (
-                  <div className="flex h-full w-full items-center justify-center">
-                    <span className="material-symbols-outlined text-5xl text-base-content/30">
-                      person
-                    </span>
-                  </div>
+                  <img
+                    src="https://www.pngplay.com/wp-content/uploads/12/User-Avatar-Profile-PNG-Pic-Clip-Art-Background.png"
+                    alt="User default Avatar"
+                  />
                 )}
               </div>
+
+              {/* ****** Add Avatar btn ***** */}
               <button
                 type="button"
                 onClick={() => setOpenEditAvatar(!openEditAvatar)}
-                className="absolute bottom-0 right-0 btn bg-primary btn-sm rounded-2xl"
-              >
+                className="absolute bottom-0 right-0 btn bg-primary btn-sm rounded-2xl">
                 <span className="material-symbols-outlined text-sm">edit</span>
               </button>
             </div>
 
+            {/* display avatar edit form and btn to upload one */}
             {openEditAvatar && (
               <div className="w-full flex flex-col gap-2 justify-center">
                 <div className="flex-1 flex-col ">
+                  <label
+                    htmlFor="avatar"
+                    className="label block text-sm font-medium">
+                    Paste Avatar Url
+                  </label>
                   <input
                     className="input input-primary w-full"
                     type="text"
                     name="avatar"
                     value={formData.avatar}
                     onChange={handleChange}
+                    placeholder="Enter avatar url"
+                    id="avatar"
                   />
                 </div>
-                <label className="btn btn-outline btn-neutral btn-sm rounded-2xl w-16">
-                  . . .
-                  <input type="file" className="hidden" name="avatar" />
-                </label>
+
+                <div className="divider divider-primary">OR</div>
+
+                <div>
+                  <label
+                    className="block font-medium text-neutral-content "
+                    htmlFor="avatarFile">
+                    Pick a file
+                  </label>
+                  <input
+                    type="file"
+                    name="imageFile"
+                    onChange={handleFileChange}
+                    className="mt-1 w-full file-input file-input-primary file-input-lg rounded-lg "
+                  />
+                </div>
               </div>
             )}
           </div>
           {/* name section */}
           <div>
-            <label className="block text-sm font-medium">
+            <label className="block font-medium text-neutral-content htmlFor='name'">
               Name
               <input
                 className="mt-1 w-full rounded-lg input input-lg input-primary"
@@ -189,6 +261,7 @@ const AddContact = ({ user, isOpen, setIsOpen }) => {
                 type="text"
                 value={formData.name}
                 onChange={handleChange}
+                id="name"
               />
             </label>
             {error.name && (
@@ -238,7 +311,7 @@ const AddContact = ({ user, isOpen, setIsOpen }) => {
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium">
+            <label className="block font-medium text-neutral-content ">
               Birthday
               <input
                 className="mt-1 w-full rounded-lg  input input-primary"
@@ -253,20 +326,18 @@ const AddContact = ({ user, isOpen, setIsOpen }) => {
             )}
           </div>
           <div>
-            <label className="block text-sm font-medium">
+            <label className="block font-medium text-neutral-content ">
               Tags
               <div className="mt-1 flex flex-wrap gap-2">
                 {formData.tags.map((tag) => {
                   return (
                     <span
                       key={tag}
-                      className="flex items-center rounded-full bg-primary/10 px-3 py-1 text-sm text-primary dark:bg-primary/20"
-                    >
+                      className="flex items-center rounded-full bg-primary/10 px-3 py-1 text-sm text-primary dark:bg-primary/20">
                       {tag}
                       <button
                         className="ml-2 text-primary/50 hover:text-primary"
-                        onClick={() => handleRemoveTag(tag)}
-                      >
+                        onClick={() => handleRemoveTag(tag)}>
                         ×
                       </button>
                     </span>
@@ -288,8 +359,7 @@ const AddContact = ({ user, isOpen, setIsOpen }) => {
             <button
               type="button"
               className="btn btn-outline  hover:bg-primary/10 rounded-xl "
-              onClick={() => setIsOpen(false)}
-            >
+              onClick={() => setIsOpen(false)}>
               Cancel
             </button>
             <button
@@ -297,8 +367,7 @@ const AddContact = ({ user, isOpen, setIsOpen }) => {
                 isLoading ? "cursor-not-allowed" : ""
               }`}
               type="submit"
-              disabled={isLoading}
-            >
+              disabled={isLoading}>
               {isLoading ? (
                 <>
                   <span className="loading loading-spinner"></span>

@@ -8,6 +8,8 @@ const ContactSection = () => {
   const [isOpenAddContact, setIsOpenAddContact] = useState(false);
 
   const { user, allUsers } = useAuth();
+
+  console.log(" User contacts", user.contacts);
   const scrollContainer = useRef(null);
   const scroll = (scrollOffset) => {
     if (scrollContainer.current) {

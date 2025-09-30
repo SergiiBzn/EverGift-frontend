@@ -1,7 +1,7 @@
-import { EditProfile } from "../index";
+import { EditContactProfile } from "../Modals/index.js";
 import { useState } from "react";
 
-const ContactData = ({ contact }) => {
+const ContactData = ({ contact, setContact }) => {
   const [isOpenEditProfile, setIsOpenEditProfile] = useState(false);
 
   if (!contact) {
@@ -51,8 +51,9 @@ const ContactData = ({ contact }) => {
               </p>
             </div>
             {isOpenEditProfile && (
-              <EditProfile
+              <EditContactProfile
                 contact={contact}
+                setContact={setContact}
                 isOpen={isOpenEditProfile}
                 setIsOpen={setIsOpenEditProfile}
               />

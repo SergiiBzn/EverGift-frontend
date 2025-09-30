@@ -56,8 +56,6 @@ const ProfileSection = ({ profile }) => {
           </button>
           {isOpenEditProfile && (
             <EditUserProfile
-              user={user}
-              baseUrl={baseUrl}
               isOpen={isOpenEditProfile}
               setIsOpen={setIsOpenEditProfile}
             />

@@ -2,33 +2,46 @@ import ProfileModal from "./ProfilModal.jsx";
 import ProfileForm from "./ProfileForm";
 import { buildProfileFormData } from "../../utils/buildProfileFormData.js";
 import useAuth from "../../hooks/useAuth";
+import { useNavigate } from "react-router";
 
-const EditUserProfile = ({ isOpen, setIsOpen }) => {
+const EditContactProfile = ({ contact, setContact, isOpen, setIsOpen }) => {
   const defaultAvatar =
     "https://www.pngplay.com/wp-content/uploads/12/User-Avatar-Profile-PNG-Pic-Clip-Art-Background.png";
 
-  const { baseUrl, setUser, user } = useAuth();
+  const { baseUrl } = useAuth();
+  const navigate = useNavigate();
 
-  user.profile = {
-    ...user.profile,
-    birthday: new Date(user.profile.birthday).toISOString().split("T")[0] || "",
+  contact.profile = {
+    ...contact.profile,
+    birthday:
+      new Date(contact.profile.birthday).toISOString().split("T")[0] || "",
   };
 
   const handleSubmit = async (formData, imageFile, setError) => {
-    const fd = buildProfileFormData("user", formData, imageFile, defaultAvatar);
+    const fd = buildProfileFormData(
+      "contact",
+      formData,
+      imageFile,
+      defaultAvatar,
+      contact.slug
+    );
 
     try {
-      const res = await fetch(`${baseUrl}/users/profile`, {
+      const res = await fetch(`${baseUrl}/contacts/${contact.slug}/profile`, {
         method: "PUT",
         body: fd,
         credentials: "include",
       });
 
-      if (!res.ok) throw new Error("Failed to update user profile");
+      if (!res.ok) throw new Error("Failed to update contact profile");
 
-      const updatedUser = await res.json();
+      const updatedContact = await res.json();
 
-      setUser({ ...user, profile: updatedUser });
+      console.log(updatedContact);
+      if (updatedContact.slug !== contact.slug) {
+        navigate(`/contact/${updatedContact.slug}`);
+      }
+      setContact({ ...contact, profile: updatedContact.profile });
 
       setIsOpen(false);
     } catch (err) {
@@ -41,10 +54,10 @@ const EditUserProfile = ({ isOpen, setIsOpen }) => {
     <ProfileModal
       isOpen={isOpen}
       onClose={() => setIsOpen(false)}
-      title="Edit User Profile"
+      title="Edit Contact Profile"
     >
       <ProfileForm
-        initialData={user.profile}
+        initialData={contact.profile}
         defaultAvatar={defaultAvatar}
         isSubmitting={false}
         onSubmit={handleSubmit}
@@ -54,4 +67,4 @@ const EditUserProfile = ({ isOpen, setIsOpen }) => {
   );
 };
 
-export default EditUserProfile;
+export default EditContactProfile;

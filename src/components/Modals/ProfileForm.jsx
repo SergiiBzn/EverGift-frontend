@@ -169,15 +169,17 @@ const ProfileForm = ({
                 onChange={handleChange}
                 checked={formData.gender === g}
               />
-              <span>{g}</span>
+              <span className={g == "other" ? "" : "material-symbols-outlined"}>
+                {g}
+              </span>
             </label>
           ))}
         </div>
       </div>
 
       {/* Tags */}
-      <div>
-        <label className="block font-medium text-neutral-content">Tags</label>
+      <div className="text-sm font-medium text-neutral-content flex flex-col gap-2">
+        Tags
         <div className="flex flex-wrap gap-2">
           {formData.tags.map((tag) => (
             <span
@@ -197,6 +199,7 @@ const ProfileForm = ({
         </div>
         <input
           className="w-full rounded-lg input input-lg input-primary text-base-content"
+          name="tags"
           placeholder="Add a tag..."
           type="text"
           value={newTag}

@@ -15,7 +15,6 @@ import {
   getISOWeek,
 } from "date-fns";
 import EventModal from "../Modals/EventModal.jsx";
-import User from "../../../../EverGift-backend/models/User.js";
 import useAuth from "../../hooks/useAuth.jsx";
 
 export default function Calendar() {
@@ -34,12 +33,14 @@ export default function Calendar() {
         <div className=" flex space-x-2">
           <button
             className="btn btn-sm rounded-full"
-            onClick={() => setCurrentMonth(addMonths(currentMonth, -1))}>
+            onClick={() => setCurrentMonth(addMonths(currentMonth, -1))}
+          >
             <svg
               className="w-5 h-5"
               fill="currentColor"
               viewBox="0 0 256 256"
-              xmlns="http://www.w3.org/2000/svg">
+              xmlns="http://www.w3.org/2000/svg"
+            >
               <path d="M165.66,202.34a8,8,0,0,1-11.32,11.32l-80-80a8,8,0,0,1,0-11.32l80-80a8,8,0,0,1,11.32,11.32L91.31,128Z"></path>
             </svg>
           </button>
@@ -48,12 +49,14 @@ export default function Calendar() {
           </div>
           <button
             className="btn btn-sm rounded-full"
-            onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}>
+            onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
+          >
             <svg
               className="w-5 h-5"
               fill="currentColor"
               viewBox="0 0 256 256"
-              xmlns="http://www.w3.org/2000/svg">
+              xmlns="http://www.w3.org/2000/svg"
+            >
               <path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"></path>
             </svg>
           </button>
@@ -70,7 +73,8 @@ export default function Calendar() {
       days.push(
         <div
           key={i}
-          className="text-center font-medium text-neutral-content py-2">
+          className="text-center font-medium text-neutral-content py-2"
+        >
           {format(addDays(startDate, i), "EEEEEE")}
         </div>
       );
@@ -99,7 +103,8 @@ export default function Calendar() {
       days.push(
         <div
           key={`week-${weekNumber}`}
-          className="font-bold text-secondary flex items-center justify-center">
+          className="font-bold text-secondary flex items-center justify-center"
+        >
           {weekNumber}
         </div>
       );
@@ -120,7 +125,8 @@ export default function Calendar() {
               ${isToday(cloneDay) ? "bg-primary/30 font-bold" : ""}
               ${hasEvent ? "bg-accent/30" : ""}
             `}
-            onClick={() => handleDateClick(cloneDay)}>
+            onClick={() => handleDateClick(cloneDay)}
+          >
             <span>{format(cloneDay, "d")}</span>
           </div>
         );
@@ -168,7 +174,8 @@ export default function Calendar() {
           {/* add new event button */}
           <button
             onClick={handleAddEvent}
-            className="btn btn-primary rounded-2xl">
+            className="btn btn-primary rounded-2xl"
+          >
             <span>Add New Event</span>
           </button>
 
@@ -184,7 +191,8 @@ export default function Calendar() {
                 new Date().toISOString().split("T")[0] ? (
                   <div
                     key={event._id}
-                    className="flex items-center gap-4 p-4 rounded-lg bg-white">
+                    className="flex items-center gap-4 p-4 rounded-lg bg-white"
+                  >
                     <img
                       className="h-18 w-18 rounded-full"
                       src={event.contactId.customProfile?.avatar}

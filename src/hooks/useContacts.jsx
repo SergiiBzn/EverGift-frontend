@@ -8,7 +8,7 @@ const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
 export const useContacts = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const { setUser } = useAuth();
+  const { setUser, baseUrl } = useAuth();
   const [allContacts, setAllContacts] = useState([]);
 
   const improveErrorMessage = async (error) => {
@@ -119,5 +119,32 @@ export const useContact = (contactSlug) => {
 
     fetchUser();
   }, [contactSlug]);
-  return { contact, isLoading, setContact };
+
+  const deleteContact = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(`${baseUrl}/contacts/${contactSlug}`, {
+        method: "DELETE",
+        credentials: "include", // Include cookies for authentication
+        // NO 'Content-Type' header here!
+      });
+
+      if (!response.ok) {
+        const { error } = await response.json();
+        console.log("error", error);
+        return;
+      }
+      setContact(null);
+      toast.success(
+        <div className="text-center">
+          Contact {contact.profile.name} deleted successfully.
+        </div>
+      );
+    } catch (error) {
+      toast.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  return { contact, isLoading, setContact, deleteContact };
 };

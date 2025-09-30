@@ -54,9 +54,13 @@ const ContactsComponent = () => {
         {filteredContacts?.map((contact) => {
           return (
             <Link
-              key={contact._id}
+             
               to={`/contact/${contact.slug}`}
-              className="flex items-center gap-4 p-4 rounded-lg bg-white shadow-sm">
+
+              key={contact.slug}
+              className="flex items-center gap-4 p-4 rounded-lg bg-white shadow-sm"
+            >
+
               <div
                 className="w-12 h-12 bg-center bg-no-repeat bg-cover rounded-full "
                 style={{

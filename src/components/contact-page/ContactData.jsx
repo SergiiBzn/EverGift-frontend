@@ -1,8 +1,12 @@
-import { EditContactProfile } from "../Modals/index.js";
+import EditContactProfile from "./EditContactProfile.jsx";
 import { useState } from "react";
+import { useNavigate } from "react-router";
+import { useContacts } from "../../hooks/useContacts.jsx";
 
-const ContactData = ({ contact, setContact }) => {
+const ContactData = ({ contact, setContact, deleteContact }) => {
   const [isOpenEditProfile, setIsOpenEditProfile] = useState(false);
+  const [isOpenDeleteConfirm, setIsOpenDeleteConfirm] = useState(false);
+  const navigate = useNavigate();
 
   if (!contact) {
     return <div>Contact not found</div>;
@@ -10,6 +14,14 @@ const ContactData = ({ contact, setContact }) => {
 
   const { profile, contactType } = contact;
 
+  const handleDelete = async () => {
+    try {
+      await deleteContact(contact.slug);
+      navigate("/");
+    } catch (error) {
+      console.error("Failed to delete contact:", error);
+    }
+  };
   return (
     <div className="rounded-xl bg-white shadow-sm p-6">
       <div className="flex flex-c items-start gap-6 md:flex-row">
@@ -45,6 +57,12 @@ const ContactData = ({ contact, setContact }) => {
                     Edit
                   </button>
                 )}
+                <button
+                  onClick={() => setIsOpenDeleteConfirm(true)}
+                  className="btn btn-sm btn-danger btn-outline"
+                >
+                  Delete
+                </button>
               </div>
               <p className="text-zinc-500 dark:text-zinc-400">
                 Age: {profile.age >= 0 ? profile.age : "N/A"}
@@ -88,6 +106,40 @@ const ContactData = ({ contact, setContact }) => {
           ></textarea>
         </label>
       </div>
+      {isOpenDeleteConfirm && (
+        <dialog className="modal modal-open sm:modal-middle">
+          <div className="modal-box alert alert-warning">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              className="stroke-info h-6 w-6 shrink-0"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              ></path>
+            </svg>
+            <p className="py-4">
+              Are you sure you want to delete this contact? This action cannot
+              be undone.
+            </p>
+            <div className="modal-action">
+              <button
+                onClick={() => setIsOpenDeleteConfirm(false)}
+                className="btn btn-sm"
+              >
+                Cancel
+              </button>
+              <button onClick={handleDelete} className="btn btn-sm btn-primary">
+                Delete
+              </button>
+            </div>
+          </div>
+        </dialog>
+      )}
     </div>
   );
 };

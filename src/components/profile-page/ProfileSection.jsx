@@ -1,10 +1,8 @@
 import { useState } from "react";
-import { EditUserProfile } from "../Modals/index.js";
-import useAuth from "../../hooks/useAuth";
+import EditUserProfile from "./EditUserProfile.jsx";
 
 const ProfileSection = ({ profile }) => {
   const [isOpenEditProfile, setIsOpenEditProfile] = useState(false);
-  const { user, baseUrl } = useAuth();
 
   return (
     <section>

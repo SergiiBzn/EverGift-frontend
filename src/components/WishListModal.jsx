@@ -110,18 +110,19 @@ export default function WishlistModal({
           {/* Actions */}
           <div className='mt-8 flex items-center justify-between'>
             <button
-              type='submit'
-              disabled={loading}
-              className='min-w-28 rounded-2xl bg-orange-500 px-6 py-3 font-semibold text-white shadow hover:bg-orange-600 active:bg-orange-700 disabled:opacity-60'
-            >
-              {loading ? 'saving...' : 'save'}
-            </button>
-            <button
               type='button'
               onClick={onClose}
-              className='min-w-28 rounded-2xl bg-orange-500/90 px-6 py-3 font-semibold text-white shadow hover:bg-orange-600 active:bg-orange-700'
+              className='btn btn-outline min-w-28 rounded-2xl'
+              disabled={loading}
             >
               cancel
+            </button>
+            <button
+              type='submit'
+              disabled={loading}
+              className='btn btn-primary min-w-28 rounded-2xl'
+            >
+              save
             </button>
           </div>
         </div>

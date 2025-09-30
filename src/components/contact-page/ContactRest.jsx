@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { GivenGiftModal } from '../Modals';
+import WishlistModal from '../WishListModal.jsx';
 
 const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
@@ -10,6 +11,11 @@ const ContactRest = ({ contact }) => {
   const [errorMsg, setErrorMsg] = useState('');
   const [givenGifts, setGivenGifts] = useState([]);
   const [editingGift, setEditingGift] = useState(null); // stores full givenGift object
+  // Wishlist state
+  const [wishList, setWishList] = useState(() => contact?.wishList || []);
+  const [wlModalOpen, setWlModalOpen] = useState(false);
+  const [editingWishIndex, setEditingWishIndex] = useState(null); // index in wishList
+  const [wlSubmitting, setWlSubmitting] = useState(false);
 
   // Fetch existing given gifts for this contact
   const fetchGivenGifts = useCallback(async () => {
@@ -130,6 +136,56 @@ const ContactRest = ({ contact }) => {
       month: 'short',
       day: 'numeric',
     });
+  };
+
+  // ===== Wishlist CRUD (PUT replaces entire array) =====
+  const saveWishlist = async (nextList) => {
+    if (!contact?.slug) {
+      setErrorMsg('Missing contact slug for wishlist update');
+      return;
+    }
+    setWlSubmitting(true);
+    setErrorMsg('');
+    try {
+      const res = await fetch(`${baseUrl}/contacts/${contact.slug}/wishlist`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(
+          nextList.map(({ item, description }) => ({ item, description }))
+        ),
+      });
+      if (!res.ok) {
+        const txt = await res.text();
+        throw new Error(txt || `Failed to update wishlist (${res.status})`);
+      }
+      const updatedContact = await res.json();
+      setWishList(updatedContact.wishList || []);
+      setWlModalOpen(false);
+      setEditingWishIndex(null);
+    } catch (e) {
+      console.error(e);
+      setErrorMsg(e.message || 'Error updating wishlist');
+    } finally {
+      setWlSubmitting(false);
+    }
+  };
+
+  const addWishlistItem = async ({ item, description }) => {
+    const next = [...wishList, { item, description }];
+    await saveWishlist(next);
+  };
+
+  const updateWishlistItem = async (idx, { item, description }) => {
+    const next = wishList.map((w, i) =>
+      i === idx ? { item, description } : w
+    );
+    await saveWishlist(next);
+  };
+
+  const deleteWishlistItem = async (idx) => {
+    const next = wishList.filter((_, i) => i !== idx);
+    await saveWishlist(next);
   };
 
   return (
@@ -266,52 +322,118 @@ const ContactRest = ({ contact }) => {
       <div className='rounded-xl bg-white shadow-sm p-6'>
         <div className='flex items-center justify-between'>
           <h3 className='text-lg font-bold text-zinc-900 '>Wishlist</h3>
-          <button className='btn btn-primary btn-outline rounded-2xl'>
+          <button
+            className='btn btn-primary btn-outline rounded-2xl disabled:opacity-50'
+            onClick={() => {
+              setEditingWishIndex(null);
+              setWlModalOpen(true);
+            }}
+            disabled={wlSubmitting}
+          >
             <span className='material-symbols-outlined'> add </span>
             <span>Add</span>
           </button>
         </div>
-        <ul
-          className='mt-4 divide-y divide-zinc-200 dark:divide-zinc-800'
-          role='list'
-        >
-          <li className='flex items-center justify-between gap-x-6 py-3'>
-            <div className='min-w-0 flex-auto'>
-              <p className='text-sm font-semibold leading-6 text-zinc-900 '>
-                Designer Handbag
-              </p>
-              <p className='mt-1 truncate text-xs leading-5 text-zinc-500 dark:text-zinc-400'>
-                A stylish handbag from a top designer.
-              </p>
+        <div className='mt-4 flow-root'>
+          <div className='-mx-6 -my-2 overflow-x-auto'>
+            <div className='inline-block min-w-full py-2 align-middle sm:px-6'>
+              <table className='min-w-full divide-y divide-zinc-800'>
+                <thead>
+                  <tr>
+                    <th
+                      className='py-3.5 pl-6 pr-3 text-left text-sm font-semibold text-zinc-900'
+                      scope='col'
+                    >
+                      Item
+                    </th>
+                    <th
+                      className='px-3 py-3.5 text-left text-sm font-semibold text-zinc-900'
+                      scope='col'
+                    >
+                      Description
+                    </th>
+                    <th className='relative py-3.5 pl-3 pr-6' scope='col'>
+                      <span className='sr-only'>Actions</span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className='divide-y divide-zinc-800'>
+                  {wishList.length === 0 ? (
+                    <tr>
+                      <td
+                        colSpan={3}
+                        className='px-6 py-6 text-center text-sm text-zinc-500'
+                      >
+                        No wishlist items.
+                      </td>
+                    </tr>
+                  ) : (
+                    wishList.map((w, idx) => (
+                      <tr key={idx}>
+                        <td className='whitespace-nowrap py-4 pl-6 pr-3 text-sm font-medium text-zinc-900'>
+                          {w.item}
+                        </td>
+                        <td className='whitespace-nowrap px-3 py-4 text-sm text-zinc-500 dark:text-zinc-400 max-w-sm truncate'>
+                          {w.description || '—'}
+                        </td>
+                        <td className='relative whitespace-nowrap py-4 pl-3 pr-6 text-right text-sm font-medium'>
+                          <div className='flex items-center justify-end gap-x-4'>
+                            <button
+                              type='button'
+                              className='text-primary hover:text-primary/80'
+                              onClick={() => {
+                                setEditingWishIndex(idx);
+                                setWlModalOpen(true);
+                              }}
+                            >
+                              <span className='material-symbols-outlined'>
+                                edit
+                              </span>
+                            </button>
+                            <button
+                              type='button'
+                              className='text-red-500 hover:text-red-400'
+                              onClick={() => deleteWishlistItem(idx)}
+                              disabled={wlSubmitting}
+                            >
+                              <span className='material-symbols-outlined'>
+                                delete
+                              </span>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
             </div>
-            <div className='flex items-center gap-x-4'>
-              <a className='text-primary hover:text-primary/80' href='#'>
-                <span className='material-symbols-outlined'>edit</span>
-              </a>
-              <a className='text-red-500 hover:text-red-400' href='#'>
-                <span className='material-symbols-outlined'>delete</span>
-              </a>
-            </div>
-          </li>
-          <li className='flex items-center justify-between gap-x-6 py-3'>
-            <div className='min-w-0 flex-auto'>
-              <p className='text-sm font-semibold leading-6 text-zinc-900 '>
-                Travel Photography Workshop
-              </p>
-              <p className='mt-1 truncate text-xs leading-5 text-zinc-500 dark:text-zinc-400'>
-                A workshop focused on travel photography.
-              </p>
-            </div>
-            <div className='flex items-center gap-x-4'>
-              <a className='text-primary hover:text-primary/80' href='#'>
-                <span className='material-symbols-outlined'>edit</span>
-              </a>
-              <a className='text-red-500 hover:text-red-400' href='#'>
-                <span className='material-symbols-outlined'>delete</span>
-              </a>
-            </div>
-          </li>
-        </ul>
+          </div>
+        </div>
+        <WishlistModal
+          isOpen={wlModalOpen}
+          onClose={() => {
+            if (wlSubmitting) return;
+            setWlModalOpen(false);
+          }}
+          initialData={
+            editingWishIndex !== null
+              ? {
+                  item: wishList[editingWishIndex].item,
+                  description: wishList[editingWishIndex].description,
+                }
+              : null
+          }
+          loading={wlSubmitting}
+          onSave={({ name, description }) => {
+            // Map modal output { name, description } to wishlist item shape { item, description }
+            if (editingWishIndex !== null) {
+              updateWishlistItem(editingWishIndex, { item: name, description });
+            } else {
+              addWishlistItem({ item: name, description });
+            }
+          }}
+        />
       </div>
     </div>
   );

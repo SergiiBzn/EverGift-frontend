@@ -40,9 +40,9 @@ const ContactData = ({ contact, setContact }) => {
                 {contactType == "custom" && (
                   <button
                     onClick={() => setIsOpenEditProfile(true)}
-                    className="btn btn-sm btn-primary"
+                    className="btn btn-sm btn-primary btn-outline"
                   >
-                    Edit Profile
+                    Edit
                   </button>
                 )}
               </div>

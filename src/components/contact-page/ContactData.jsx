@@ -1,7 +1,7 @@
-import { EditProfile } from "../index";
+import { EditContactProfile } from "../Modals/index.js";
 import { useState } from "react";
 
-const ContactData = ({ contact }) => {
+const ContactData = ({ contact, setContact }) => {
   const [isOpenEditProfile, setIsOpenEditProfile] = useState(false);
 
   if (!contact) {
@@ -40,9 +40,9 @@ const ContactData = ({ contact }) => {
                 {contactType == "custom" && (
                   <button
                     onClick={() => setIsOpenEditProfile(true)}
-                    className="btn btn-sm btn-primary"
+                    className="btn btn-sm btn-primary btn-outline"
                   >
-                    Edit Profile
+                    Edit
                   </button>
                 )}
               </div>
@@ -51,8 +51,9 @@ const ContactData = ({ contact }) => {
               </p>
             </div>
             {isOpenEditProfile && (
-              <EditProfile
+              <EditContactProfile
                 contact={contact}
+                setContact={setContact}
                 isOpen={isOpenEditProfile}
                 setIsOpen={setIsOpenEditProfile}
               />

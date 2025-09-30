@@ -119,5 +119,5 @@ export const useContact = (contactSlug) => {
 
     fetchUser();
   }, [contactSlug]);
-  return { contact, isLoading };
+  return { contact, isLoading, setContact };
 };

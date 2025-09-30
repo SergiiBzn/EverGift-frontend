@@ -1,3 +1,5 @@
+/** @format */
+
 import { useState } from "react";
 import {
   startOfMonth,
@@ -12,8 +14,12 @@ import {
   isToday,
   getISOWeek,
 } from "date-fns";
+import EventModal from "../Modals/EventModal.jsx";
+import User from "../../../../EverGift-backend/models/User.js";
+import useAuth from "../../hooks/useAuth.jsx";
 
 export default function Calendar() {
+  const { user } = useAuth();
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(currentMonth);
   const events = ["2025-09-13", "2025-09-12", "2025-09-25"];
@@ -28,14 +34,12 @@ export default function Calendar() {
         <div className=" flex space-x-2">
           <button
             className="btn btn-sm rounded-full"
-            onClick={() => setCurrentMonth(addMonths(currentMonth, -1))}
-          >
+            onClick={() => setCurrentMonth(addMonths(currentMonth, -1))}>
             <svg
               className="w-5 h-5"
               fill="currentColor"
               viewBox="0 0 256 256"
-              xmlns="http://www.w3.org/2000/svg"
-            >
+              xmlns="http://www.w3.org/2000/svg">
               <path d="M165.66,202.34a8,8,0,0,1-11.32,11.32l-80-80a8,8,0,0,1,0-11.32l80-80a8,8,0,0,1,11.32,11.32L91.31,128Z"></path>
             </svg>
           </button>
@@ -44,14 +48,12 @@ export default function Calendar() {
           </div>
           <button
             className="btn btn-sm rounded-full"
-            onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
-          >
+            onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}>
             <svg
               className="w-5 h-5"
               fill="currentColor"
               viewBox="0 0 256 256"
-              xmlns="http://www.w3.org/2000/svg"
-            >
+              xmlns="http://www.w3.org/2000/svg">
               <path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"></path>
             </svg>
           </button>
@@ -68,8 +70,7 @@ export default function Calendar() {
       days.push(
         <div
           key={i}
-          className="text-center font-medium text-neutral-content py-2"
-        >
+          className="text-center font-medium text-neutral-content py-2">
           {format(addDays(startDate, i), "EEEEEE")}
         </div>
       );
@@ -98,8 +99,7 @@ export default function Calendar() {
       days.push(
         <div
           key={`week-${weekNumber}`}
-          className="font-bold text-secondary flex items-center justify-center"
-        >
+          className="font-bold text-secondary flex items-center justify-center">
           {weekNumber}
         </div>
       );
@@ -116,12 +116,11 @@ export default function Calendar() {
           <div
             key={cloneDay}
             className={`w-12 p-2 text-center cursor-pointer rounded-full my-2 mx-auto
-              ${!isSameMonth(cloneDay, monthStart) ? "text-gray-400" : ""} 
-              ${isToday(cloneDay) ? "bg-primary/30 font-bold" : ""} 
+              ${!isSameMonth(cloneDay, monthStart) ? "text-gray-400" : ""}
+              ${isToday(cloneDay) ? "bg-primary/30 font-bold" : ""}
               ${hasEvent ? "bg-accent/30" : ""}
             `}
-            onClick={() => handleDateClick(cloneDay)}
-          >
+            onClick={() => handleDateClick(cloneDay)}>
             <span>{format(cloneDay, "d")}</span>
           </div>
         );
@@ -147,6 +146,10 @@ export default function Calendar() {
       <h3 className="text-lg font-bold">{`${selectedMonth} ${selectedDay}, ${selectedYear}`}</h3>
     );
   };
+
+  const handleAddEvent = () => {
+    document.getElementById("my_modal_5").showModal();
+  };
   return (
     <div className="flex flex-col gap-6">
       <div className="w-full rounded-xl ">
@@ -161,16 +164,43 @@ export default function Calendar() {
       <div className="flex flex-col bg-base-200 p-4 rounded-xl shadow-md">
         <div className="flex items-center justify-between mb-4">
           {renderSelectedDay()}
-          <button className="btn btn-primary rounded-2xl">
+
+          {/* add new event button */}
+          <button
+            onClick={handleAddEvent}
+            className="btn btn-primary rounded-2xl">
             <span>Add New Event</span>
           </button>
+
+          <EventModal />
         </div>
         <div className="space-y-4">
-          <div className="flex items-center gap-4 p-4 rounded-lg bg-background-light">
-            <div className="flex-1">
-              <p className="font-bold">No events today</p>
-              <p className="text-smtext-muted-dark">Enjoy your day!</p>
+          <div className=" p-4 rounded-lg bg-background-light">
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4 my-4">
+              {/* added events here */}
+
+              {user.events?.map((event) =>
+                event.date?.split("T")[0] ===
+                new Date().toISOString().split("T")[0] ? (
+                  <div
+                    key={event._id}
+                    className="flex items-center gap-4 p-4 rounded-lg bg-white">
+                    <img
+                      className="h-18 w-18 rounded-full"
+                      src={event.contactId.customProfile?.avatar}
+                    />
+                    <div className="space-y-4 ">
+                      <p className="font-bold text-gray-900 ">{event.title}</p>
+                      <p className=" text-black/80 ">
+                        {event.contactId.customProfile?.name}
+                      </p>
+                    </div>
+                  </div>
+                ) : null
+              )}
             </div>
+
+            <p className="text-smtext-muted-dark mt-4">Enjoy your day!</p>
           </div>
         </div>
       </div>

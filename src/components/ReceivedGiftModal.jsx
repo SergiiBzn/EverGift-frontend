@@ -315,17 +315,17 @@ export default function ReceivedGiftModal({
           {/* Actions */}
           <div className='mt-8 flex items-center justify-between'>
             <button
-              type='submit'
-              className='min-w-28 rounded-2xl bg-orange-500 px-6 py-3 font-semibold text-white shadow hover:bg-orange-600 active:bg-orange-700'
-            >
-              save
-            </button>
-            <button
               type='button'
               onClick={onClose}
-              className='min-w-28 rounded-2xl bg-orange-500/90 px-6 py-3 font-semibold text-white shadow hover:bg-orange-600 active:bg-orange-700'
+              className='btn btn-outline min-w-28 rounded-2xl'
             >
               cancel
+            </button>
+            <button
+              type='submit'
+              className='btn btn-primary min-w-28 rounded-2xl'
+            >
+              save
             </button>
           </div>
         </div>

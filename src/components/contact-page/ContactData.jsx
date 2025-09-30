@@ -1,4 +1,4 @@
-import { EditContactProfile } from "../Modals/index.js";
+import EditContactProfile from "./EditContactProfile.jsx";
 import { useState } from "react";
 
 const ContactData = ({ contact, setContact }) => {

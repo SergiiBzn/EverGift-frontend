@@ -57,6 +57,7 @@ const ContactsComponent = () => {
           return (
             <Link
               to={`/contact/${contact.slug}`}
+              key={contact.slug}
               className="flex items-center gap-4 p-4 rounded-lg bg-white shadow-sm"
             >
               <div

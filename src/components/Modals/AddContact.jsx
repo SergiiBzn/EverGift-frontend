@@ -1,6 +1,6 @@
 /** @format */
 import { useContacts } from "../../hooks/useContacts.jsx";
-import ProfileModal from "./ProfilModal.jsx";
+import ProfileModal from "./ProfileModal.jsx";
 import ProfileForm from "./ProfileForm";
 import { buildProfileFormData } from "../../utils/buildProfileFormData.js";
 
@@ -19,9 +19,9 @@ const AddContact = ({ isOpen, setIsOpen }) => {
       defaultAvatar
     );
 
-    fd.entries().forEach(([key, value]) => {
-      console.log(key, value);
-    });
+    // fd.entries().forEach(([key, value]) => {
+    //   console.log(key, value);
+    // });
     try {
       await createContact(fd);
       setIsOpen(false);
@@ -35,7 +35,8 @@ const AddContact = ({ isOpen, setIsOpen }) => {
     <ProfileModal
       isOpen={isOpen}
       onClose={() => setIsOpen(false)}
-      title="Add Contact"
+      title="Add New Contact"
+      size="md"
     >
       <ProfileForm
         initialData={{

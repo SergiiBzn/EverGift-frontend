@@ -208,7 +208,7 @@ export default function ReceivedGiftSection() {
       <div className='flex items-center justify-between'>
         <h2 className='text-2xl font-bold'>Received Gift History</h2>
         <button
-          className='flex items-center gap-2 rounded-lg btn btn-primary px-4 py-2 text-sm font-bold text-white'
+          className='flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-bold text-white'
           aria-label='Add Gift'
           onClick={() => setOpen(true)}
         >
@@ -392,7 +392,7 @@ export default function ReceivedGiftSection() {
       </div>
 
       {/* add received gift */}
-       <ReceivedGiftModal
+      <ReceivedGiftModal
         isOpen={open}
         onClose={() => {
           setOpen(false);

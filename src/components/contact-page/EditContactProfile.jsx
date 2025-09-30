@@ -1,7 +1,7 @@
-import ProfileModal from "./ProfilModal.jsx";
-import ProfileForm from "./ProfileForm";
+import ProfileModal from "../Modals/ProfileModal.jsx";
+import ProfileForm from "../Modals/ProfileForm.jsx";
 import { buildProfileFormData } from "../../utils/buildProfileFormData.js";
-import useAuth from "../../hooks/useAuth";
+import useAuth from "../../hooks/useAuth.jsx";
 import { useNavigate } from "react-router";
 
 const EditContactProfile = ({ contact, setContact, isOpen, setIsOpen }) => {
@@ -50,11 +50,15 @@ const EditContactProfile = ({ contact, setContact, isOpen, setIsOpen }) => {
     }
   };
 
+  const title = `Edit ${contact.profile.name}'s Data `;
+
   return (
     <ProfileModal
       isOpen={isOpen}
       onClose={() => setIsOpen(false)}
-      title="Edit Contact Profile"
+      type="contact"
+      size="md"
+      title={title}
     >
       <ProfileForm
         initialData={contact.profile}

@@ -4,13 +4,16 @@ import React, { useState } from "react";
 import useAuth from "../hooks/useAuth.jsx";
 import { toast } from "react-toastify";
 import { Link } from "react-router";
-
+import { Eye, EyeOff } from "lucide-react";
 const Register = () => {
   const [formState, setFormState] = useState({
     email: "",
     password: "",
     confirmPassword: "",
   });
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [confirmPassword, setConfirmPassword] = useState("");
 
@@ -84,29 +87,61 @@ const Register = () => {
             <label className="fieldset-label text-lg" htmlFor="password">
               Password
             </label>
-            <input
-              type="password"
-              onChange={handleChange}
-              name="password"
-              value={formState.password}
-              className="input input-lg w-full"
-              placeholder="Password"
-              id="password"
-              required
-            />
+            <div className="relative">
+              <input
+                // type="password"
+                type={showPassword ? "text" : "password"}
+                onChange={handleChange}
+                name="password"
+                value={formState.password}
+                className="input input-lg w-full pr-14"
+                placeholder="Password"
+                id="password"
+                required
+              />
+              {showPassword ? (
+                <EyeOff
+                  size={22}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer z-30"
+                  onClick={() => setShowPassword(!showPassword)}
+                />
+              ) : (
+                <Eye
+                  size={22}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer z-30"
+                  onClick={() => setShowPassword(!showPassword)}
+                />
+              )}
+            </div>
             <label className="fieldset-label text-lg" htmlFor="confirmPassword">
               Confirm Password
             </label>
-            <input
-              type="password"
-              onChange={handleChange}
-              name="confirmPassword"
-              value={formState.confirmPassword}
-              className="input input-lg w-full"
-              placeholder="Confirm Password"
-              id="confirmPassword"
-              required
-            />
+            <div className="relative">
+              <input
+                // type="password"
+                type={showConfirmPassword ? "text" : "password"}
+                onChange={handleChange}
+                name="confirmPassword"
+                value={formState.confirmPassword}
+                className="input input-lg w-full pr-14"
+                placeholder="Confirm Password"
+                id="confirmPassword"
+                required
+              />
+              {showConfirmPassword ? (
+                <EyeOff
+                  size={22}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer z-30"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                />
+              ) : (
+                <Eye
+                  size={22}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer z-30"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                />
+              )}
+            </div>
             <button
               className={`btn  btn-lg w-full my-4   ${
                 isClicked ? "btn-secondary  cursor-not-allowed" : "btn-primary"

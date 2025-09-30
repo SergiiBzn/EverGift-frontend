@@ -4,12 +4,15 @@ import { useState } from "react";
 import useAuth from "../hooks/useAuth.jsx";
 import { toast } from "react-toastify";
 import { Link } from "react-router";
+import { Eye, EyeOff } from "lucide-react";
 
 const Login = () => {
   const [formState, setFormState] = useState({
     email: "",
     password: "",
   });
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const [isClicked, setIsClicked] = useState(false);
 
@@ -61,21 +64,39 @@ const Login = () => {
               id="email"
               required
             />
+
+            {/* password */}
             <label className="fieldset-label text-lg" htmlFor="password">
               Password
             </label>
-            <input
-              type="password"
-              onChange={handleChange}
-              name="password"
-              value={formState.password}
-              className="input input-lg w-full"
-              placeholder="Password"
-              id="password"
-              required
-            />
+            <div className="relative">
+              <input
+                // type="password"
+                type={showPassword ? "text" : "password"}
+                onChange={handleChange}
+                name="password"
+                value={formState.password}
+                className="input input-lg w-full pr-14"
+                placeholder="Password"
+                id="password"
+                required
+              />
+              {showPassword ? (
+                <EyeOff
+                  size={22}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer z-30"
+                  onClick={() => setShowPassword(!showPassword)}
+                />
+              ) : (
+                <Eye
+                  size={22}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer z-30"
+                  onClick={() => setShowPassword(!showPassword)}
+                />
+              )}
+            </div>
             <button
-              className={`btn  btn-lg w-full my-4   ${
+              className={`btn  btn-lg w-full my-4    ${
                 isClicked ? "btn-secondary  cursor-not-allowed" : "btn-primary"
               }`}>
               {isClicked ? (

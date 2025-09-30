@@ -1,10 +1,10 @@
 import { useState } from "react";
-import EditProfile from "../Modals/EditProfile";
+import { EditUserProfile } from "../Modals/index.js";
 import useAuth from "../../hooks/useAuth";
+
 const ProfileSection = ({ profile }) => {
   const [isOpenEditProfile, setIsOpenEditProfile] = useState(false);
-  const user = useAuth();
-  console.log(user);
+  const { user, baseUrl } = useAuth();
 
   return (
     <section>
@@ -55,8 +55,9 @@ const ProfileSection = ({ profile }) => {
             Edit Profile
           </button>
           {isOpenEditProfile && (
-            <EditProfile
+            <EditUserProfile
               user={user}
+              baseUrl={baseUrl}
               isOpen={isOpenEditProfile}
               setIsOpen={setIsOpenEditProfile}
             />

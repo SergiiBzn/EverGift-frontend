@@ -11,10 +11,12 @@ const ContactsComponent = () => {
 
   const { user } = useAuth();
 
+  console.log("user", user);
+
   //********** filter contacts **********
   const filteredContacts =
-    user.contacts?.filter((contact) =>
-      contact.name.toLowerCase().includes(searchContact.toLowerCase())
+    user?.contacts?.filter((contact) =>
+      contact?.name?.toLowerCase()?.includes(searchContact?.toLowerCase())
     ) || [];
   return (
     <div className=" p-4 rounded-xl flex flex-col bg-base-200 shadow-md">

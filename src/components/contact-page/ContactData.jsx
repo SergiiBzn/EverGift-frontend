@@ -1,12 +1,13 @@
 import EditContactProfile from "./EditContactProfile.jsx";
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import useAuth from "../../hooks/useAuth.jsx";
-const ContactData = ({ contact, setContact }) => {
+import { useContacts } from "../../hooks/useContacts.jsx";
+
+const ContactData = ({ contact, setContact, deleteContact }) => {
   const [isOpenEditProfile, setIsOpenEditProfile] = useState(false);
   const [isOpenDeleteConfirm, setIsOpenDeleteConfirm] = useState(false);
   const navigate = useNavigate();
-  const { baseUrl } = useAuth();
+
   if (!contact) {
     return <div>Contact not found</div>;
   }
@@ -15,17 +16,10 @@ const ContactData = ({ contact, setContact }) => {
 
   const handleDelete = async () => {
     try {
-      const res = await fetch(`${baseUrl}/contacts/${contact.slug}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
-      if (!res.ok) {
-        throw new Error("Failed to delete contact");
-      }
-      setContact(null);
+      await deleteContact(contact.slug);
       navigate("/");
     } catch (error) {
-      console.error(error.message);
+      console.error("Failed to delete contact:", error);
     }
   };
   return (

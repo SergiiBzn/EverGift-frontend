@@ -1,7 +1,7 @@
-import ProfileModal from "./ProfilModal.jsx";
-import ProfileForm from "./ProfileForm";
+import ProfileModal from "../Modals/ProfileModal.jsx";
+import ProfileForm from "../Modals/ProfileForm.jsx";
 import { buildProfileFormData } from "../../utils/buildProfileFormData.js";
-import useAuth from "../../hooks/useAuth";
+import useAuth from "../../hooks/useAuth.jsx";
 
 const EditUserProfile = ({ isOpen, setIsOpen }) => {
   const defaultAvatar =
@@ -41,7 +41,9 @@ const EditUserProfile = ({ isOpen, setIsOpen }) => {
     <ProfileModal
       isOpen={isOpen}
       onClose={() => setIsOpen(false)}
-      title="Edit User Profile"
+      type="user"
+      size="md"
+      title="Edit Your Profile"
     >
       <ProfileForm
         initialData={user.profile}

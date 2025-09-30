@@ -54,7 +54,7 @@ const ContactsComponent = () => {
         {filteredContacts?.map((contact) => {
           return (
             <Link
-              key={contact._id}
+              key={contact.slug}
               to={`/contact/${contact.slug}`}
               className="flex items-center gap-4 p-4 rounded-lg bg-white shadow-sm">
               <div

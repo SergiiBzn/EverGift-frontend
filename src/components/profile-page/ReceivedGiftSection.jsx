@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 
 import ReceivedGiftModal from '../ReceivedGiftModal.jsx';
+import { ConfirmModal } from '../Modals';
 
 const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
@@ -12,6 +13,7 @@ export default function ReceivedGiftSection() {
   const [searchTerm, setSearchTerm] = useState('');
   const [extraSenders, setExtraSenders] = useState([]);
   const [contacts, setContacts] = useState([]);
+  const [confirmState, setConfirmState] = useState({ open: false, id: null });
 
   // Fetch received gifts from the backend
   const fetchReceivedGifts = async () => {
@@ -103,6 +105,13 @@ export default function ReceivedGiftSection() {
       console.error(error);
     }
   };
+
+  const requestDelete = (id) => setConfirmState({ open: true, id });
+  const handleConfirmDelete = async () => {
+    if (confirmState.id) await deleteReceivedGift(confirmState.id);
+    setConfirmState({ open: false, id: null });
+  };
+  const handleCancelDelete = () => setConfirmState({ open: false, id: null });
 
   const fetchContacts = async () => {
     try {
@@ -375,7 +384,7 @@ export default function ReceivedGiftSection() {
                         <button
                           className='p-2 rounded-full hover:bg-red-500/10'
                           aria-label={`Delete gift from ${gifter}`}
-                          onClick={() => deleteReceivedGift(r._id)}
+                          onClick={() => requestDelete(r._id)}
                         >
                           <span className='material-symbols-outlined text-red-500'>
                             delete
@@ -408,6 +417,17 @@ export default function ReceivedGiftSection() {
         fromOptions={fromOptions}
         onAddSender={handleAddSender}
         initialData={editingGift}
+      />
+
+      <ConfirmModal
+        isOpen={confirmState.open}
+        title='Delete Received Gift'
+        message='Are you sure you want to delete this received gift? This action cannot be undone.'
+        confirmLabel='delete'
+        cancelLabel='cancel'
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+        tone='danger'
       />
     </section>
   );

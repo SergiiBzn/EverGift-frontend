@@ -1,14 +1,19 @@
 /** @format */
 import { useState, useEffect } from 'react';
 import WishlistModal from '../WishListModal.jsx';
+import { ConfirmModal } from '../Modals';
 
 const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
-export default function WishlistSection({ initialWishList = [] }) {
+export default function WishListSection({ initialWishList = [] }) {
   const [isWishModalOpen, setIsWishModalOpen] = useState(false);
   const [wishList, setWishList] = useState(initialWishList);
   const [savingWish, setSavingWish] = useState(false);
   const [editingWishIndex, setEditingWishIndex] = useState(null);
+  const [confirmState, setConfirmState] = useState({
+    open: false,
+    index: null,
+  });
 
   useEffect(() => {
     setWishList(initialWishList || []);
@@ -57,6 +62,14 @@ export default function WishlistSection({ initialWishList = [] }) {
     const newList = wishList.filter((_, i) => i !== idx);
     await persistWishList(newList, { closeModal: false });
   };
+
+  const requestDeleteWish = (index) => setConfirmState({ open: true, index });
+  const handleConfirmDelete = async () => {
+    if (confirmState.index !== null) await deleteWishItem(confirmState.index);
+    setConfirmState({ open: false, index: null });
+  };
+  const handleCancelDelete = () =>
+    setConfirmState({ open: false, index: null });
 
   return (
     <section className='flex flex-col gap-6'>
@@ -118,7 +131,7 @@ export default function WishlistSection({ initialWishList = [] }) {
                   <button
                     className='p-2 rounded-full hover:bg-red-500/10'
                     aria-label={`Delete ${item.item}`}
-                    onClick={() => deleteWishItem(idx)}
+                    onClick={() => requestDeleteWish(idx)}
                   >
                     <span className='material-symbols-outlined text-red-500'>
                       delete
@@ -150,6 +163,17 @@ export default function WishlistSection({ initialWishList = [] }) {
         initialData={
           editingWishIndex !== null ? wishList[editingWishIndex] : null
         }
+      />
+
+      <ConfirmModal
+        isOpen={confirmState.open}
+        title='Delete Wish Item'
+        message='Delete this wish from your list?'
+        confirmLabel='delete'
+        cancelLabel='cancel'
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+        tone='danger'
       />
     </section>
   );

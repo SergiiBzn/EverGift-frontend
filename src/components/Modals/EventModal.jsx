@@ -1,283 +1,323 @@
 /** @format */
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import useAuth from "../../hooks/useAuth.jsx";
 
-import { improveErrorMessage } from "../../utils/improveErrorMessage.js";
-import { toast } from "react-toastify";
-
-const EventModal = () => {
-  const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
-
-  const [formData, setFormData] = useState({
-    contact: "",
+const EventModal = ({
+  isOpen,
+  onClose,
+  onSave,
+  eventToEdit,
+  contactId,
+  initialDate,
+}) => {
+  const { user } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  // Default state now includes a 'contacts' array
+  const getDefaultFormData = () => ({
     title: "",
-    gift: "",
     date: "",
     isRepeat: "none",
+    isPinned: false,
+    contacts: [], // MODIFIED: from 'contact' to 'contacts' array
+    gift: {
+      name: "",
+    },
   });
+  const [formData, setFormData] = useState(getDefaultFormData());
 
-  const [contactId, setContactId] = useState("");
+  // Effect to sync form state with eventToEdit prop
+  useEffect(() => {
+    if (isOpen) {
+      if (eventToEdit) {
+        // Edit mode: pre-fill form with event data
+        setFormData({
+          title: eventToEdit.title || "",
+          date: eventToEdit.date
+            ? new Date(eventToEdit.date).toISOString().split("T")[0]
+            : "",
+          isRepeat: eventToEdit.isRepeat || "none", // CORRECTED: Handle incoming string
+          isPinned: eventToEdit.isPinned || false,
+          contacts: Array.isArray(eventToEdit.contacts)
+            ? eventToEdit.contacts.map((c) =>
+                typeof c === "object" ? c.id : c
+              )
+            : eventToEdit.contacts
+            ? [eventToEdit.contacts]
+            : [],
+          gift: {
+            name: eventToEdit.gift?.name || "",
+          },
+        });
+      } else {
+        // Create mode: reset and pre-fill based on context
+        const newFormData = getDefaultFormData();
+        if (initialDate) {
+          newFormData.date = initialDate; // Pre-fill date from calendar
+        }
+        if (contactId) {
+          newFormData.contacts = [contactId];
 
-  const { user, setUser } = useAuth();
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  /*  const handleSave = (e) => {
-    e.preventDefault();
-
-    document.getElementById("my_modal_5").close();
-  }; */
-
-  const handleContactClick = (contactId, contactName) => {
-    console.log("contactId", contactId);
-    setFormData({ ...formData, contact: contactName });
-    setContactId(contactId);
-  };
-
-  const handleClose = (e) => {
-    e.preventDefault();
-    document.getElementById("my_modal_5").close();
-  };
-  const handleSave = async (e) => {
-    e.preventDefault();
-
-    try {
-      const giftObject = {
-        gift: {
-          name: formData.gift || "default",
-
-          date: formData.date || "",
-        },
-        title: formData.title || "",
-        date: formData.date,
-        isRepeat: formData.isRepeat,
-      };
-      const response = await fetch(`${baseUrl}/contacts/${contactId}/events`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(giftObject),
-        credentials: "include",
-      });
-
-      if (!response.ok) {
-        const { error } = await response.json();
-        await improveErrorMessage(error, 5000);
-        return;
+          // Pre-fill contact from ContactEvent page
+        }
+        setFormData(newFormData);
       }
+    }
+  }, [eventToEdit, contactId, user?.contacts, isOpen, initialDate]);
 
-      const event = await response.json();
-
-      console.log("user events", user.events);
-      console.log("event", event);
-
-      setUser((prevUser) => ({
-        ...prevUser,
-        events: [...(prevUser.events || []), event],
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    if (name === "giftName") {
+      setFormData((prev) => ({
+        ...prev,
+        gift: { ...prev.gift, name: value },
       }));
-      document.getElementById("my_modal_5").close();
-      setFormData({
-        ...formData,
-        contact: "",
-        title: "",
-        gift: "",
-        date: "",
-        isRepeat: "none",
-      });
-      toast.success("Event created successfully");
-    } catch (error) {
-      console.error("Error creating event:", error);
-      toast.error(error);
+    } else if (name === "isRepeat") {
+      setFormData((prev) => ({
+        ...prev,
+        isRepeat: checked ? "yearly" : "none",
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: type === "checkbox" ? checked : value,
+      }));
     }
   };
 
+  //  Handler for toggling contact selection
+  const handleContactToggle = (idToToggle) => {
+    setFormData((prev) => {
+      const contacts = prev.contacts.includes(idToToggle)
+        ? prev.contacts.filter((id) => id !== idToToggle) // Unselect
+        : [...prev.contacts, idToToggle]; // Select
+      return { ...prev, contacts };
+    });
+  };
+  // const handleClose = (e) => {
+  //   e.preventDefault();
+  //   document.getElementById("my_modal_5").close();
+  // };
+  const handleSave = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    const payload = { ...formData };
+    const isEditMode = !!eventToEdit;
+    if (!isEditMode && contactId) payload.contacts = [contactId];
+
+    if (payload.gift && !payload.gift.name) {
+      delete payload.gift;
+    }
+
+    try {
+      await onSave(payload);
+      onClose();
+    } catch (error) {
+      console.error("Failed to save event:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+  if (!isOpen) return null;
+
+  const isEditMode = !!eventToEdit;
+  // In create mode, show contact selector only if not coming from a specific contact's page
+  const showContactSelector = !isEditMode && !contactId;
+
   //********** filter contacts **********
-  const filteredContacts =
-    user?.contacts?.filter((contact) =>
-      contact?.name?.toLowerCase()?.includes(formData.contact?.toLowerCase())
-    ) || [];
+  // const selectedContacts =
+  //   user?.contacts?.filter((contact) =>
+  //     formData.contacts.includes(contact.id)
+  //   ) || [];
+
+  // const availableContacts =
+  //   user?.contacts?.filter(
+  //     (contact) => !formData.contacts.includes(contact.id)
+  //   ) || [];
+
   return (
-    <dialog
-      id="my_modal_5"
-      className="modal  modal-bottom sm:modal-middle fixed inset-0 z-50 flex items-center justify-center p-4 rounded-3xl bg-amber-700 text-white "
-    >
-      <div className="modal-box max-h-none h-auto bg-amber-700 text-white ">
-        <h3 className="font-bold text-lg text-center">Add Event</h3>
+    <dialog id="event_modal" className="modal modal-open">
+      <div className="modal-box w-11/12 max-w-lg">
+        <div className="p-4">
+          <h3 className="font-bold text-2xl text-center mb-6">
+            {isEditMode ? "Edit Event" : "Create New Event"}
+          </h3>
+          <form onSubmit={handleSave}>
+            <div className="space-y-4">
+              {/* Event Title and Date */}
+              <input
+                type="text"
+                name="title"
+                placeholder="Event Title"
+                className="input input-bordered w-full"
+                value={formData.title}
+                onChange={handleInputChange}
+                required
+              />
+              <input
+                type="date"
+                name="date"
+                className="input input-bordered w-full"
+                value={formData.date}
+                onChange={handleInputChange}
+                required
+              />
 
-        <div className="not-prose overflow-auto rounded-lg bg-gray-800 outline outline-white/5 ">
-          <div className="mx-auto max-w-md min-w-0 bg-white shadow-xl ">
-            <div className="flex flex-nowrap overflow-x-auto bg-gray-800 space-x-4 p-4">
-              {filteredContacts.length > 0 ? (
-                filteredContacts.map((contact) => (
-                  <div
-                    // key={contact._id}
-                    key={contact.name}
-                    onClick={() =>
-                      handleContactClick(contact._id, contact.name)
+              {/* MODIFIED: Contact Selector for Multi-Select */}
+
+              {/* Contact Selector with Search + Horizontal Scroll */}
+              {showContactSelector && (
+                <div>
+                  <label className="label">
+                    <span className="label-text">Select Contacts</span>
+                  </label>
+
+                  {/*search input */}
+                  <input
+                    type="text"
+                    placeholder="Search contacts..."
+                    className="input input-bordered w-full mb-3"
+                    value={formData.contactSearch || ""}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        contactSearch: e.target.value,
+                      }))
                     }
-                    className="shrink-0"
-                  >
-                    <div className="flex flex-col items-center justify-center gap-3">
-                      <img
-                        className="h-18 w-18 rounded-full"
-                        src={contact.avatar}
-                        alt={contact.name}
-                      />
-                      <strong className="text-xs font-medium text-gray-900 dark:text-gray-200">
-                        {contact.name}
-                      </strong>
-                    </div>
+                  />
+
+                  {/* selected contacts (badges) */}
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    {formData.contacts.map((_id) => {
+                      const contact = user?.contacts?.find(
+                        (c) => c._id === _id
+                      );
+                      return (
+                        <div
+                          key={_id}
+                          className="badge badge-primary gap-2 py-3 px-4 text-sm"
+                        >
+                          {/* contact avatar */}
+                          <img
+                            src={contact?.avatar}
+                            alt={contact?.name}
+                            className="h-5 w-5 rounded-full"
+                          />
+                          {/* contact name */}
+                          <span>{contact?.name}</span>
+                          {/* remove button */}
+                          <button
+                            type="button"
+                            onClick={() => handleContactToggle(_id)}
+                            className="ml-1 text-white/80 hover:text-red-300"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      );
+                    })}
                   </div>
-                ))
-              ) : (
-                <option value="">No contacts found</option>
+
+                  {/* horizontal scrollable contact selector */}
+                  <div className="flex space-x-4 overflow-x-auto p-2 rounded-lg bg-gray-100 dark:bg-gray-800">
+                    {user?.contacts
+                      ?.filter((c) =>
+                        c.name
+                          .toLowerCase()
+                          .includes(
+                            (formData.contactSearch || "").toLowerCase()
+                          )
+                      )
+                      .map((contact) => {
+                        const isSelected = formData.contacts.includes(
+                          contact.id
+                        );
+
+                        return (
+                          <div
+                            key={contact.id}
+                            onClick={() => handleContactToggle(contact._id)}
+                            className={`flex-shrink-0 w-20 cursor-pointer p-2 rounded-lg text-center transition-all ${
+                              isSelected
+                                ? "bg-primary text-white"
+                                : "bg-base-100 hover:bg-gray-200"
+                            }`}
+                          >
+                            <img
+                              className="h-16 w-16 rounded-full object-cover mx-auto"
+                              src={contact.avatar}
+                              alt={contact.name}
+                            />
+                            <span className="text-xs block truncate mt-2">
+                              {contact.name}
+                            </span>
+                          </div>
+                        );
+                      })}
+                  </div>
+                </div>
               )}
+
+              {/* Gift Name */}
+              <input
+                type="text"
+                name="giftName"
+                placeholder="Gift Name (Optional)"
+                className="input input-bordered w-full"
+                value={formData.gift.name}
+                onChange={handleInputChange}
+              />
+
+              {/* Toggles */}
+              <div className="flex justify-around pt-4">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    name="isRepeat"
+                    className="toggle toggle-primary"
+                    checked={formData.isRepeat === "yearly"}
+                    onChange={handleInputChange}
+                  />
+                  <span className="text-lg">Repeat Annually</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    name="isPinned"
+                    className="toggle toggle-secondary"
+                    checked={formData.isPinned}
+                    onChange={handleInputChange}
+                  />
+                  <span className="text-lg">Pin Event</span>
+                </label>
+              </div>
             </div>
-          </div>
-        </div>
 
-        <div className=" modal-action">
-          <form
-            onSubmit={handleSave}
-            className="relative z-10 w-full max-w-lg  bg-amber-700 text-white  "
-          >
-            {/* if there is a button in form, it will close the modal */}
-            <div className="px-6 py-5 sm:px-8 sm:py-7">
-              <div className="space-y-4">
-                {/* Event contact */}
-                <div className="grid grid-cols-12 items-center gap-3">
-                  <label
-                    htmlFor="contact"
-                    className="col-span-4 text-right text-lg"
-                  >
-                    Contact:
-                  </label>
-                  <div className="col-span-8">
-                    <input
-                      id="contact"
-                      type="text"
-                      className="w-full rounded-xl bg-white/95 p-3 text-gray-900 outline-none focus:ring-2 focus:ring-orange-400"
-                      value={formData.contact}
-                      onChange={(e) =>
-                        setFormData({ ...formData, contact: e.target.value })
-                      }
-                      required
-                      disabled={isSubmitting}
-                    />
-                  </div>
-                </div>
-                {/* title */}
-                <div className="grid grid-cols-12 items-center gap-3">
-                  <label
-                    htmlFor="title"
-                    className="col-span-4 text-right text-lg"
-                  >
-                    Title:
-                  </label>
-                  <div className="col-span-8">
-                    <input
-                      id="title"
-                      type="text"
-                      className="w-full rounded-xl bg-white/95 p-3 text-gray-900 outline-none focus:ring-2 focus:ring-orange-400"
-                      value={formData.title || ""}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          title: e.target.value,
-                        })
-                      }
-                      required
-                      disabled={isSubmitting}
-                    />
-                  </div>
-                </div>
-                {/* Gift */}
-                <div className="grid grid-cols-12 items-center gap-3">
-                  <label
-                    htmlFor="gift"
-                    className="col-span-4 text-right text-lg"
-                  >
-                    Gift:
-                  </label>
-                  <div className="col-span-8">
-                    <input
-                      id="gift"
-                      type="text"
-                      className="w-full rounded-xl bg-white/95 p-3 text-gray-900 outline-none focus:ring-2 focus:ring-orange-400"
-                      value={formData.gift}
-                      onChange={(e) =>
-                        setFormData({ ...formData, gift: e.target.value })
-                      }
-                      // required
-                      disabled={isSubmitting}
-                    />
-                  </div>
-                </div>
-                {/* Date */}
-                <div className="grid grid-cols-12 items-center gap-3">
-                  <label
-                    htmlFor="date"
-                    className="col-span-4 text-right text-lg"
-                  >
-                    Event Date:
-                  </label>
-                  <div className="col-span-8">
-                    <input
-                      id="date"
-                      type="date"
-                      className="w-full rounded-xl bg-white/95 p-3 text-gray-900 outline-none focus:ring-2 focus:ring-orange-400"
-                      value={formData.date}
-                      onChange={(e) =>
-                        setFormData({ ...formData, date: e.target.value })
-                      }
-                      required
-                      disabled={isSubmitting}
-                    />
-                  </div>
-                </div>
-
-                {/* repeat select yearly or none */}
-                <div className="grid grid-cols-12 items-center gap-3">
-                  <label
-                    htmlFor="repeat"
-                    className="col-span-4 text-right text-lg"
-                  >
-                    Repeat:
-                  </label>
-                  <div className="col-span-8">
-                    <select
-                      id="repeat"
-                      className="w-full rounded-xl bg-white/95 p-3 text-gray-900 outline-none focus:ring-2 focus:ring-orange-400"
-                      value={formData.isRepeat}
-                      onChange={(e) =>
-                        setFormData({ ...formData, isRepeat: e.target.value })
-                      }
-                      required
-                      disabled={isSubmitting}
-                    >
-                      <option value="none">None</option>
-                      <option value="yearly">Yearly</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-              <div className="mt-8 flex items-center justify-between">
-                <button
-                  className="btn  btn-outline hover:bg-primary/10 rounded-xl"
-                  onClick={handleClose}
-                >
-                  Close
-                </button>
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="btn btn-primary rounded-xl"
-                >
-                  {isSubmitting ? "saving..." : "save"}
-                </button>
-              </div>
+            <div className="mt-8 flex items-center justify-between">
+              <button
+                type="button"
+                className="btn btn-ghost"
+                onClick={onClose}
+                disabled={isSubmitting}
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="btn btn-primary"
+                disabled={
+                  isSubmitting ||
+                  (!isEditMode && formData.contacts.length === 0)
+                }
+              >
+                {isSubmitting ? (
+                  <span className="loading loading-spinner"></span>
+                ) : isEditMode ? (
+                  "Save Changes"
+                ) : (
+                  "Create Event"
+                )}
+              </button>
             </div>
           </form>
         </div>

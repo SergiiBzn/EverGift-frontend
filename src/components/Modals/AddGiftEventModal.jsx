@@ -1,10 +1,10 @@
 /** @format */
 
-import React, { useState } from "react";
-import useAuth from "../../hooks/useAuth.jsx";
+import { useState } from "react";
+// import useAuth from "../../hooks/useAuth.jsx";
 import { improveErrorMessage } from "../../utils/improveErrorMessage.js";
 import { toast } from "react-toastify";
-import { useParams } from "react-router";
+// import { useParams } from "react-router";
 
 const AddGiftEventModal = ({ contact, setContact }) => {
   const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
@@ -15,8 +15,8 @@ const AddGiftEventModal = ({ contact, setContact }) => {
     date: "",
   });
 
-  const { user, setUser } = useAuth();
-  const { contactSlug } = useParams();
+  // const { user, setUser } = useAuth();
+  // const { contactSlug } = useParams();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -53,7 +53,7 @@ const AddGiftEventModal = ({ contact, setContact }) => {
       }
 
       const event = await response.json();
-      console.log("event", event);
+      // console.log("event", event);
 
       /*   setUser({ ...user, events: [...(user.events || []), event] });
       document.getElementById("addGiftEventModal").close();

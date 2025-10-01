@@ -43,12 +43,12 @@ const EventCard = ({ event }) => {
           )}
         </div>
       </div>
-      <button
+      {/* <button
         onClick={() => handleDelete(event._id, event.contact.id)}
         className="text-red-500 hover:text-red-400"
       >
         <span className="material-symbols-outlined">delete</span>
-      </button>
+      </button> */}
     </div>
   );
 };

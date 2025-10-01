@@ -24,11 +24,12 @@ export default function Calendar() {
   const [selectedDate, setSelectedDate] = useState(currentMonth);
 
   const selectedEvents =
-    user.events.filter(
-      (e) => e.date.split("T")[0] === format(selectedDate, "yyyy-MM-dd")
+    user.events?.filter(
+      (e) =>
+        e.date && e.date.split("T")[0] === format(selectedDate, "yyyy-MM-dd")
     ) || [];
 
-  const eventDates = user.events.map((e) => e.date);
+  const eventDates = user.events?.map((e) => e.date).filter(Boolean) || [];
 
   const handleDateClick = (date) => {
     setSelectedDate(date);

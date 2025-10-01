@@ -70,6 +70,9 @@ const EventModal = () => {
 
       const event = await response.json();
 
+      console.log("user events", user.events);
+      console.log("event", event);
+
       setUser((prevUser) => ({
         ...prevUser,
         events: [...(prevUser.events || []), event],

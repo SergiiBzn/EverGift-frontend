@@ -16,19 +16,19 @@ import {
 } from "date-fns";
 import EventModal from "../Modals/EventModal.jsx";
 import useAuth from "../../hooks/useAuth.jsx";
+import EventCard from "./EventCard.jsx";
 
 export default function Calendar() {
   const { user } = useAuth();
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(currentMonth);
-  const [selectedEvents, setSelectedEvents] = useState(
-    user.events.filter((e) => {
-      if (e.date.split("T")[0] === format(currentMonth, "yyyy-MM-dd")) return e;
-    })
-  );
+
+  const selectedEvents =
+    user.events.filter(
+      (e) => e.date.split("T")[0] === format(selectedDate, "yyyy-MM-dd")
+    ) || [];
 
   const eventDates = user.events.map((e) => e.date);
-  // const events = ["2025-09-13", "2025-09-12", "2025-09-25"];
 
   const handleDateClick = (date) => {
     setSelectedDate(date);
@@ -124,8 +124,9 @@ export default function Calendar() {
         const cloneDay = day;
         const hasEvent = eventDates.some(
           (eventDate) =>
+            eventDate &&
             format(new Date(eventDate), "yyyy-MM-dd") ===
-            format(cloneDay, "yyyy-MM-dd")
+              format(cloneDay, "yyyy-MM-dd")
         );
 
         days.push(
@@ -159,7 +160,7 @@ export default function Calendar() {
     const selectedMonth = format(selectedDate, "MMMM");
     const selectedDay = format(selectedDate, "d");
     const selectedYear = format(selectedDate, "yyyy");
-    console.log(selectedEvents);
+
     return (
       <div>
         <h3 className="text-lg font-bold">{`${selectedMonth} ${selectedDay}, ${selectedYear}`}</h3>
@@ -170,6 +171,7 @@ export default function Calendar() {
   const handleAddEvent = () => {
     document.getElementById("my_modal_5").showModal();
   };
+
   return (
     <div className="flex flex-col gap-6">
       <div className="w-full rounded-xl ">
@@ -199,22 +201,8 @@ export default function Calendar() {
           <div className=" p-4 rounded-lg bg-background-light">
             <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-4 my-4">
               {/* added events here */}
-              {selectedEvents?.map((event) => (
-                <div
-                  key={event._id}
-                  className="flex items-center gap-4 p-4 rounded-lg bg-white"
-                >
-                  <img
-                    className="h-18 w-18 rounded-full"
-                    src={event.contactId.customProfile?.avatar}
-                  />
-                  <div className="space-y-4 ">
-                    <p className="font-bold text-gray-900 ">{event.title}</p>
-                    <p className=" text-black/80 ">
-                      {event.contactId.customProfile?.name}
-                    </p>
-                  </div>
-                </div>
+              {selectedEvents.map((event) => (
+                <EventCard key={event._id} event={event} />
               ))}
             </div>
           </div>

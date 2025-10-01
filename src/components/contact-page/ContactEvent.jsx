@@ -1,6 +1,10 @@
-import React, { useState, useMemo } from "react";
+/** @format */
 
-const ContactEvent = ({ contact }) => {
+import React, { useState, useMemo } from "react";
+import AddGiftEventModal from "../Modals/addGiftEventModal";
+
+const ContactEvent = ({ contact, setContact }) => {
+  console.log("contact from contactEvent", contact);
   // --- State Management ---
   // Placeholder for events data, should be fetched from an API
   const [events, setEvents] = useState(
@@ -18,15 +22,15 @@ const ContactEvent = ({ contact }) => {
 
   // --- Memoized Calculations for Pagination ---
   const totalPages = useMemo(
-    () => Math.ceil(events.length / itemsPerPage),
-    [events.length]
+    () => Math.ceil(contact?.events.length / itemsPerPage),
+    [contact?.events.length]
   );
 
   const pagedEvents = useMemo(() => {
     const start = currentPage * itemsPerPage;
     const end = start + itemsPerPage;
-    return events.slice(start, end);
-  }, [events, currentPage]);
+    return contact?.events.slice(start, end);
+  }, [contact?.events, currentPage]);
 
   // --- Event Handlers ---
   const handleNextPage = () => {
@@ -43,11 +47,13 @@ const ContactEvent = ({ contact }) => {
 
   const handleAddEvent = () => {
     // Placeholder for Add Event modal logic
-    console.log("Add event button clicked");
+
+    document.getElementById("addGiftEventModal").showModal();
   };
 
   const handleEventClick = (event) => {
     // Placeholder for opening event details modal
+
     console.log("Event card clicked:", event);
   };
 
@@ -83,8 +89,14 @@ const ContactEvent = ({ contact }) => {
           )}
         </div>
       </div>
+
+      {/* modal  */}
+
+      <AddGiftEventModal contact={contact} setContact={setContact} />
+
+      {/* All added Events cards */}
       <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-        {pagedEvents.map((event) => (
+        {pagedEvents?.map((event) => (
           <div
             key={event.id}
             onClick={() => handleEventClick(event)}

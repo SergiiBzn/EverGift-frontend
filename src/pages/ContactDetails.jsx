@@ -3,8 +3,10 @@ import { useContact } from "../hooks/useContacts.jsx";
 import { useParams } from "react-router";
 const ContactDetails = () => {
   const { contactSlug } = useParams();
+
   const { contact, isLoading, setContact, deleteContact } =
     useContact(contactSlug);
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -16,7 +18,7 @@ const ContactDetails = () => {
           setContact={setContact}
           deleteContact={deleteContact}
         />
-        <ContactEvent contact={contact} />
+        <ContactEvent contact={contact} setContact={setContact} />
         <ContactRest contact={contact} />
       </div>
     </main>

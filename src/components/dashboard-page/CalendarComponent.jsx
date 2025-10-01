@@ -21,10 +21,17 @@ export default function Calendar() {
   const { user } = useAuth();
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(currentMonth);
-  const events = ["2025-09-13", "2025-09-12", "2025-09-25"];
+  const [selectedEvents, setSelectedEvents] = useState([]);
+
+  const eventDates = user.events.map((e) => e.date);
+  // const events = ["2025-09-13", "2025-09-12", "2025-09-25"];
 
   const handleDateClick = (date) => {
     setSelectedDate(date);
+    const eventsOnDay = user.events.filter((e) => {
+      if (e.date.split("T")[0] === format(date, "yyyy-MM-dd")) return e;
+    });
+    setSelectedEvents(eventsOnDay);
   };
   const renderHeader = () => {
     return (
@@ -111,7 +118,7 @@ export default function Calendar() {
 
       for (let i = 0; i < 7; i++) {
         const cloneDay = day;
-        const hasEvent = events.some(
+        const hasEvent = eventDates.some(
           (eventDate) =>
             format(new Date(eventDate), "yyyy-MM-dd") ===
             format(cloneDay, "yyyy-MM-dd")
@@ -148,8 +155,11 @@ export default function Calendar() {
     const selectedMonth = format(selectedDate, "MMMM");
     const selectedDay = format(selectedDate, "d");
     const selectedYear = format(selectedDate, "yyyy");
+    console.log(selectedEvents);
     return (
-      <h3 className="text-lg font-bold">{`${selectedMonth} ${selectedDay}, ${selectedYear}`}</h3>
+      <div>
+        <h3 className="text-lg font-bold">{`${selectedMonth} ${selectedDay}, ${selectedYear}`}</h3>
+      </div>
     );
   };
 
@@ -185,30 +195,24 @@ export default function Calendar() {
           <div className=" p-4 rounded-lg bg-background-light">
             <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-4 my-4">
               {/* added events here */}
-
-              {user.events?.map((event) =>
-                event.date?.split("T")[0] ===
-                new Date().toISOString().split("T")[0] ? (
-                  <div
-                    key={event._id}
-                    className="flex items-center gap-4 p-4 rounded-lg bg-white"
-                  >
-                    <img
-                      className="h-18 w-18 rounded-full"
-                      src={event.contactId.customProfile?.avatar}
-                    />
-                    <div className="space-y-4 ">
-                      <p className="font-bold text-gray-900 ">{event.title}</p>
-                      <p className=" text-black/80 ">
-                        {event.contactId.customProfile?.name}
-                      </p>
-                    </div>
+              {selectedEvents?.map((event) => (
+                <div
+                  key={event._id}
+                  className="flex items-center gap-4 p-4 rounded-lg bg-white"
+                >
+                  <img
+                    className="h-18 w-18 rounded-full"
+                    src={event.contactId.customProfile?.avatar}
+                  />
+                  <div className="space-y-4 ">
+                    <p className="font-bold text-gray-900 ">{event.title}</p>
+                    <p className=" text-black/80 ">
+                      {event.contactId.customProfile?.name}
+                    </p>
                   </div>
-                ) : null
-              )}
+                </div>
+              ))}
             </div>
-
-            <p className="text-smtext-muted-dark mt-4">Enjoy your day!</p>
           </div>
         </div>
       </div>

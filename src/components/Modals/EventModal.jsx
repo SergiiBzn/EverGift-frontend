@@ -45,7 +45,7 @@ const EventModal = () => {
     try {
       const giftObject = {
         gift: {
-          name: formData.gift || "",
+          name: formData.gift || "default",
 
           date: formData.date || "",
         },
@@ -96,7 +96,8 @@ const EventModal = () => {
   return (
     <dialog
       id="my_modal_5"
-      className="modal  modal-bottom sm:modal-middle fixed inset-0 z-50 flex items-center justify-center p-4 rounded-3xl bg-amber-700 text-white ">
+      className="modal  modal-bottom sm:modal-middle fixed inset-0 z-50 flex items-center justify-center p-4 rounded-3xl bg-amber-700 text-white "
+    >
       <div className="modal-box max-h-none h-auto bg-amber-700 text-white ">
         <h3 className="font-bold text-lg text-center">Add Event</h3>
 
@@ -110,7 +111,8 @@ const EventModal = () => {
                     onClick={() =>
                       handleContactClick(contact._id, contact.name)
                     }
-                    className="shrink-0">
+                    className="shrink-0"
+                  >
                     <div className="flex flex-col items-center justify-center gap-3">
                       <img
                         className="h-18 w-18 rounded-full"
@@ -133,7 +135,8 @@ const EventModal = () => {
         <div className=" modal-action">
           <form
             onSubmit={handleSave}
-            className="relative z-10 w-full max-w-lg  bg-amber-700 text-white  ">
+            className="relative z-10 w-full max-w-lg  bg-amber-700 text-white  "
+          >
             {/* if there is a button in form, it will close the modal */}
             <div className="px-6 py-5 sm:px-8 sm:py-7">
               <div className="space-y-4">
@@ -141,7 +144,8 @@ const EventModal = () => {
                 <div className="grid grid-cols-12 items-center gap-3">
                   <label
                     htmlFor="contact"
-                    className="col-span-4 text-right text-lg">
+                    className="col-span-4 text-right text-lg"
+                  >
                     Contact:
                   </label>
                   <div className="col-span-8">
@@ -162,7 +166,8 @@ const EventModal = () => {
                 <div className="grid grid-cols-12 items-center gap-3">
                   <label
                     htmlFor="title"
-                    className="col-span-4 text-right text-lg">
+                    className="col-span-4 text-right text-lg"
+                  >
                     Title:
                   </label>
                   <div className="col-span-8">
@@ -186,7 +191,8 @@ const EventModal = () => {
                 <div className="grid grid-cols-12 items-center gap-3">
                   <label
                     htmlFor="gift"
-                    className="col-span-4 text-right text-lg">
+                    className="col-span-4 text-right text-lg"
+                  >
                     Gift:
                   </label>
                   <div className="col-span-8">
@@ -198,7 +204,7 @@ const EventModal = () => {
                       onChange={(e) =>
                         setFormData({ ...formData, gift: e.target.value })
                       }
-                      required
+                      // required
                       disabled={isSubmitting}
                     />
                   </div>
@@ -207,7 +213,8 @@ const EventModal = () => {
                 <div className="grid grid-cols-12 items-center gap-3">
                   <label
                     htmlFor="date"
-                    className="col-span-4 text-right text-lg">
+                    className="col-span-4 text-right text-lg"
+                  >
                     Event Date:
                   </label>
                   <div className="col-span-8">
@@ -229,7 +236,8 @@ const EventModal = () => {
                 <div className="grid grid-cols-12 items-center gap-3">
                   <label
                     htmlFor="repeat"
-                    className="col-span-4 text-right text-lg">
+                    className="col-span-4 text-right text-lg"
+                  >
                     Repeat:
                   </label>
                   <div className="col-span-8">
@@ -241,7 +249,8 @@ const EventModal = () => {
                         setFormData({ ...formData, isRepeat: e.target.value })
                       }
                       required
-                      disabled={isSubmitting}>
+                      disabled={isSubmitting}
+                    >
                       <option value="none">None</option>
                       <option value="yearly">Yearly</option>
                     </select>
@@ -251,13 +260,15 @@ const EventModal = () => {
               <div className="mt-8 flex items-center justify-between">
                 <button
                   className="btn  btn-outline hover:bg-primary/10 rounded-xl"
-                  onClick={handleClose}>
+                  onClick={handleClose}
+                >
                   Close
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="btn btn-primary rounded-xl">
+                  className="btn btn-primary rounded-xl"
+                >
                   {isSubmitting ? "saving..." : "save"}
                 </button>
               </div>

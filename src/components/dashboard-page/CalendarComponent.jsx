@@ -21,7 +21,11 @@ export default function Calendar() {
   const { user } = useAuth();
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(currentMonth);
-  const [selectedEvents, setSelectedEvents] = useState([]);
+  const [selectedEvents, setSelectedEvents] = useState(
+    user.events.filter((e) => {
+      if (e.date.split("T")[0] === format(currentMonth, "yyyy-MM-dd")) return e;
+    })
+  );
 
   const eventDates = user.events.map((e) => e.date);
   // const events = ["2025-09-13", "2025-09-12", "2025-09-25"];

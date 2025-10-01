@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import useAuth from "../hooks/useAuth.jsx";
 import { toast } from "react-toastify";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Eye, EyeOff } from "lucide-react";
 const Register = () => {
   const [formState, setFormState] = useState({
@@ -19,7 +19,12 @@ const Register = () => {
 
   const [isClicked, setIsClicked] = useState(false);
 
-  const { register, error, setError } = useAuth();
+  const { user, register, error, setError } = useAuth();
+
+  const navigate = useNavigate();
+  if (user) {
+    navigate("/");
+  }
 
   const handleChange = (e) => {
     setFormState((prev) => {

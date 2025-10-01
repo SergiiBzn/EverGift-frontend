@@ -1,7 +1,7 @@
 import EditContactProfile from "./EditContactProfile.jsx";
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { useContacts } from "../../hooks/useContacts.jsx";
+import ContactNote from "./ContactNote.jsx";
 
 const ContactData = ({ contact, setContact, deleteContact }) => {
   const [isOpenEditProfile, setIsOpenEditProfile] = useState(false);
@@ -95,17 +95,7 @@ const ContactData = ({ contact, setContact, deleteContact }) => {
           </div>
         </div>
       </div>
-      <div className="mt-6">
-        <label className="block text-sm font-medium text-neutral">
-          Notes
-          <textarea
-            className=" mt-1 block w-full rounded-lg border-zinc-300 dark:border-zinc-700 text-base-content bg-base-200 dark:bg-background-dark p-3 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
-            name="notes"
-            placeholder="Add your notes here..."
-            rows="4"
-          ></textarea>
-        </label>
-      </div>
+      <ContactNote contact={contact} setContact={setContact} />
       {isOpenDeleteConfirm && (
         <dialog className="modal modal-open sm:modal-middle">
           <div className="modal-box alert alert-warning">

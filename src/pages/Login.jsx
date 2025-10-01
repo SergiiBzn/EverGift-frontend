@@ -5,6 +5,7 @@ import useAuth from "../hooks/useAuth.jsx";
 import { toast } from "react-toastify";
 import { Link } from "react-router";
 import { Eye, EyeOff } from "lucide-react";
+import { useNavigate } from "react-router";
 
 const Login = () => {
   const [formState, setFormState] = useState({
@@ -16,7 +17,12 @@ const Login = () => {
 
   const [isClicked, setIsClicked] = useState(false);
 
-  const { login, error, setError } = useAuth();
+  const { login, error, setError, user } = useAuth();
+
+  const navigate = useNavigate();
+  if (user) {
+    navigate("/");
+  }
 
   const handleChange = (e) => {
     setFormState((prev) => {
@@ -98,7 +104,8 @@ const Login = () => {
             <button
               className={`btn  btn-lg w-full my-4    ${
                 isClicked ? "btn-secondary  cursor-not-allowed" : "btn-primary"
-              }`}>
+              }`}
+            >
               {isClicked ? (
                 <>
                   <span className="loading loading-spinner"></span>

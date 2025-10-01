@@ -5,7 +5,15 @@ export {
   ContactEvent,
   ContactRest,
 } from "./contact-page/index.js";
-export { GivenGiftModal, AddContact } from "./Modals/index.js";
+export {
+  GivenGiftModal,
+  AddContact,
+  ProfileForm,
+  ProfileModal,
+  ConfirmModal,
+  EventDetailsModal,
+  EventModal,
+} from "./Modals/index.js";
 export {
   CalendarComponent,
   ContactsComponent,

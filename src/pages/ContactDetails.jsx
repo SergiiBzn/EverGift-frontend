@@ -8,7 +8,18 @@ const ContactDetails = () => {
     useContact(contactSlug);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <span className="loading loading-spinner loading-lg"></span>
+      </div>
+    );
+  }
+  if (!contact) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p>Contact not found.</p>
+      </div>
+    );
   }
   return (
     <main className="flex-1 px-4 py-8 sm:px-6 lg:px-8">

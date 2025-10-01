@@ -18,7 +18,7 @@ import EventModal from "../Modals/EventModal.jsx";
 import useAuth from "../../hooks/useAuth.jsx";
 import EventCard from "./EventCard.jsx";
 
-export default function Calendar() {
+export default function Calendar({ onEventClick, onCreateEvent }) {
   const { user } = useAuth();
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(currentMonth);
@@ -33,10 +33,6 @@ export default function Calendar() {
 
   const handleDateClick = (date) => {
     setSelectedDate(date);
-    const eventsOnDay = user.events.filter((e) => {
-      if (e.date.split("T")[0] === format(date, "yyyy-MM-dd")) return e;
-    });
-    setSelectedEvents(eventsOnDay);
   };
   const renderHeader = () => {
     return (
@@ -170,7 +166,7 @@ export default function Calendar() {
   };
 
   const handleAddEvent = () => {
-    document.getElementById("my_modal_5").showModal();
+    onCreateEvent(format(selectedDate, "yyyy-MM-dd"));
   };
 
   return (
@@ -195,15 +191,17 @@ export default function Calendar() {
           >
             <span>Add New Event</span>
           </button>
-
-          <EventModal />
         </div>
         <div className="space-y-4">
           <div className=" p-4 rounded-lg bg-background-light">
             <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-4 my-4">
               {/* added events here */}
               {selectedEvents.map((event) => (
-                <EventCard key={event._id} event={event} />
+                <EventCard
+                  key={event._id}
+                  event={event}
+                  onEventClick={onEventClick}
+                />
               ))}
             </div>
           </div>

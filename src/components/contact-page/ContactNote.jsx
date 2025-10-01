@@ -46,7 +46,12 @@ const ContactNote = ({ contact, setContact }) => {
   return (
     <div className="mt-6 flex flex-col gap-2">
       <div className="flex items-center justify-between">
-        <label className="block text-sm font-medium text-neutral">Notes </label>
+        <label
+          onClick={() => setIsEditing(true)}
+          className="block text-sm font-medium text-neutral"
+        >
+          Notes{" "}
+        </label>
         {isEditing && (
           <div className="flex justify-end gap-2">
             <button

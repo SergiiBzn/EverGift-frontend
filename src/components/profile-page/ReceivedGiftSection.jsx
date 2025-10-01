@@ -13,7 +13,6 @@ export default function ReceivedGiftSection() {
   const [filterYear, setFilterYear] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
   const [extraSenders, setExtraSenders] = useState([]);
-  // const [contacts, setContacts] = useState([]);
   const [confirmState, setConfirmState] = useState({ open: false, id: null });
 
   // Fetch received gifts from the backend
@@ -115,19 +114,6 @@ export default function ReceivedGiftSection() {
     setConfirmState({ open: false, id: null });
   };
   const handleCancelDelete = () => setConfirmState({ open: false, id: null });
-
-  // const fetchContacts = async () => {
-  //   try {
-  //     const res = await fetch(`${baseUrl}/contacts`, {
-  //       credentials: 'include',
-  //     });
-  //     if (!res.ok) throw new Error('Failed to load contacts');
-  //     const data = await res.json();
-  //     setContacts(data);
-  //   } catch (e) {
-  //     console.error(e);
-  //   }
-  // };
 
   useEffect(() => {
     fetchReceivedGifts();

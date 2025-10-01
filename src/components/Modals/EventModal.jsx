@@ -109,7 +109,8 @@ const EventModal = () => {
               {filteredContacts.length > 0 ? (
                 filteredContacts.map((contact) => (
                   <div
-                    key={contact._id}
+                    // key={contact._id}
+                    key={contact.name}
                     onClick={() =>
                       handleContactClick(contact._id, contact.name)
                     }

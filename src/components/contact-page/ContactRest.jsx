@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { GivenGiftModal } from '../Modals';
+import { GivenGiftModal, ConfirmModal } from '../Modals';
 import WishlistModal from '../WishListModal.jsx';
 
 const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
@@ -16,6 +16,12 @@ const ContactRest = ({ contact }) => {
   const [wlModalOpen, setWlModalOpen] = useState(false);
   const [editingWishIndex, setEditingWishIndex] = useState(null); // index in wishList
   const [wlSubmitting, setWlSubmitting] = useState(false);
+  const [confirmState, setConfirmState] = useState({
+    open: false,
+    type: null,
+    id: null,
+    index: null,
+  });
 
   // Fetch existing given gifts for this contact
   const fetchGivenGifts = useCallback(async () => {
@@ -188,6 +194,21 @@ const ContactRest = ({ contact }) => {
     await saveWishlist(next);
   };
 
+  const requestDeleteGivenGift = (id) => {
+    setConfirmState({ open: true, type: 'given', id, index: null });
+  };
+  const requestDeleteWishlistItem = (index) => {
+    setConfirmState({ open: true, type: 'wish', id: null, index });
+  };
+  const handleConfirm = async () => {
+    const { type, id, index } = confirmState;
+    if (type === 'given' && id) await deleteGivenGift(id);
+    if (type === 'wish' && index !== null) await deleteWishlistItem(index);
+    setConfirmState({ open: false, type: null, id: null, index: null });
+  };
+  const handleCancelConfirm = () =>
+    setConfirmState({ open: false, type: null, id: null, index: null });
+
   return (
     <div className='grid grid-cols-1 gap-8 lg:grid-cols-2'>
       <div className='rounded-xl bg-white  shadow-sm p-6'>
@@ -301,7 +322,7 @@ const ContactRest = ({ contact }) => {
                               <button
                                 type='button'
                                 className='text-red-500 hover:text-red-400'
-                                onClick={() => deleteGivenGift(g._id)}
+                                onClick={() => requestDeleteGivenGift(g._id)}
                               >
                                 <span className='material-symbols-outlined'>
                                   delete
@@ -393,7 +414,7 @@ const ContactRest = ({ contact }) => {
                             <button
                               type='button'
                               className='text-red-500 hover:text-red-400'
-                              onClick={() => deleteWishlistItem(idx)}
+                              onClick={() => requestDeleteWishlistItem(idx)}
                               disabled={wlSubmitting}
                             >
                               <span className='material-symbols-outlined'>
@@ -435,6 +456,24 @@ const ContactRest = ({ contact }) => {
           }}
         />
       </div>
+      <ConfirmModal
+        isOpen={confirmState.open}
+        title={
+          confirmState.type === 'given'
+            ? 'Delete Given Gift'
+            : 'Delete Wish Item'
+        }
+        message={
+          confirmState.type === 'given'
+            ? 'Are you sure you want to delete this given gift? This action cannot be undone.'
+            : 'Are you sure you want to delete this wish item?'
+        }
+        confirmLabel='delete'
+        cancelLabel='cancel'
+        onConfirm={handleConfirm}
+        onCancel={handleCancelConfirm}
+        tone='danger'
+      />
     </div>
   );
 };

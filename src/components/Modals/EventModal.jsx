@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import useAuth from "../../hooks/useAuth.jsx";
 
 import { improveErrorMessage } from "../../utils/improveErrorMessage.js";
@@ -69,9 +69,14 @@ const EventModal = () => {
       }
 
       const event = await response.json();
+
+      console.log("user events", user.events);
       console.log("event", event);
 
-      setUser({ ...user, events: [...(user.events || []), event] });
+      setUser((prevUser) => ({
+        ...prevUser,
+        events: [...(prevUser.events || []), event],
+      }));
       document.getElementById("my_modal_5").close();
       setFormData({
         ...formData,
@@ -107,7 +112,8 @@ const EventModal = () => {
               {filteredContacts.length > 0 ? (
                 filteredContacts.map((contact) => (
                   <div
-                    key={contact._id}
+                    // key={contact._id}
+                    key={contact.name}
                     onClick={() =>
                       handleContactClick(contact._id, contact.name)
                     }

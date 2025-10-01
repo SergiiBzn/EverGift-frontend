@@ -16,19 +16,19 @@ import {
 } from "date-fns";
 import EventModal from "../Modals/EventModal.jsx";
 import useAuth from "../../hooks/useAuth.jsx";
+import EventCard from "./EventCard.jsx";
 
 export default function Calendar() {
   const { user } = useAuth();
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(currentMonth);
-  const [selectedEvents, setSelectedEvents] = useState(
-    user.events.filter((e) => {
-      if (e.date.split("T")[0] === format(currentMonth, "yyyy-MM-dd")) return e;
-    })
-  );
+
+  const selectedEvents =
+    user.events.filter(
+      (e) => e.date.split("T")[0] === format(selectedDate, "yyyy-MM-dd")
+    ) || [];
 
   const eventDates = user.events.map((e) => e.date);
-  // const events = ["2025-09-13", "2025-09-12", "2025-09-25"];
 
   const handleDateClick = (date) => {
     setSelectedDate(date);
@@ -44,12 +44,14 @@ export default function Calendar() {
         <div className=" flex space-x-2">
           <button
             className="btn btn-sm rounded-full"
-            onClick={() => setCurrentMonth(addMonths(currentMonth, -1))}>
+            onClick={() => setCurrentMonth(addMonths(currentMonth, -1))}
+          >
             <svg
               className="w-5 h-5"
               fill="currentColor"
               viewBox="0 0 256 256"
-              xmlns="http://www.w3.org/2000/svg">
+              xmlns="http://www.w3.org/2000/svg"
+            >
               <path d="M165.66,202.34a8,8,0,0,1-11.32,11.32l-80-80a8,8,0,0,1,0-11.32l80-80a8,8,0,0,1,11.32,11.32L91.31,128Z"></path>
             </svg>
           </button>
@@ -58,12 +60,14 @@ export default function Calendar() {
           </div>
           <button
             className="btn btn-sm rounded-full"
-            onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}>
+            onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
+          >
             <svg
               className="w-5 h-5"
               fill="currentColor"
               viewBox="0 0 256 256"
-              xmlns="http://www.w3.org/2000/svg">
+              xmlns="http://www.w3.org/2000/svg"
+            >
               <path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"></path>
             </svg>
           </button>
@@ -80,7 +84,8 @@ export default function Calendar() {
       days.push(
         <div
           key={i}
-          className="text-center font-medium text-neutral-content py-2">
+          className="text-center font-medium text-neutral-content py-2"
+        >
           {format(addDays(startDate, i), "EEEEEE")}
         </div>
       );
@@ -109,7 +114,8 @@ export default function Calendar() {
       days.push(
         <div
           key={`week-${weekNumber}`}
-          className="font-bold text-secondary flex items-center justify-center">
+          className="font-bold text-secondary flex items-center justify-center"
+        >
           {weekNumber}
         </div>
       );
@@ -118,8 +124,9 @@ export default function Calendar() {
         const cloneDay = day;
         const hasEvent = eventDates.some(
           (eventDate) =>
+            eventDate &&
             format(new Date(eventDate), "yyyy-MM-dd") ===
-            format(cloneDay, "yyyy-MM-dd")
+              format(cloneDay, "yyyy-MM-dd")
         );
 
         days.push(
@@ -130,7 +137,8 @@ export default function Calendar() {
               ${isToday(cloneDay) ? "bg-primary/30 font-bold" : ""}
               ${hasEvent ? "bg-accent/30" : ""}
             `}
-            onClick={() => handleDateClick(cloneDay)}>
+            onClick={() => handleDateClick(cloneDay)}
+          >
             <span>{format(cloneDay, "d")}</span>
           </div>
         );
@@ -152,7 +160,7 @@ export default function Calendar() {
     const selectedMonth = format(selectedDate, "MMMM");
     const selectedDay = format(selectedDate, "d");
     const selectedYear = format(selectedDate, "yyyy");
-    console.log(selectedEvents);
+
     return (
       <div>
         <h3 className="text-lg font-bold">{`${selectedMonth} ${selectedDay}, ${selectedYear}`}</h3>
@@ -163,6 +171,7 @@ export default function Calendar() {
   const handleAddEvent = () => {
     document.getElementById("my_modal_5").showModal();
   };
+
   return (
     <div className="flex flex-col gap-6">
       <div className="w-full rounded-xl ">
@@ -181,7 +190,8 @@ export default function Calendar() {
           {/* add new event button */}
           <button
             onClick={handleAddEvent}
-            className="btn btn-primary rounded-2xl">
+            className="btn btn-primary rounded-2xl"
+          >
             <span>Add New Event</span>
           </button>
 
@@ -191,21 +201,8 @@ export default function Calendar() {
           <div className=" p-4 rounded-lg bg-background-light">
             <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-4 my-4">
               {/* added events here */}
-              {selectedEvents?.map((event) => (
-                <div
-                  key={event._id}
-                  className="flex items-center gap-4 p-4 rounded-lg bg-white">
-                  <img
-                    className="h-18 w-18 rounded-full"
-                    src={event.contactId.customProfile?.avatar}
-                  />
-                  <div className="space-y-4 ">
-                    <p className="font-bold text-gray-900 ">{event.title}</p>
-                    <p className=" text-black/80 ">
-                      {event.contactId.customProfile?.name}
-                    </p>
-                  </div>
-                </div>
+              {selectedEvents.map((event) => (
+                <EventCard key={event._id} event={event} />
               ))}
             </div>
           </div>

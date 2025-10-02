@@ -27,14 +27,12 @@ const ContactEvent = ({ contact, setContact }) => {
 
     if (isEditMode) {
       const updatedEvent = await handleUpdate(selectedEvent, payload);
-      console.log({ ...updatedEvent, date: updatedEvent.date.slice("T")[0] });
 
       setContact((prev) => ({
         ...prev,
         events: prev.events.map((e) =>
           e.id === updatedEvent.id
-            ? // ? { ...updatedEvent, date: updatedEvent.date.slice("T")[0] }
-              updatedEvent
+            ? { ...updatedEvent, date: updatedEvent.date.split("T")[0] }
             : e
         ),
       }));

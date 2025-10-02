@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { GivenGiftModal, ConfirmModal } from "../Modals";
 import WishlistModal from "../WishListModal.jsx";
-import User from "../../../../EverGift-backend/models/User.js";
 
 const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
 

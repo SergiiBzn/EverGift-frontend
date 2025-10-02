@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 // import AddGiftEventModal from "../Modals/addGiftEventModal";
-import EventModal from "../Modals/EventModal.jsx";
+import { EventModal, EventDetailsModal } from "../Modals/index.js";
 import useEventActions from "../../hooks/useEventActions.js";
 
 const ContactEvent = ({ contact, setContact }) => {
@@ -10,26 +10,76 @@ const ContactEvent = ({ contact, setContact }) => {
   const itemsPerPage = 5;
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const { handleCreateEvent } = useEventActions();
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
-  const handleOpenCreateModal = () => setIsCreateModalOpen(true);
-  const handleCloseCreateModal = () => setIsCreateModalOpen(false);
+  const { handleCreateEvent, handleUpdate, handleDelete } = useEventActions();
 
-  const handleSaveNewEvent = async (eventData) => {
+  const handleOpenCreateModal = () => {
+    setSelectedEvent(null);
+    setIsCreateModalOpen(true);
+  };
+
+  const handleSaveEvent = async (eventData) => {
+    const isEditMode = !!selectedEvent;
     const { contacts, ...payload } = eventData;
 
-    const newEvent = await handleCreateEvent(payload, contacts[0]);
+    if (isEditMode) {
+      const updatedEvent = await handleUpdate(selectedEvent, payload);
+      console.log({ ...updatedEvent, date: updatedEvent.date.slice("T")[0] });
 
+      setContact((prev) => ({
+        ...prev,
+        events: prev.events.map((e) =>
+          e.id === updatedEvent.id
+            ? // ? { ...updatedEvent, date: updatedEvent.date.slice("T")[0] }
+              updatedEvent
+            : e
+        ),
+      }));
+      setIsEditModalOpen(false);
+      setSelectedEvent(null);
+    } else {
+      const newEvent = await handleCreateEvent(payload, contacts[0]);
+
+      setContact((prev) => ({
+        ...prev,
+        events: [
+          ...(prev.events || []),
+          {
+            ...newEvent,
+            date: newEvent.date.split("T")[0],
+          },
+        ],
+      }));
+      setIsCreateModalOpen(false);
+    }
+  };
+
+  const handleEventClick = (event) => {
+    setSelectedEvent(event);
+    setIsDetailsModalOpen(true);
+  };
+
+  const handleCloseDetailsModal = () => {
+    setSelectedEvent(null);
+    setIsDetailsModalOpen(false);
+  };
+
+  // --- Event Edit Modal ---
+  const handleOpenEditModal = () => {
+    setIsDetailsModalOpen(false);
+    setIsEditModalOpen(true);
+  };
+  const handleDeleteEvent = async () => {
+    if (!selectedEvent) return;
+    await handleDelete(selectedEvent);
     setContact((prev) => ({
       ...prev,
-      events: [
-        ...(prev.events || []),
-        {
-          ...newEvent,
-          date: newEvent.date.split("T")[0],
-        },
-      ],
+      events: prev.events.filter((e) => e.id !== selectedEvent.id),
     }));
+    handleCloseDetailsModal();
   };
 
   // --- Memoized Calculations for Pagination ---
@@ -55,12 +105,6 @@ const ContactEvent = ({ contact, setContact }) => {
     if (currentPage > 0) {
       setCurrentPage(currentPage - 1);
     }
-  };
-
-  const handleEventClick = (event) => {
-    // Placeholder for opening event details modal
-
-    console.log("Event card clicked:", event);
   };
 
   return (
@@ -96,12 +140,12 @@ const ContactEvent = ({ contact, setContact }) => {
         </div>
       </div>
 
-      {/* modal  */}
+      {/* create modal  */}
 
       <EventModal
         isOpen={isCreateModalOpen}
-        onClose={handleCloseCreateModal}
-        onSave={handleSaveNewEvent}
+        onClose={() => setIsCreateModalOpen(false)}
+        onSave={handleSaveEvent}
         contactId={contact.id}
       />
 
@@ -109,7 +153,7 @@ const ContactEvent = ({ contact, setContact }) => {
       <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
         {pagedEvents?.map((event) => (
           <div
-            key={event.id}
+            key={event._id}
             onClick={() => handleEventClick(event)}
             className="group relative cursor-pointer rounded-lg  bg-primary/60 p-4 shadow-lg hover:scale-105 transition-shadow"
           >
@@ -128,6 +172,27 @@ const ContactEvent = ({ contact, setContact }) => {
           </div>
         ))}
       </div>
+      {isDetailsModalOpen && selectedEvent && (
+        <EventDetailsModal
+          isOpen={isDetailsModalOpen}
+          event={selectedEvent}
+          onClose={handleCloseDetailsModal}
+          onDelete={handleDeleteEvent}
+          onEdit={handleOpenEditModal}
+        />
+      )}
+      {isEditModalOpen && selectedEvent && (
+        <EventModal
+          isOpen={isEditModalOpen}
+          onSave={handleSaveEvent}
+          onClose={() => {
+            setIsEditModalOpen(false);
+            setSelectedEvent(null);
+          }}
+          contactId={contact.id}
+          eventToEdit={selectedEvent}
+        />
+      )}
     </div>
   );
 };

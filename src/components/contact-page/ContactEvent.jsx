@@ -1,24 +1,36 @@
 /** @format */
 
-import React, { useState, useMemo } from "react";
-import AddGiftEventModal from "../Modals/addGiftEventModal";
+import { useState, useMemo } from "react";
+// import AddGiftEventModal from "../Modals/addGiftEventModal";
+import EventModal from "../Modals/EventModal.jsx";
+import useEventActions from "../../hooks/useEventActions.js";
 
 const ContactEvent = ({ contact, setContact }) => {
-  console.log("contact from contactEvent", contact);
-  // --- State Management ---
-  // Placeholder for events data, should be fetched from an API
-  const [events, setEvents] = useState(
-    // Example placeholder structure. Replace with API data.
-    Array.from({ length: 7 }, (_, i) => ({
-      id: i + 1,
-      title: `Event Title ${i + 1}`,
-      date: `YYYY-MM-DD`,
-    }))
-  );
   const [currentPage, setCurrentPage] = useState(0);
-  const [pinned, setPinned] = useState([]); // Stores IDs of pinned events
-
   const itemsPerPage = 5;
+
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const { handleCreateEvent } = useEventActions();
+
+  const handleOpenCreateModal = () => setIsCreateModalOpen(true);
+  const handleCloseCreateModal = () => setIsCreateModalOpen(false);
+
+  const handleSaveNewEvent = async (eventData) => {
+    const { contacts, ...payload } = eventData;
+
+    const newEvent = await handleCreateEvent(payload, contacts[0]);
+
+    setContact((prev) => ({
+      ...prev,
+      events: [
+        ...(prev.events || []),
+        {
+          ...newEvent,
+          date: newEvent.date.split("T")[0],
+        },
+      ],
+    }));
+  };
 
   // --- Memoized Calculations for Pagination ---
   const totalPages = useMemo(
@@ -45,11 +57,10 @@ const ContactEvent = ({ contact, setContact }) => {
     }
   };
 
-  const handleAddEvent = () => {
-    // Placeholder for Add Event modal logic
-
-    document.getElementById("addGiftEventModal").showModal();
-  };
+  // const handleAddEvent = () => {
+  //   // Placeholder for Add Event modal logic
+  //   document.getElementById("addGiftEventModal").showModal();
+  // };
 
   const handleEventClick = (event) => {
     // Placeholder for opening event details modal
@@ -63,7 +74,7 @@ const ContactEvent = ({ contact, setContact }) => {
         <h3 className="text-lg font-bold text-zinc-900 ">Gift Events</h3>
         <div className="flex items-center gap-2">
           <button
-            onClick={handleAddEvent}
+            onClick={handleOpenCreateModal}
             className="btn btn-primary btn-outline rounded-2xl"
           >
             <span className="material-symbols-outlined"> add </span>
@@ -92,7 +103,12 @@ const ContactEvent = ({ contact, setContact }) => {
 
       {/* modal  */}
 
-      <AddGiftEventModal contact={contact} setContact={setContact} />
+      <EventModal
+        isOpen={isCreateModalOpen}
+        onClose={handleCloseCreateModal}
+        onSave={handleSaveNewEvent}
+        contactId={contact.id}
+      />
 
       {/* All added Events cards */}
       <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">

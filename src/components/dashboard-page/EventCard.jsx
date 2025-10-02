@@ -1,31 +1,34 @@
-import useAuth from "../../hooks/useAuth.jsx";
+// import useAuth from "../../hooks/useAuth.jsx";
 
-const EventCard = ({ event }) => {
-  const { setUser, baseUrl } = useAuth();
-  const handleDelete = async (eventId, contactId) => {
-    try {
-      const res = await fetch(
-        `${baseUrl}/contacts/${contactId}/events/${eventId}`,
-        {
-          method: "DELETE",
-          credentials: "include",
-        }
-      );
+const EventCard = ({ event, onEventClick }) => {
+  // const { setUser, baseUrl } = useAuth();
+  // const handleDelete = async (eventId, contactId) => {
+  //   try {
+  //     const res = await fetch(
+  //       `${baseUrl}/contacts/${contactId}/events/${eventId}`,
+  //       {
+  //         method: "DELETE",
+  //         credentials: "include",
+  //       }
+  //     );
 
-      if (res.ok) {
-        setUser((prevUser) => ({
-          ...prevUser,
-          events: prevUser.events.filter((event) => event._id !== eventId),
-        }));
-      } else {
-        console.error("Failed to delete event");
-      }
-    } catch (error) {
-      console.error("Error deleting event:", error);
-    }
-  };
+  //     if (res.ok) {
+  //       setUser((prevUser) => ({
+  //         ...prevUser,
+  //         events: prevUser.events.filter((event) => event._id !== eventId),
+  //       }));
+  //     } else {
+  //       console.error("Failed to delete event");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error deleting event:", error);
+  //   }
+  // };
   return (
-    <div className="flex items-center justify-between gap-4 p-4 rounded-lg bg-white">
+    <div
+      onClick={() => onEventClick(event)}
+      className="flex items-center justify-between gap-4 p-4 rounded-lg bg-white shadow-md hover:cursor-pointer"
+    >
       <div className="flex items-center gap-4">
         {event.contact?.profile && (
           <img
@@ -43,12 +46,12 @@ const EventCard = ({ event }) => {
           )}
         </div>
       </div>
-      <button
+      {/* <button
         onClick={() => handleDelete(event._id, event.contact.id)}
         className="text-red-500 hover:text-red-400"
       >
         <span className="material-symbols-outlined">delete</span>
-      </button>
+      </button> */}
     </div>
   );
 };

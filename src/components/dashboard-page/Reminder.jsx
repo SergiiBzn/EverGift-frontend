@@ -4,8 +4,6 @@ import useAuth from "../../hooks/useAuth.jsx";
 const ReminderComponent = () => {
   const { user } = useAuth();
 
-  console.log("user event", user.events);
-
   //********** filter the next 2 months events **********
 
   const today = new Date();
@@ -18,7 +16,6 @@ const ReminderComponent = () => {
       return isWithinInterval(eventDate, { start: today, end: twoMonthsLater });
     })
     .sort((a, b) => compareAsc(new Date(a.date), new Date(b.date)));
-  console.log("filtered events", filteredEvents);
 
   return (
     <div className="bg-base-200 p-4 rounded-xl flex flex-col gap-6 shadow-md min-w-[300px]">
@@ -51,7 +48,10 @@ const ReminderComponent = () => {
           style={{ maxHeight: "450px" }}
         >
           {filteredEvents.map((event) => (
-            <div className="flex items-center gap-4 p-4 rounded-lg bg-white shadow-sm">
+            <div
+              key={event._id}
+              className="flex items-center gap-4 p-4 rounded-lg bg-white shadow-sm"
+            >
               <div className="flex-1">
                 <p className="font-bold">{event.title}</p>
                 <p className="text-sm text-muted-light dark:text-muted-dark">

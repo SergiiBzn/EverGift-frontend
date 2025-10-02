@@ -19,7 +19,9 @@ const ReminderComponent = ({ onEventClick = () => {} }) => {
     })
     .sort((a, b) => compareAsc(new Date(a.date), new Date(b.date)));
 
-  const pinnedEvents = (user?.events || []).filter((e) => e.isPinned);
+  const pinnedEvents = (user?.events || [])
+    .filter((e) => e.isPinned)
+    .sort((a, b) => compareAsc(new Date(a.date), new Date(b.date)));
 
   return (
     <div className="bg-base-200 p-4 rounded-xl flex flex-col gap-6 shadow-md min-w-[300px]">
@@ -57,9 +59,12 @@ const ReminderComponent = ({ onEventClick = () => {} }) => {
               )}
               <button
                 type="button"
-                onClick={() => handleTogglePin(event)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleTogglePin(event);
+                }}
                 className="p-1 rounded-full hover:bg-yellow-100 transition-colors"
-                aria-label="Unpin event"
+                aria-label={event.isPinned ? "Unpin event" : "Pin event"}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -122,7 +127,10 @@ const ReminderComponent = ({ onEventClick = () => {} }) => {
               )}
               <button
                 type="button"
-                onClick={() => handleTogglePin(event)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleTogglePin(event);
+                }}
                 className="p-1 rounded-full hover:bg-yellow-100 transition-colors"
                 aria-label={event.isPinned ? "Unpin event" : "Pin event"}
               >

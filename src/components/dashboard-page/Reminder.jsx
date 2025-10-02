@@ -2,7 +2,7 @@ import { addMonths, format, isWithinInterval, compareAsc } from "date-fns";
 import useAuth from "../../hooks/useAuth.jsx";
 import useEventActions from "../../hooks/useEventActions.js";
 
-const ReminderComponent = () => {
+const ReminderComponent = ({ onEventClick = () => {} }) => {
   const { user } = useAuth();
   const { handleTogglePin } = useEventActions();
 
@@ -36,6 +36,7 @@ const ReminderComponent = () => {
           {pinnedEvents.map((event) => (
             <div
               key={event._id}
+              onClick={() => onEventClick(event)}
               className="flex items-center gap-4 p-4 rounded-lg bg-white shadow-sm"
             >
               <div className="flex-1">
@@ -90,6 +91,7 @@ const ReminderComponent = () => {
           {filteredEvents.map((event) => (
             <div
               key={event._id}
+              onClick={() => onEventClick(event)}
               className="flex items-center gap-4 p-4 rounded-lg bg-white shadow-sm"
             >
               <div className="flex-1">

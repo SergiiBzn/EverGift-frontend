@@ -96,7 +96,7 @@ const ContactSection = () => {
       <div className="relative">
         <div
           ref={scrollContainer}
-          className="flex items-center gap-4 overflow-x-auto  py-[2rem] px-[4rem] rounded-lg  dark:bg-gray-800 scrollbar-custom text-white"
+          className="flex items-center gap-4 overflow-x-auto  p-6 rounded-lg  dark:bg-gray-800 scrollbar-custom "
         >
           {filteredContacts.length > 0 ? (
             filteredContacts.map((contact) => (
@@ -114,14 +114,14 @@ const ContactSection = () => {
                  : contact.customProfil?.avatar||defaultAvatar
              })`,
            }}></div> */}
-                <div>
+                <div className="h-40 w-35  bg-white space-x-4 py-2 rounded-lg">
                   <img
-                    className="h-24 w-24 rounded-full bg-cover bg-center border border-primary mx-auto"
+                    className="h-24 w-24 rounded-full bg-cover bg-center border border-primary mx-auto object-cover block "
                     src={`
                           ${contact.avatar}`}
                     alt={contact._id}
                   />
-                  <p className="text-sm font-medium text-center p-2">
+                  <p className="text-sm font-medium text-center p-2 word-break">
                     {contact.name}
                   </p>
                 </div>

@@ -43,8 +43,8 @@ const EventModal = ({
                 typeof c === "object" ? c.id : c
               )
             : eventToEdit.contacts
-            ? [eventToEdit.contacts]
-            : [],
+              ? [eventToEdit.contacts]
+              : [],
           gift: {
             name: eventToEdit.gift?.name || "",
           },
@@ -223,7 +223,7 @@ const EventModal = ({
                   </div>
 
                   {/* horizontal scrollable contact selector */}
-                  <div className="flex space-x-4 overflow-x-auto p-2 rounded-lg bg-gray-100 dark:bg-gray-800">
+                  <div className="flex space-x-4 overflow-x-auto p-2 rounded-lg bg-gray-100 dark:bg-gray-800 scrollbar-custom">
                     {user?.contacts
                       ?.filter((c) =>
                         c.name

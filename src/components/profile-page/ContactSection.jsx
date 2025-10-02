@@ -96,7 +96,7 @@ const ContactSection = () => {
       <div className="relative">
         <div
           ref={scrollContainer}
-          className="flex items-center gap-4 overflow-x-auto  py-[2rem] px-[4rem]"
+          className="flex items-center gap-4 overflow-x-auto  py-[2rem] px-[4rem] rounded-lg  dark:bg-gray-800 scrollbar-custom text-white"
         >
           {filteredContacts.length > 0 ? (
             filteredContacts.map((contact) => (

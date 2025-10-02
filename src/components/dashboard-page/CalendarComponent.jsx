@@ -193,7 +193,7 @@ export default function Calendar({ onEventClick, onCreateEvent }) {
           </button>
         </div>
         <div
-          className={`space-y-4 overflow-y-auto pr-1`}
+          className={`space-y-4 overflow-y-auto pr-1 `}
           style={{ maxHeight: "260px" }}
         >
           <div className=" p-4 rounded-lg bg-background-light">

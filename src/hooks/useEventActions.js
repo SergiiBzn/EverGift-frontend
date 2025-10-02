@@ -73,7 +73,13 @@ const useEventActions = () => {
   };
   const handleUpdate = async (eventToEdit, formData) => {
     const { contact, _id: eventId } = eventToEdit;
-    const contactId = contact.id;
+    let contactId;
+    if (!contact) {
+      contactId = eventToEdit.contactId;
+    } else {
+      contactId = contact.id;
+    }
+
     try {
       const res = await fetch(
         `${baseUrl}/contacts/${contactId}/events/${eventId}`,

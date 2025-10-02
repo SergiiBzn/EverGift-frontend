@@ -25,13 +25,16 @@ const ReminderComponent = ({ onEventClick = () => {} }) => {
 
   return (
     <div className="bg-base-200 p-4 rounded-xl flex flex-col gap-6 shadow-md min-w-[300px]">
-      <div className="flex flex-col">
+      <div className="flex flex-col ">
         <div className="divider divider-primary "></div>
         <h3 className="text-lg font-bold text-center">Pinned</h3>
         <div className="divider divider-primary "></div>
-        <div className="space-y-4 max-h-64 overflow-y-auto pr-1">
+        <div
+          className={`space-y-4 overflow-y-auto pr-1`}
+          style={{ maxHeight: "240px" }}
+        >
           {pinnedEvents.length === 0 && (
-            <p className="text-center text-sm text-muted-dark opacity-70">
+            <p className="text-center text-lg text-muted-dark opacity-70">
               No pinned events yet
             </p>
           )}
@@ -85,19 +88,29 @@ const ReminderComponent = ({ onEventClick = () => {} }) => {
         </div>
       </div>
 
-      <div className="space-y-4">
-        <div className="divider divider-primary "></div>
+      <div className="space-y-4 mt-[3.50rem]">
+        <div className="divider divider-primary " />
         <h3 className="text-lg font-bold mb-4 text-center">
           Events in the next 2 months
         </h3>
 
         <div className="divider divider-primary "></div>
-        <div className="space-y-4 overflow-y-auto pr-1 max-h-72">
+        <div
+          className={`space-y-4  overflow-y-auto pr-1`}
+          style={{ maxHeight: "228px" }}
+        >
+          {filteredEvents.length === 0 && (
+            <p className="text-center text-lg text-muted-dark opacity-70">
+              No Event in the next 2 months
+            </p>
+          )}
           {filteredEvents.map((event) => (
             <div
               key={event._id}
+
               onClick={() => onEventClick(event)}
               className="flex items-center gap-4 p-4 rounded-lg bg-white shadow-sm"
+
             >
               <div className="flex-1">
                 <p className="font-bold">{event.title}</p>

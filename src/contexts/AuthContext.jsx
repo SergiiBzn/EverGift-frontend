@@ -170,7 +170,8 @@ export const AuthContextProvider = ({ children }) => {
         setAllUsers,
 
         baseUrl,
-      }}>
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

@@ -180,19 +180,22 @@ export default function Calendar({ onEventClick, onCreateEvent }) {
         </div>
       </div>
 
-      <div className="flex flex-col bg-base-200 p-4 rounded-xl shadow-md">
+      <div className="flex flex-col bg-base-200 p-4 rounded-xl shadow-md h-[410px]">
         <div className="flex items-center justify-between mb-4">
           {renderSelectedDay()}
 
           {/* add new event button */}
           <button
             onClick={handleAddEvent}
-            className="btn btn-primary rounded-2xl"
+            className="btn btn-primary rounded-lg shadow-md"
           >
             <span>Add New Event</span>
           </button>
         </div>
-        <div className="space-y-4">
+        <div
+          className={`space-y-4 overflow-y-auto pr-1`}
+          style={{ maxHeight: "260px" }}
+        >
           <div className=" p-4 rounded-lg bg-background-light">
             <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-4 my-4">
               {/* added events here */}

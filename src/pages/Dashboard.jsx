@@ -28,7 +28,7 @@ const Dashboard = () => {
   };
   const handleDeleteEvent = async () => {
     if (selectedEvent) {
-      await handleDelete(selectedEvent.id);
+      await handleDelete(selectedEvent);
       handleCloseDetailsModal();
     }
   };
@@ -48,7 +48,9 @@ const Dashboard = () => {
 
     if (eventToEdit) {
       // Update event
-      await handleUpdate(eventToEdit.id, eventData);
+
+      const updatedEvent = await handleUpdate(eventToEdit, payload);
+      console.log("updatedEvent", updatedEvent);
     } else {
       // Create event
       if (contacts && contacts.length > 0) {

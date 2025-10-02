@@ -42,12 +42,13 @@ const useEventActions = () => {
   };
 
   const handleDelete = async (event) => {
-    if (!event || !event.contact || !event.contact._id || !event._id) {
+    if (!event) {
       toast.error("Invalid event data provided for deletion.");
       return;
     }
     const { contact, _id: eventId } = event;
-    const contactId = contact._id;
+    const contactId = contact.id;
+
     try {
       const res = await fetch(
         `${baseUrl}/contacts/${contactId}/events/${eventId}`,
@@ -70,29 +71,32 @@ const useEventActions = () => {
       console.error("Error deleting event:", error);
     }
   };
-  const handleUpdate = async (event) => {
-    // try {
-    //   const res = await fetch(
-    //     `${baseUrl}/contacts/${contactId}/events/${eventId}`,
-    //     {
-    //       method: "PUT",
-    //       credentials: "include",
-    //     }
-    //   );
-    //   if (!res.ok) {
-    //     toast.error("Failed to edit event");
-    //   }
-    //   setUser((prevUser) => ({
-    //     ...prevUser,
-    //     events: prevUser.events.map((event) =>
-    //       event._id === eventId ? { ...event, ...res.data } : event
-    //     ),
-    //   }));
-    //   toast.success("Event edited successfully");
-    // } catch (error) {
-    //   toast.error("Error editing event");
-    //   console.error("Error editing event:", error);
-    // }
+  const handleUpdate = async (eventToEdit, formData) => {
+    const { contact, _id: eventId } = eventToEdit;
+    const contactId = contact.id;
+    try {
+      const res = await fetch(
+        `${baseUrl}/contacts/${contactId}/events/${eventId}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          method: "PUT",
+          credentials: "include",
+          body: JSON.stringify(formData),
+        }
+      );
+
+      if (!res.ok) {
+        toast.error("Failed to edit event");
+        return null;
+      }
+      const updatedEvent = await res.json();
+      return updatedEvent;
+    } catch (error) {
+      toast.error("Error editing event");
+      console.error("Error editing event:", error);
+    }
     console.log(`Editing event ${event}`);
   };
   const handleArchieve = async (event) => {

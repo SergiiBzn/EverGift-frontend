@@ -38,17 +38,20 @@ const ContactSection = () => {
           <div className="w-full sm:w-64">
             <label
               className="input input-primary input-sm"
-              htmlFor="search-contact">
+              htmlFor="search-contact"
+            >
               <svg
                 className="h-[1em] opacity-50"
                 xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24">
+                viewBox="0 0 24 24"
+              >
                 <g
                   strokeLinejoin="round"
                   strokeLinecap="round"
                   strokeWidth="2.5"
                   fill="none"
-                  stroke="currentColor">
+                  stroke="currentColor"
+                >
                   <circle cx="11" cy="11" r="8"></circle>
                   <path d="m21 21-4.3-4.3"></path>
                 </g>
@@ -61,13 +64,15 @@ const ContactSection = () => {
                 type="text"
                 value={searchContact}
                 onChange={handleSearchContact}
+                className=" rounded-lg  "
               />
             </label>
           </div>
 
           <button
             onClick={() => setIsOpenAddContact(true)}
-            className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-bold text-white">
+            className="btn btn-primary rounded-lg shadow-md "
+          >
             <svg
               className="lucide lucide-plus"
               fill="none"
@@ -78,7 +83,8 @@ const ContactSection = () => {
               strokeWidth="2"
               viewBox="0 0 24 24"
               width="20"
-              xmlns="http://www.w3.org/2000/svg">
+              xmlns="http://www.w3.org/2000/svg"
+            >
               <path d="M5 12h14"></path>
               <path d="M12 5v14"></path>
             </svg>
@@ -90,13 +96,15 @@ const ContactSection = () => {
       <div className="relative">
         <div
           ref={scrollContainer}
-          className="flex items-center gap-4 overflow-x-auto  py-[2rem] px-[4rem]">
+          className="flex items-center gap-4 overflow-x-auto  py-[2rem] px-[4rem]"
+        >
           {filteredContacts.length > 0 ? (
             filteredContacts.map((contact) => (
               <Link
                 to={`/contact/${contact.slug}`}
                 key={contact._id}
-                className="flex flex-col items-center justify-center gap-2 flex-shrink-0">
+                className="flex flex-col items-center justify-center gap-2 flex-shrink-0"
+              >
                 {/* <div
            className="h-24 w-24 rounded-full bg-cover bg-center border border-primary"
            style={{
@@ -132,7 +140,8 @@ const ContactSection = () => {
             <button
               className="p-2 rounded-full bg-background-light/80 dark:bg-background-dark/80 shadow-md ring-1 ring-black/5 dark:ring-white/10 hover:bg-background-light dark:hover:bg-background-dark btn btn-circle"
               aria-label="Previous Contacts"
-              onClick={() => scroll(-300)}>
+              onClick={() => scroll(-300)}
+            >
               <span className="material-symbols-outlined text-primary">
                 chevron_left
               </span>
@@ -142,7 +151,8 @@ const ContactSection = () => {
             <button
               className="p-2 rounded-full bg-background-light/80 dark:bg-background-dark/80 shadow-md ring-1 ring-black/5 dark:ring-white/10 hover:bg-background-light dark:hover:bg-background-dark btn btn-circle  "
               aria-label="Next Contacts"
-              onClick={() => scroll(300)}>
+              onClick={() => scroll(300)}
+            >
               <span className="material-symbols-outlined text-primary  ">
                 chevron_right
               </span>

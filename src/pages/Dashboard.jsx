@@ -6,7 +6,9 @@ import {
 } from "../components";
 import useEventAction from "../hooks/useEventActions.js";
 import { useState } from "react";
+import { toast } from "react-toastify";
 import { EventModal, EventDetailsModal } from "../components/index.js";
+import useAuth from "../hooks/useAuth.jsx";
 
 const Dashboard = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -16,6 +18,7 @@ const Dashboard = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [initialDate, setInitialDate] = useState(null);
   const { handleCreateEvent, handleUpdate, handleDelete } = useEventAction();
+  const { setUser } = useAuth();
 
   const handleEventClick = (event) => {
     setSelectedEvent(event);
@@ -48,9 +51,19 @@ const Dashboard = () => {
 
     if (eventToEdit) {
       // Update event
-
       const updatedEvent = await handleUpdate(eventToEdit, payload);
-      console.log("updatedEvent", updatedEvent);
+      if (updatedEvent) {
+        setSelectedEvent(updatedEvent);
+        setUser((prevUser) => ({
+          ...prevUser,
+          events: prevUser.events.map((event) =>
+            event._id === updatedEvent._id ? updatedEvent : event
+          ),
+        }));
+        toast.success("Event edited successfully");
+      } else {
+        toast.error("Error editing event");
+      }
     } else {
       // Create event
       if (contacts && contacts.length > 0) {
@@ -75,7 +88,7 @@ const Dashboard = () => {
           onEventClick={handleEventClick}
           onCreateEvent={handleOpenCreateModal}
         />
-        <ReminderComponent />
+        <ReminderComponent onEventClick={handleEventClick} />
       </div>
       {isDetailsModalOpen && selectedEvent && (
         <EventDetailsModal

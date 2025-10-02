@@ -57,11 +57,6 @@ const ContactEvent = ({ contact, setContact }) => {
     }
   };
 
-  // const handleAddEvent = () => {
-  //   // Placeholder for Add Event modal logic
-  //   document.getElementById("addGiftEventModal").showModal();
-  // };
-
   const handleEventClick = (event) => {
     // Placeholder for opening event details modal
 

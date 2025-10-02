@@ -1,7 +1,7 @@
 import { addMonths, format, isWithinInterval, compareAsc } from "date-fns";
 import useAuth from "../../hooks/useAuth.jsx";
 
-const ReminderComponent = () => {
+const ReminderComponent = ({ onEventClick = () => {} }) => {
   const { user } = useAuth();
 
   //********** filter the next 2 months events **********
@@ -77,6 +77,7 @@ const ReminderComponent = () => {
           {filteredEvents.map((event) => (
             <div
               key={event._id}
+              onClick={() => onEventClick(event)}
               className="flex items-center gap-4 p-4 rounded-lg bg-white shadow-sm"
             >
               <div className="flex-1">

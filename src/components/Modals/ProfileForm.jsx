@@ -18,6 +18,22 @@ const ProfileForm = ({
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    if (name === "birthday") {
+      const today = new Date().toISOString().split("T")[0];
+      if (value && value > today) {
+        setError((prev) => ({
+          ...prev,
+          birthday: "Birthday cannot be in the future.",
+        }));
+      } else if (error.birthday) {
+        // Clear the error if the date is now valid
+        setError((prev) => {
+          const { birthday, ...rest } = prev;
+          return rest;
+        });
+      }
+    }
+
     if (name === "avatar") {
       setPreview(value);
       if (imageFile) setImageFile(null);
@@ -60,6 +76,14 @@ const ProfileForm = ({
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const today = new Date().toISOString().split("T")[0];
+    if (formData.birthday && formData.birthday > today) {
+      setError((prev) => ({
+        ...prev,
+        birthday: "Birthday cannot be in the future.",
+      }));
+      return; // Stop submission
+    }
     onSubmit(formData, imageFile, setError);
   };
 

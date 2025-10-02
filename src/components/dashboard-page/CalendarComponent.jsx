@@ -10,11 +10,11 @@ import {
   addMonths,
   format,
   isSameMonth,
-  // isSameDay,
+  isSameDay,
   isToday,
   getISOWeek,
 } from "date-fns";
-import EventModal from "../Modals/EventModal.jsx";
+// import EventModal from "../Modals/EventModal.jsx";
 import useAuth from "../../hooks/useAuth.jsx";
 import EventCard from "./EventCard.jsx";
 
@@ -133,6 +133,11 @@ export default function Calendar({ onEventClick, onCreateEvent }) {
               ${!isSameMonth(cloneDay, monthStart) ? "text-gray-400" : ""}
               ${isToday(cloneDay) ? "bg-primary/30 font-bold" : ""}
               ${hasEvent ? "bg-accent/30" : ""}
+              ${
+                isSameDay(cloneDay, selectedDate) && !hasEvent
+                  ? "bg-blue-200 "
+                  : ""
+              } 
             `}
             onClick={() => handleDateClick(cloneDay)}
           >
@@ -199,6 +204,11 @@ export default function Calendar({ onEventClick, onCreateEvent }) {
           <div className=" p-4 rounded-lg bg-background-light">
             <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-4 my-4">
               {/* added events here */}
+              {!selectedEvents.length && (
+                <div className="text-center text-gray-500">
+                  No events for this day
+                </div>
+              )}
               {selectedEvents.map((event) => (
                 <EventCard
                   key={event._id}

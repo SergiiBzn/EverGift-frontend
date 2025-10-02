@@ -36,6 +36,7 @@ const ReminderComponent = ({ onEventClick = () => {} }) => {
           {pinnedEvents.map((event) => (
             <div
               key={event._id}
+              onClick={() => onEventClick(event)}
               className="flex items-center gap-4 p-4 rounded-lg bg-white shadow-sm"
             >
               <div className="flex-1">

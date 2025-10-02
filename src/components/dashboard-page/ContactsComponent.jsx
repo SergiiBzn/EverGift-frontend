@@ -62,7 +62,7 @@ const ContactsComponent = () => {
         style={shouldScroll ? { maxHeight: '450px' } : {}}
       > */}
       <div
-        className={`space-y-4 overflow-y-auto pr-1`}
+        className={`space-y-4 overflow-y-auto pr-1  `}
         style={{ maxHeight: "678px" }}
       >
         {filteredContacts?.map((contact) => {
@@ -70,7 +70,7 @@ const ContactsComponent = () => {
             <Link
               key={contact.slug}
               to={`/contact/${contact.slug}`}
-              className="flex items-center gap-4 p-4 rounded-lg bg-white shadow-sm"
+              className="flex items-center gap-4 p-4 rounded-lg bg-white shadow-sm "
             >
               <div
                 className="w-12 h-12 bg-center bg-no-repeat bg-cover rounded-full "

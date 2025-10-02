@@ -13,10 +13,6 @@ const EventDetailsModal = ({ event, onClose, onDelete, onEdit }) => {
     return user?.contacts?.find((c) => c.id === contactId);
   };
 
-  const eventContacts = Array.isArray(event.contacts)
-    ? event.contacts.map(getContactDetails).filter(Boolean)
-    : [];
-
   const handleDeleteClick = () => {
     setIsConfirmOpen(true); //
   };
@@ -29,11 +25,26 @@ const EventDetailsModal = ({ event, onClose, onDelete, onEdit }) => {
   return (
     <>
       <dialog id="event_details_modal" className="modal modal-open">
-        <div className="modal-box w-11/12 max-w-lg">
+        <div className="modal-box w-11/12 max-w-lg rounded-3xl">
           <div className="p-4">
-            <h3 className="font-bold text-2xl text-center mb-6">
-              {event.title}
-            </h3>
+            {/* Modal Header with Contact Info */}
+            <div className="flex flex-col items-center mb-6">
+              {event.contact?.profile?.avatar && (
+                <img
+                  src={event.contact.profile.avatar}
+                  alt={event.contact.profile.name}
+                  className="w-20 h-20 rounded-full object-cover mb-4 "
+                />
+              )}
+              {event.contact?.profile?.name && (
+                <p className="text-lg font-semibold text-primary">
+                  For {event.contact.profile.name}'s
+                </p>
+              )}
+              <h3 className="font-bold text-2xl text-center mt-1">
+                {event.title}
+              </h3>
+            </div>
 
             <div className="space-y-4">
               {/* Date */}
@@ -41,36 +52,15 @@ const EventDetailsModal = ({ event, onClose, onDelete, onEdit }) => {
                 <span className="font-semibold">Date:</span>
                 <span>{format(new Date(event.date), "MMMM d, yyyy")}</span>
               </div>
-
-              {/* Contacts */}
-              {eventContacts.length > 0 && (
-                <div>
-                  <span className="font-semibold">For:</span>
-                  <div className="flex flex-wrap gap-4 mt-2">
-                    {eventContacts.map((contact) => (
-                      <div
-                        key={contact.id}
-                        className="flex items-center gap-2 bg-base-200 p-2 rounded-lg"
-                      >
-                        <img
-                          src={contact.avatar}
-                          alt={contact.name}
-                          className="w-10 h-10 rounded-full object-cover"
-                        />
-                        <span>{contact.name}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
               {/* Gift */}
-              {event.gift?.name && (
-                <div className="flex items-center gap-4">
-                  <span className="font-semibold">Gift:</span>
+              <div className="flex items-center gap-4">
+                <span className="font-semibold">Gift:</span>
+                {event.gift?.name && event.gift.name !== "default" ? (
                   <span>{event.gift.name}</span>
-                </div>
-              )}
+                ) : (
+                  <span className="text-gray-400 italic">No gift prepared</span>
+                )}
+              </div>
             </div>
 
             {/* Action Buttons */}

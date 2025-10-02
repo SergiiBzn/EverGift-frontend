@@ -118,27 +118,34 @@ const EventModal = ({
   if (!isOpen) return null;
 
   const isEditMode = !!eventToEdit;
-  // In create mode, show contact selector only if not coming from a specific contact's page
+
   const showContactSelector = !isEditMode && !contactId;
-
-  //********** filter contacts **********
-  // const selectedContacts =
-  //   user?.contacts?.filter((contact) =>
-  //     formData.contacts.includes(contact.id)
-  //   ) || [];
-
-  // const availableContacts =
-  //   user?.contacts?.filter(
-  //     (contact) => !formData.contacts.includes(contact.id)
-  //   ) || [];
 
   return (
     <dialog id="event_modal" className="modal modal-open">
-      <div className="modal-box w-11/12 max-w-lg">
+      <div className="modal-box w-11/12 max-w-lg rounded-xl">
         <div className="p-4">
-          <h3 className="font-bold text-2xl text-center mb-6">
-            {isEditMode ? "Edit Event" : "Create New Event"}
-          </h3>
+          {isEditMode && (
+            <div className="flex flex-col items-center mb-6">
+              {eventToEdit.contact?.profile?.avatar && (
+                <img
+                  src={eventToEdit.contact.profile.avatar}
+                  alt={eventToEdit.contact.profile.name}
+                  className="w-20 h-20 rounded-full object-cover mb-4 "
+                />
+              )}
+              {eventToEdit.contact?.profile?.name && (
+                <p className="text-lg font-semibold text-primary">
+                  For {eventToEdit.contact.profile.name}
+                </p>
+              )}
+            </div>
+          )}
+          {!isEditMode && (
+            <h3 className="font-bold text-2xl text-center mb-6">
+              Create New Event
+            </h3>
+          )}
           <form onSubmit={handleSave}>
             <div className="space-y-4">
               {/* Event Title and Date */}

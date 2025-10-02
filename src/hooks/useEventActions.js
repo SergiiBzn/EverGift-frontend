@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import { improveErrorMessage } from "../utils/improveErrorMessage.js";
 
 const useEventActions = () => {
-  const { user, setUser, baseUrl } = useAuth();
+  const { setUser, baseUrl } = useAuth();
 
   /**
    * Creates a new event for a specific contact.
@@ -99,6 +99,46 @@ const useEventActions = () => {
     }
     console.log(`Editing event ${event}`);
   };
+  const handleTogglePin = async (event) => {
+    if (!event || !event.contact || !event.contact.id || !event._id) {
+      toast.error("Invalid event data provided for pin toggle.");
+      return null;
+    }
+    const { contact, _id: eventId } = event;
+    const contactId = contact.id;
+    const desiredPinnedState = !event.isPinned;
+    try {
+      const res = await fetch(
+        `${baseUrl}/contacts/${contactId}/events/${eventId}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          method: "PUT",
+          credentials: "include",
+          body: JSON.stringify({ isPinned: desiredPinnedState }),
+        }
+      );
+      if (!res.ok) {
+        toast.error("Failed to toggle pin");
+        return null;
+      }
+      const updatedEvent = await res.json();
+      // update user events list in state
+      setUser((prev) => ({
+        ...prev,
+        events: prev.events.map((ev) =>
+          ev._id === updatedEvent._id ? updatedEvent : ev
+        ),
+      }));
+      toast.success(desiredPinnedState ? "Event pinned" : "Event unpinned");
+      return updatedEvent;
+    } catch (error) {
+      toast.error("Error toggling pin");
+      console.error("Error toggling pin:", error);
+      return null;
+    }
+  };
   const handleArchieve = async (event) => {
     if (!event || !event.contact || !event.contact._id || !event._id) {
       toast.error("Invalid event data provided for achieving.");
@@ -115,6 +155,7 @@ const useEventActions = () => {
     handleArchieve,
     handleCreateEvent,
     handleEdit,
+    handleTogglePin,
   };
 };
 

@@ -80,7 +80,7 @@ const ContactsComponent = () => {
             </Link>
           );
         })}
-        {totalContacts.length < 1 ? 'No contacts found' : null}
+        {totalContacts.length < 1 ? 'No contacts' : null}
 
         {/* <div className="flex items-center gap-4 p-4 rounded-lg bg-background-light dark:bg-background-dark shadow-sm">
           <div className="w-12 h-12 bg-center bg-no-repeat bg-cover rounded-full bg-[url('https://lh3.googleusercontent.com/aida-public/AB6AXuCvPSQKPGXCnWbLY35gfN4kooPIpbnyxt-oaqWBmhjmLdxdvXhGqJbKlB8PxPcnbcNWEUdFBf8y8n5u2kWlMRgO56AOe95_eJ2AFig4rG2TmLZDdZtEJzL8Py9h1fu9HA0SP7SJLL7gX5v-7rsyCqzyE6ocNnQBFNXrqcR0TDTnZoKeFi9wXy7N27TJ29XpdTjB6YFnulgCba2kXXU2CejP7fD-5o_7p8exurdt8obuep_pKXhoDca0Etzb52CaMlFoqCqO4pmTTYPh')]"></div>

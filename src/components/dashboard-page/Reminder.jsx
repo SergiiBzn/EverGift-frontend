@@ -23,7 +23,10 @@ const ReminderComponent = () => {
         <div className="divider divider-primary " />
         <h3 className="text-lg font-bold mb-4 text-center">Pinned</h3>
         <div className="divider divider-primary " />
-        <div className="space-y-4">
+        <div
+          className={`space-y-4 overflow-y-auto pr-1`}
+          style={{ maxHeight: "240px" }}
+        >
           <div className="flex items-center gap-4 p-4 rounded-lg bg-background-light dark:bg-background-dark shadow-sm">
             <div className="flex-1">
               <p className="font-bold">Mother's Day</p>
@@ -63,7 +66,7 @@ const ReminderComponent = () => {
         </div>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-4 mt-[3.50rem]">
         <div className="divider divider-primary " />
         <h3 className="text-lg font-bold mb-4 text-center">
           Events in the next 2 months
@@ -71,8 +74,8 @@ const ReminderComponent = () => {
 
         <div className="divider divider-primary " />
         <div
-          className={`space-y-4 overflow-y-auto pr-1`}
-          style={{ maxHeight: "450px" }}
+          className={`space-y-4  overflow-y-auto pr-1`}
+          style={{ maxHeight: "240px" }}
         >
           {filteredEvents.map((event) => (
             <div

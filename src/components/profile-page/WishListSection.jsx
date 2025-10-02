@@ -1,9 +1,9 @@
 /** @format */
-import { useState, useEffect } from 'react';
-import WishlistModal from '../WishListModal.jsx';
-import { ConfirmModal } from '../Modals';
+import { useState, useEffect } from "react";
+import WishlistModal from "../WishListModal.jsx";
+import { ConfirmModal } from "../Modals";
 
-const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
 export default function WishListSection({ initialWishList = [] }) {
   const [isWishModalOpen, setIsWishModalOpen] = useState(false);
@@ -25,12 +25,12 @@ export default function WishListSection({ initialWishList = [] }) {
     try {
       setSavingWish(true);
       const res = await fetch(`${baseUrl}/users/wishList`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify(newList),
       });
-      if (!res.ok) throw new Error('Failed to update wishlist');
+      if (!res.ok) throw new Error("Failed to update wishlist");
       const updatedUser = await res.json();
       setWishList(updatedUser.wishList || newList);
       if (closeModal) {
@@ -72,68 +72,68 @@ export default function WishListSection({ initialWishList = [] }) {
     setConfirmState({ open: false, index: null });
 
   return (
-    <section className='flex flex-col gap-6'>
-      <div className='flex items-center justify-between'>
-        <h2 className='text-2xl font-bold'>Wishlist</h2>
+    <section className="flex flex-col gap-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold">Wishlist</h2>
         <button
-          className='flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-bold text-white'
-          aria-label='Add Item to Wishlist'
+          className="btn btn-primary rounded-lg shadow-md "
+          aria-label="Add Item to Wishlist"
           onClick={() => {
             setEditingWishIndex(null);
             setIsWishModalOpen(true);
           }}
         >
           <svg
-            className='lucide lucide-plus'
-            fill='none'
-            height='20'
-            stroke='currentColor'
-            strokeLinecap='round'
-            strokeLinejoin='round'
-            strokeWidth='2'
-            viewBox='0 0 24 24'
-            width='20'
-            xmlns='http://www.w3.org/2000/svg'
+            className="lucide lucide-plus"
+            fill="none"
+            height="20"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+            width="20"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <path d='M5 12h14'></path>
-            <path d='M12 5v14'></path>
+            <path d="M5 12h14"></path>
+            <path d="M12 5v14"></path>
           </svg>
           <span>Add Item</span>
         </button>
       </div>
 
-      <div className='rounded-lg bg-background-light shadow-sm ring-1 ring-primary/20 dark:bg-background-dark dark:ring-primary/30'>
-        <ul className='divide-y divide-primary/20 dark:divide-primary/30'>
+      <div className="rounded-lg bg-background-light shadow-sm ring-1 ring-primary/20 dark:bg-background-dark dark:ring-primary/30">
+        <ul className="divide-y divide-primary/20 dark:divide-primary/30">
           {wishList && wishList.length > 0 ? (
             wishList.map((item, idx) => (
-              <li key={idx} className='p-4 flex justify-between items-center'>
+              <li key={idx} className="p-4 flex justify-between items-center">
                 <div>
-                  <p className='font-semibold'>{item.item}</p>
+                  <p className="font-semibold">{item.item}</p>
                   {item.description && (
-                    <p className='text-sm text-primary/80 dark:text-primary/70'>
+                    <p className="text-sm text-primary/80 dark:text-primary/70">
                       {item.description}
                     </p>
                   )}
                 </div>
-                <div className='flex items-center gap-2'>
+                <div className="flex items-center gap-2">
                   <button
-                    className='p-2 rounded-full hover:bg-primary/10'
+                    className="p-2 rounded-full hover:bg-primary/10"
                     aria-label={`Edit ${item.item}`}
                     onClick={() => {
                       setEditingWishIndex(idx);
                       setIsWishModalOpen(true);
                     }}
                   >
-                    <span className='material-symbols-outlined text-primary/80 dark:text-primary/70'>
+                    <span className="material-symbols-outlined text-primary/80 dark:text-primary/70">
                       edit
                     </span>
                   </button>
                   <button
-                    className='p-2 rounded-full hover:bg-red-500/10'
+                    className="p-2 rounded-full hover:bg-red-500/10"
                     aria-label={`Delete ${item.item}`}
                     onClick={() => requestDeleteWish(idx)}
                   >
-                    <span className='material-symbols-outlined text-red-500'>
+                    <span className="material-symbols-outlined text-red-500">
                       delete
                     </span>
                   </button>
@@ -141,7 +141,7 @@ export default function WishListSection({ initialWishList = [] }) {
               </li>
             ))
           ) : (
-            <li className='p-4 text-sm text-primary/70'>No wishes yet.</li>
+            <li className="p-4 text-sm text-primary/70">No wishes yet.</li>
           )}
         </ul>
       </div>
@@ -167,13 +167,13 @@ export default function WishListSection({ initialWishList = [] }) {
 
       <ConfirmModal
         isOpen={confirmState.open}
-        title='Delete Wish Item'
-        message='Delete this wish from your list?'
-        confirmLabel='delete'
-        cancelLabel='cancel'
+        title="Delete Wish Item"
+        message="Delete this wish from your list?"
+        confirmLabel="delete"
+        cancelLabel="cancel"
         onConfirm={handleConfirmDelete}
         onCancel={handleCancelDelete}
-        tone='danger'
+        tone="danger"
       />
     </section>
   );

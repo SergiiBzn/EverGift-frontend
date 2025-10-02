@@ -48,7 +48,7 @@ const ProfileSection = ({ profile }) => {
 
           <button
             onClick={() => setIsOpenEditProfile(true)}
-            className="btn btn-sm btn-primary"
+            className="btn btn-primary rounded-lg shadow-md "
           >
             Edit Profile
           </button>

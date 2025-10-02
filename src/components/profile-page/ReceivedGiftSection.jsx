@@ -1,17 +1,17 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from "react";
 
-import ReceivedGiftModal from '../ReceivedGiftModal.jsx';
-import useAuth from '../../hooks/useAuth.jsx';
-import { ConfirmModal } from '../Modals';
+import ReceivedGiftModal from "../ReceivedGiftModal.jsx";
+import useAuth from "../../hooks/useAuth.jsx";
+import { ConfirmModal } from "../Modals";
 
-const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
 export default function ReceivedGiftSection() {
   const [open, setOpen] = useState(false);
   const [receivedGifts, setReceivedGifts] = useState([]);
   const [editingGift, setEditingGift] = useState(null);
-  const [filterYear, setFilterYear] = useState('All');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [filterYear, setFilterYear] = useState("All");
+  const [searchTerm, setSearchTerm] = useState("");
   const [extraSenders, setExtraSenders] = useState([]);
   const [confirmState, setConfirmState] = useState({ open: false, id: null });
 
@@ -19,9 +19,9 @@ export default function ReceivedGiftSection() {
   const fetchReceivedGifts = async () => {
     try {
       const response = await fetch(`${baseUrl}/users/receivedGifts`, {
-        credentials: 'include', // Include cookies for authentication
+        credentials: "include", // Include cookies for authentication
       });
-      if (!response.ok) throw new Error('Failed to fetch received gifts');
+      if (!response.ok) throw new Error("Failed to fetch received gifts");
       const data = await response.json();
       setReceivedGifts(data);
     } catch (error) {
@@ -47,12 +47,12 @@ export default function ReceivedGiftSection() {
       };
 
       const response = await fetch(`${baseUrl}/users/receivedGifts`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify(body),
       });
-      if (!response.ok) throw new Error('Failed to add received gift');
+      if (!response.ok) throw new Error("Failed to add received gift");
       const newGift = await response.json();
       setReceivedGifts((prev) => [...prev, newGift]);
       setOpen(false);
@@ -77,12 +77,12 @@ export default function ReceivedGiftSection() {
       };
 
       const response = await fetch(`${baseUrl}/users/receivedGifts/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify(body),
       });
-      if (!response.ok) throw new Error('Failed to edit received gift');
+      if (!response.ok) throw new Error("Failed to edit received gift");
       const updated = await response.json();
       setReceivedGifts((prev) =>
         prev.map((g) => (g._id === updated._id ? updated : g))
@@ -98,10 +98,10 @@ export default function ReceivedGiftSection() {
   const deleteReceivedGift = async (id) => {
     try {
       const response = await fetch(`${baseUrl}/users/receivedGifts/${id}`, {
-        method: 'DELETE',
-        credentials: 'include',
+        method: "DELETE",
+        credentials: "include",
       });
-      if (!response.ok) throw new Error('Failed to delete received gift');
+      if (!response.ok) throw new Error("Failed to delete received gift");
       setReceivedGifts((prev) => prev.filter((gift) => gift._id !== id));
     } catch (error) {
       console.error(error);
@@ -121,8 +121,8 @@ export default function ReceivedGiftSection() {
   }, []);
 
   const contactDisplayName = (c) => {
-    if (!c) return '';
-    return c.name || '';
+    if (!c) return "";
+    return c.name || "";
   };
 
   const { user } = useAuth();
@@ -154,7 +154,7 @@ export default function ReceivedGiftSection() {
     ]);
     return Array.from(set)
       .filter(Boolean)
-      .sort((a, b) => a.localeCompare(b, 'en'));
+      .sort((a, b) => a.localeCompare(b, "en"));
   }, [contactNames, existingGiftSenders, extraSenders]);
 
   const handleAddSender = (newName) => {
@@ -173,7 +173,7 @@ export default function ReceivedGiftSection() {
         if (!isNaN(d)) set.add(d.getFullYear());
       }
     });
-    return ['All', ...Array.from(set).sort((a, b) => b - a)];
+    return ["All", ...Array.from(set).sort((a, b) => b - a)];
   }, [receivedGifts]);
 
   const filteredGifts = useMemo(() => {
@@ -181,15 +181,15 @@ export default function ReceivedGiftSection() {
       const gift = r.gift || r;
       const gifter =
         Array.isArray(r.fromName) && r.fromName.length > 0
-          ? r.fromName.join(', ')
-          : r.from || r.fromName || '';
+          ? r.fromName.join(", ")
+          : r.from || r.fromName || "";
 
       let passYear = true;
-      if (filterYear !== 'All') {
+      if (filterYear !== "All") {
         const y =
           gift?.date && !isNaN(new Date(gift.date))
             ? new Date(gift.date).getFullYear().toString()
-            : '';
+            : "";
         passYear = y === filterYear;
       }
 
@@ -204,44 +204,44 @@ export default function ReceivedGiftSection() {
   }, [receivedGifts, filterYear, searchTerm]);
 
   return (
-    <section className='flex flex-col gap-6'>
-      <div className='flex items-center justify-between'>
-        <h2 className='text-2xl font-bold'>Received Gift History</h2>
+    <section className="flex flex-col gap-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold">Received Gift History</h2>
         <button
-          className='flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-bold text-white'
-          aria-label='Add Gift'
+          className="btn btn-primary rounded-lg shadow-md "
+          aria-label="Add Gift"
           onClick={() => setOpen(true)}
         >
           <svg
-            className='lucide lucide-plus'
-            fill='none'
-            height='20'
-            stroke='currentColor'
-            strokeLinecap='round'
-            strokeLinejoin='round'
-            strokeWidth='2'
-            viewBox='0 0 24 24'
-            width='20'
-            xmlns='http://www.w3.org/2000/svg'
+            className="lucide lucide-plus"
+            fill="none"
+            height="20"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+            width="20"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <path d='M5 12h14'></path>
-            <path d='M12 5v14'></path>
+            <path d="M5 12h14"></path>
+            <path d="M12 5v14"></path>
           </svg>
           <span>Add Item</span>
         </button>
       </div>
 
-      <div className='flex flex-col gap-4 sm:flex-row'>
-        <div className='flex-1'>
+      <div className="flex flex-col gap-4 sm:flex-row">
+        <div className="flex-1">
           <label
-            className='mb-1 block text-sm font-medium'
-            htmlFor='filter-year'
+            className="mb-1 block text-sm font-medium"
+            htmlFor="filter-year"
           >
             Filter by Year
           </label>
           <select
-            id='filter-year'
-            className='w-full rounded border-primary/20 bg-background-light px-3 py-2 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary dark:border-primary/30 dark:bg-background-dark dark:focus:border-primary'
+            id="filter-year"
+            className="w-full rounded border-primary/20 bg-background-light px-3 py-2 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary dark:border-primary/30 dark:bg-background-dark dark:focus:border-primary"
             value={filterYear}
             onChange={(e) => setFilterYear(e.target.value)}
           >
@@ -252,35 +252,35 @@ export default function ReceivedGiftSection() {
             ))}
           </select>
         </div>
-        <div className='flex-1'>
+        <div className="flex-1">
           <label
-            className='mb-1 block text-sm font-medium'
-            htmlFor='search-contact-history'
+            className="mb-1 block text-sm font-medium"
+            htmlFor="search-contact-history"
           >
             Search by Gifter
           </label>
-          <div className='relative'>
-            <span className='absolute inset-y-0 left-0 flex items-center pl-3'>
+          <div className="relative">
+            <span className="absolute inset-y-0 left-0 flex items-center pl-3">
               <svg
-                className='text-primary/70'
-                fill='currentColor'
-                height='20'
-                viewBox='0 0 20 20'
-                width='20'
-                xmlns='http://www.w3.org/2000/svg'
+                className="text-primary/70"
+                fill="currentColor"
+                height="20"
+                viewBox="0 0 20 20"
+                width="20"
+                xmlns="http://www.w3.org/2000/svg"
               >
                 <path
-                  clipRule='evenodd'
-                  d='M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z'
-                  fillRule='evenodd'
+                  clipRule="evenodd"
+                  d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                  fillRule="evenodd"
                 />
               </svg>
             </span>
             <input
-              id='search-contact-history'
-              className='w-full rounded border-primary/20 bg-background-light py-2 pl-10 pr-4 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary dark:border-primary/30 dark:bg-background-dark dark:focus:border-primary'
-              placeholder='Search by gifter'
-              type='text'
+              id="search-contact-history"
+              className="w-full rounded border-primary/20 bg-background-light py-2 pl-10 pr-4 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary dark:border-primary/30 dark:bg-background-dark dark:focus:border-primary"
+              placeholder="Search by gifter"
+              type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -288,52 +288,52 @@ export default function ReceivedGiftSection() {
         </div>
       </div>
 
-      <div className='overflow-x-auto rounded-lg shadow-sm ring-1 ring-primary/20 dark:ring-primary/30'>
-        <table className='min-w-full divide-y divide-primary/20 dark:divide-primary/30'>
-          <thead className='bg-primary/5 dark:bg-primary/10'>
+      <div className="overflow-x-auto rounded-lg shadow-sm ring-1 ring-primary/20 dark:ring-primary/30">
+        <table className="min-w-full divide-y divide-primary/20 dark:divide-primary/30">
+          <thead className="bg-primary/5 dark:bg-primary/10">
             <tr>
               <th
-                className='px-6 py-3 text-left text-xs font-medium uppercase tracking-wider'
-                scope='col'
+                className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                scope="col"
               >
                 Gifter
               </th>
               <th
-                className='px-6 py-3 text-left text-xs font-medium uppercase tracking-wider'
-                scope='col'
+                className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                scope="col"
               >
                 Gift
               </th>
               <th
-                className='px-6 py-3 text-left text-xs font-medium uppercase tracking-wider'
-                scope='col'
+                className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                scope="col"
               >
                 Description
               </th>
               <th
-                className='px-6 py-3 text-left text-xs font-medium uppercase tracking-wider'
-                scope='col'
+                className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                scope="col"
               >
                 Date
               </th>
               <th
-                className='px-6 py-3 text-right text-xs font-medium uppercase tracking-wider'
-                scope='col'
+                className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider"
+                scope="col"
               >
                 Actions
               </th>
             </tr>
           </thead>
-          <tbody className='divide-y divide-primary/20 bg-background-light dark:divide-primary/30 dark:bg-background-dark'>
+          <tbody className="divide-y divide-primary/20 bg-background-light dark:divide-primary/30 dark:bg-background-dark">
             {filteredGifts.length === 0 ? (
               <tr>
                 <td
                   colSpan={5}
-                  className='px-6 py-4 text-center text-sm text-primary/80'
+                  className="px-6 py-4 text-center text-sm text-primary/80"
                 >
                   {receivedGifts.length === 0
-                    ? 'No received gifts yet.'
-                    : 'No gifts match current filters.'}
+                    ? "No received gifts yet."
+                    : "No gifts match current filters."}
                 </td>
               </tr>
             ) : (
@@ -341,43 +341,43 @@ export default function ReceivedGiftSection() {
                 const gift = r.gift || r;
                 const gifter =
                   r.fromName && r.fromName.length
-                    ? r.fromName.join(', ')
-                    : r.from || r.fromName || '—';
+                    ? r.fromName.join(", ")
+                    : r.from || r.fromName || "—";
                 const date = gift?.date
                   ? new Date(gift.date).toLocaleDateString()
-                  : '';
+                  : "";
                 return (
                   <tr key={r._id || r.id}>
-                    <td className='whitespace-nowrap px-6 py-4'>{gifter}</td>
-                    <td className='whitespace-nowrap px-6 py-4 text-primary/80 dark:text-primary/70'>
+                    <td className="whitespace-nowrap px-6 py-4">{gifter}</td>
+                    <td className="whitespace-nowrap px-6 py-4 text-primary/80 dark:text-primary/70">
                       {gift?.name}
                     </td>
-                    <td className='whitespace-nowrap px-6 py-4 text-primary/80 dark:text-primary/70'>
+                    <td className="whitespace-nowrap px-6 py-4 text-primary/80 dark:text-primary/70">
                       {gift?.description}
                     </td>
-                    <td className='whitespace-nowrap px-6 py-4 text-primary/80 dark:text-primary/70'>
+                    <td className="whitespace-nowrap px-6 py-4 text-primary/80 dark:text-primary/70">
                       {date}
                     </td>
-                    <td className='whitespace-nowrap px-6 py-4 text-right'>
-                      <div className='flex items-center justify-end gap-2'>
+                    <td className="whitespace-nowrap px-6 py-4 text-right">
+                      <div className="flex items-center justify-end gap-2">
                         <button
-                          className='p-2 rounded-full hover:bg-primary/10'
+                          className="p-2 rounded-full hover:bg-primary/10"
                           aria-label={`Edit gift from ${gifter}`}
                           onClick={() => {
                             setEditingGift(r);
                             setOpen(true);
                           }}
                         >
-                          <span className='material-symbols-outlined text-primary/80 dark:text-primary/70'>
+                          <span className="material-symbols-outlined text-primary/80 dark:text-primary/70">
                             edit
                           </span>
                         </button>
                         <button
-                          className='p-2 rounded-full hover:bg-red-500/10'
+                          className="p-2 rounded-full hover:bg-red-500/10"
                           aria-label={`Delete gift from ${gifter}`}
                           onClick={() => requestDelete(r._id)}
                         >
-                          <span className='material-symbols-outlined text-red-500'>
+                          <span className="material-symbols-outlined text-red-500">
                             delete
                           </span>
                         </button>
@@ -412,13 +412,13 @@ export default function ReceivedGiftSection() {
 
       <ConfirmModal
         isOpen={confirmState.open}
-        title='Delete Received Gift'
-        message='Are you sure you want to delete this received gift? This action cannot be undone.'
-        confirmLabel='delete'
-        cancelLabel='cancel'
+        title="Delete Received Gift"
+        message="Are you sure you want to delete this received gift? This action cannot be undone."
+        confirmLabel="delete"
+        cancelLabel="cancel"
         onConfirm={handleConfirmDelete}
         onCancel={handleCancelDelete}
-        tone='danger'
+        tone="danger"
       />
     </section>
   );

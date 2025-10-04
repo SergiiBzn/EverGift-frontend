@@ -19,7 +19,7 @@ const ContactsComponent = () => {
       contact?.name?.toLowerCase()?.includes(searchContact?.toLowerCase())
     ) || [];
 
-  const shouldScroll = totalContacts.length > 5;
+  // sconst shouldScroll = totalContacts.length > 5;
 
   return (
     <div className=" p-4 rounded-xl flex flex-col bg-base-200 shadow-md">

@@ -133,11 +133,7 @@ export default function Calendar({ onEventClick, onCreateEvent }) {
               ${!isSameMonth(cloneDay, monthStart) ? "text-gray-400" : ""}
               ${isToday(cloneDay) ? "bg-primary/30 font-bold" : ""}
               ${hasEvent ? "bg-accent/30" : ""}
-              ${
-                isSameDay(cloneDay, selectedDate) && !hasEvent
-                  ? "bg-blue-200 "
-                  : ""
-              } 
+              ${isSameDay(cloneDay, selectedDate) ? "bg-blue-200 " : ""} 
             `}
             onClick={() => handleDateClick(cloneDay)}
           >

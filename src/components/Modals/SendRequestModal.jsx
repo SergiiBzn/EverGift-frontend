@@ -1,13 +1,12 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-
-import AuthContext from "../../contexts/AuthContext";
+import useAuth from "../../hooks/useAuth";
 import { toast } from "react-toastify";
 
 const SendRequestModal = ({ isOpen, setIsOpen }) => {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { sendContactRequest } = useContext(AuthContext);
+  const { sendContactRequest } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();

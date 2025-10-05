@@ -4,8 +4,7 @@ import useEventActions from "../../hooks/useEventActions.js";
 
 const EventCard = ({ event, onEventClick }) => {
   const { handleTogglePin } = useEventActions();
-  // const { setUser, baseUrl } = useAuth();
-  // const handleDelete = async (eventId, contactId) => {
+
   //   try {
   //     const res = await fetch(
   //       `${baseUrl}/contacts/${contactId}/events/${eventId}`,
@@ -73,12 +72,6 @@ const EventCard = ({ event, onEventClick }) => {
           />
         </svg>
       </button>
-      {/* <button
-        onClick={() => handleDelete(event._id, event.contact.id)}
-        className="text-red-500 hover:text-red-400"
-      >
-        <span className="material-symbols-outlined">delete</span>
-      </button> */}
     </div>
   );
 };

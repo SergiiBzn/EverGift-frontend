@@ -2,6 +2,7 @@ import EditContactProfile from "./EditContactProfile.jsx";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import ContactNote from "./ContactNote.jsx";
+import ConfirmModal from "../Modals/ConfirmModal.jsx";
 
 const ContactData = ({ contact, setContact, deleteContact }) => {
   const [isOpenEditProfile, setIsOpenEditProfile] = useState(false);
@@ -96,40 +97,14 @@ const ContactData = ({ contact, setContact, deleteContact }) => {
         </div>
       </div>
       <ContactNote contact={contact} setContact={setContact} />
-      {isOpenDeleteConfirm && (
-        <dialog className="modal modal-open sm:modal-middle">
-          <div className="modal-box alert alert-warning">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              className="stroke-info h-6 w-6 shrink-0"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              ></path>
-            </svg>
-            <p className="py-4">
-              Are you sure you want to delete this contact? This action cannot
-              be undone.
-            </p>
-            <div className="modal-action">
-              <button
-                onClick={() => setIsOpenDeleteConfirm(false)}
-                className="btn btn-sm"
-              >
-                Cancel
-              </button>
-              <button onClick={handleDelete} className="btn btn-sm btn-primary">
-                Delete
-              </button>
-            </div>
-          </div>
-        </dialog>
-      )}
+      <ConfirmModal
+        isOpen={isOpenDeleteConfirm}
+        title={`Delete ${profile.name}`}
+        message={`Are you sure you want to delete ${profile.name}? This action cannot be undone.`}
+        onConfirm={handleDelete}
+        onCancel={() => setIsOpenDeleteConfirm(false)}
+        tone="danger"
+      />
     </div>
   );
 };

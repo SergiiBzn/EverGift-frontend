@@ -14,7 +14,9 @@ const UserMenu = ({ user }) => {
     <div className="flex-none">
       <Link to="/Notifications" className="btn btn-ghost btn-circle relative">
         <span className="material-symbols-outlined">notifications</span>
-        <span className="absolute top-1 right-1 block h-2 w-2 rounded-full bg-primary"></span>
+        {user?.hasNotification && (
+          <span className="absolute top-1 right-1 block h-2 w-2 rounded-full bg-primary"></span>
+        )}
       </Link>
 
       <div className="dropdown dropdown-end">

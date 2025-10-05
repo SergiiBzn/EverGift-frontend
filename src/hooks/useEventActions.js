@@ -46,8 +46,14 @@ const useEventActions = () => {
       toast.error("Invalid event data provided for deletion.");
       return;
     }
+
     const { contact, _id: eventId } = event;
-    const contactId = contact.id;
+    let contactId;
+    if (!contact) {
+      contactId = event.contactId;
+    } else {
+      contactId = contact.id;
+    }
 
     try {
       const res = await fetch(
@@ -106,12 +112,19 @@ const useEventActions = () => {
     console.log(`Editing event ${event}`);
   };
   const handleTogglePin = async (event) => {
-    if (!event || !event.contact || !event.contact.id || !event._id) {
+    console.log("toggle pin event:", event);
+
+    if (!event) {
       toast.error("Invalid event data provided for pin toggle.");
       return null;
     }
     const { contact, _id: eventId } = event;
-    const contactId = contact.id;
+    let contactId;
+    if (!contact) {
+      contactId = event.contactId;
+    } else {
+      contactId = contact.id;
+    }
     const desiredPinnedState = !event.isPinned;
     try {
       const res = await fetch(
@@ -152,15 +165,12 @@ const useEventActions = () => {
     }
     console.log(`archieve event:${event}`);
   };
-  const handleEdit = (event) => {
-    console.log("Editing event:", event);
-  };
+
   return {
     handleDelete,
     handleUpdate,
     handleArchieve,
     handleCreateEvent,
-    handleEdit,
     handleTogglePin,
   };
 };

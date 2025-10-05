@@ -13,6 +13,7 @@ export {
   ConfirmModal,
   EventDetailsModal,
   EventModal,
+  SendRequestModal,
 } from "./Modals/index.js";
 export {
   CalendarComponent,

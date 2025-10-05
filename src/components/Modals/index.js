@@ -5,3 +5,4 @@ export { default as ProfileModal } from "./ProfileModal";
 export { default as ConfirmModal } from "./ConfirmModal";
 export { default as EventModal } from "./EventModal";
 export { default as EventDetailsModal } from "./EventDetailsModal";
+export { default as SendRequestModal } from "./SendRequestModal";

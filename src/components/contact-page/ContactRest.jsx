@@ -23,8 +23,6 @@ const ContactRest = ({ contact }) => {
     index: null,
   });
 
-  console.log("contact from rest", contact);
-
   // Fetch existing given gifts for this contact
   const fetchGivenGifts = useCallback(async () => {
     if (!contact?.id) return;

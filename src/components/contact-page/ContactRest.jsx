@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { GivenGiftModal, ConfirmModal } from "../Modals";
 import WishlistModal from "../WishListModal.jsx";
-import User from "../../../../EverGift-backend/models/User.js";
 
 const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
@@ -23,8 +22,6 @@ const ContactRest = ({ contact }) => {
     id: null,
     index: null,
   });
-
-  console.log("contact from rest", contact);
 
   // Fetch existing given gifts for this contact
   const fetchGivenGifts = useCallback(async () => {

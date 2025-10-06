@@ -150,6 +150,27 @@ export const AuthContextProvider = ({ children }) => {
       { autoClose: 8000 }
     );
   };
+  const sendContactRequest = async ({ email }) => {
+    try {
+      const response = await fetch(`${baseUrl}/requests`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+        credentials: "include",
+      });
+      if (!response.ok) {
+        const { error } = await response.json();
+        await improveErrorMessage(error);
+        return;
+      }
+      const { message } = await response.json();
+      toast.success(message);
+    } catch (error) {
+      toast.error(error);
+    }
+  };
 
   return (
     <AuthContext.Provider
@@ -168,6 +189,7 @@ export const AuthContextProvider = ({ children }) => {
         setAllContacts,
         allUsers,
         setAllUsers,
+        sendContactRequest,
 
         baseUrl,
       }}

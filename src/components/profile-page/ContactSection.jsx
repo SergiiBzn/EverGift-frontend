@@ -8,7 +8,7 @@ const ContactSection = () => {
   const [searchContact, setSearchContact] = useState("");
   const [isOpenAddContact, setIsOpenAddContact] = useState(false);
 
-  const { user, allUsers, setUser } = useAuth();
+  const { user } = useAuth();
 
   const scrollContainer = useRef(null);
   const scroll = (scrollOffset) => {

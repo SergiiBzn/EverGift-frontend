@@ -1,17 +1,23 @@
 /** @format */
 
 import { useState } from "react";
-import { AddContact } from "../index.js";
+import { AddContact, SendRequestModal } from "../index.js";
 import useAuth from "../../hooks/useAuth.jsx";
 import { Link } from "react-router-dom";
 
 const ContactsComponent = () => {
   const [isOpenAddContact, setIsOpenAddContact] = useState(false);
+  const [isOpenSendRequest, setIsOpenSendRequest] = useState(false);
   const [searchContact, setSearchContact] = useState("");
 
   const { user } = useAuth();
 
   const totalContacts = user?.contacts || [];
+  const handleClose = () => {
+    // if (document.activeElement instanceof HTMLElement) {
+    document.activeElement.blur();
+    // }
+  };
 
   //********** filter contacts **********
   const filteredContacts =
@@ -19,22 +25,59 @@ const ContactsComponent = () => {
       contact?.name?.toLowerCase()?.includes(searchContact?.toLowerCase())
     ) || [];
 
-  const shouldScroll = totalContacts.length > 5;
+  // sconst shouldScroll = totalContacts.length > 5;
 
   return (
     <div className=" p-4 rounded-xl flex flex-col bg-base-200 shadow-md">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-bold">Contacts</h3>
-        <button
-          onClick={() => setIsOpenAddContact(true)}
-          className="btn btn-primary rounded-lg shadow-md"
-        >
-          Add new Contact
-        </button>
+
+        {/* dropdown menu to add contact or send contact request */}
+        <div className="dropdown dropdown-right dropdown-center ">
+          <div
+            tabIndex={0}
+            role="button"
+            className="btn btn-primary rounded-lg shadow-md"
+          >
+            Add Contact
+          </div>
+          <ul
+            tabIndex={0}
+            className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
+          >
+            <li>
+              <button
+                onClick={() => {
+                  setIsOpenAddContact(true);
+                  handleClose();
+                }}
+              >
+                Add Custom Contact
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => {
+                  setIsOpenSendRequest(true);
+                  handleClose();
+                }}
+              >
+                Send Contact Request
+              </button>
+            </li>
+          </ul>
+        </div>
+
         {isOpenAddContact && (
           <AddContact
             isOpen={isOpenAddContact}
             setIsOpen={setIsOpenAddContact}
+          />
+        )}
+        {isOpenSendRequest && (
+          <SendRequestModal
+            isOpen={isOpenSendRequest}
+            setIsOpen={setIsOpenSendRequest}
           />
         )}
       </div>
@@ -57,10 +100,7 @@ const ContactsComponent = () => {
           </svg>
         </div>
       </div>
-      {/*  <div
-        className={`space-y-4 ${shouldScroll ? 'overflow-y-auto pr-1' : ''}`}
-        style={shouldScroll ? { maxHeight: '450px' } : {}}
-      > */}
+
       <div
         className={`space-y-4 overflow-y-auto pr-1  `}
         style={{ maxHeight: "678px" }}
@@ -85,13 +125,6 @@ const ContactsComponent = () => {
           );
         })}
         {totalContacts.length < 1 ? "No contacts found" : null}
-
-        {/* <div className="flex items-center gap-4 p-4 rounded-lg bg-background-light dark:bg-background-dark shadow-sm">
-          <div className="w-12 h-12 bg-center bg-no-repeat bg-cover rounded-full bg-[url('https://lh3.googleusercontent.com/aida-public/AB6AXuCvPSQKPGXCnWbLY35gfN4kooPIpbnyxt-oaqWBmhjmLdxdvXhGqJbKlB8PxPcnbcNWEUdFBf8y8n5u2kWlMRgO56AOe95_eJ2AFig4rG2TmLZDdZtEJzL8Py9h1fu9HA0SP7SJLL7gX5v-7rsyCqzyE6ocNnQBFNXrqcR0TDTnZoKeFi9wXy7N27TJ29XpdTjB6YFnulgCba2kXXU2CejP7fD-5o_7p8exurdt8obuep_pKXhoDca0Etzb52CaMlFoqCqO4pmTTYPh')]"></div>
-          <div className="flex-1">
-            <p className="font-bold">Linda Rodriguez</p>
-          </div>
-        </div> */}
       </div>
     </div>
   );

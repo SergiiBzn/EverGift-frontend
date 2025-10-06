@@ -6,7 +6,7 @@ import GuestMenu from "./GuestMenu";
 import useAuth from "../hooks/useAuth.jsx";
 
 const Navbar = () => {
-  const { user, isLoading } = useAuth();
+  const { user } = useAuth();
 
   /*  if (isLoading) {
     return <div className="skeleton h-32 w-32"></div>;

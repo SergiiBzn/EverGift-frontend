@@ -13,8 +13,9 @@ const ContactEvent = ({ contact, setContact }) => {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
-
-  const { handleCreateEvent, handleUpdate, handleDelete } = useEventActions();
+  // const [isPinned, setIsPinned] = useState(false);
+  const { handleCreateEvent, handleUpdate, handleDelete, handleTogglePin } =
+    useEventActions();
 
   const handleOpenCreateModal = () => {
     setSelectedEvent(null);
@@ -27,14 +28,12 @@ const ContactEvent = ({ contact, setContact }) => {
 
     if (isEditMode) {
       const updatedEvent = await handleUpdate(selectedEvent, payload);
-      console.log({ ...updatedEvent, date: updatedEvent.date.slice("T")[0] });
 
       setContact((prev) => ({
         ...prev,
         events: prev.events.map((e) =>
           e.id === updatedEvent.id
-            ? // ? { ...updatedEvent, date: updatedEvent.date.slice("T")[0] }
-              updatedEvent
+            ? { ...updatedEvent, date: updatedEvent.date.split("T")[0] }
             : e
         ),
       }));
@@ -74,10 +73,11 @@ const ContactEvent = ({ contact, setContact }) => {
   };
   const handleDeleteEvent = async () => {
     if (!selectedEvent) return;
+
     await handleDelete(selectedEvent);
     setContact((prev) => ({
       ...prev,
-      events: prev.events.filter((e) => e.id !== selectedEvent.id),
+      events: prev.events.filter((e) => e._id !== selectedEvent._id),
     }));
     handleCloseDetailsModal();
   };
@@ -155,19 +155,48 @@ const ContactEvent = ({ contact, setContact }) => {
           <div
             key={event._id}
             onClick={() => handleEventClick(event)}
-            className="group relative cursor-pointer rounded-lg  bg-primary/60 p-4 shadow-lg hover:scale-105 transition-shadow"
+            className="group relative cursor-pointer rounded-lg  bg-base-200 p-4 shadow-lg hover:scale-105 transition-shadow"
           >
             <div className="flex flex-col gap-2">
               <h4 className="text-md font-semibold text-zinc-900">
                 {event.title}
               </h4>
-              <p className="text-sm text-base-100">{event.date}</p>
+              <p className="text-sm text-gray-500">{event.date}</p>
             </div>
 
-            <button className="btn btn-ghost rounded-full absolute top-1 right-1">
-              <span className="material-symbols-outlined text-base">
-                push_pin
-              </span>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleTogglePin(event);
+                setContact((prev) => ({
+                  ...prev,
+                  events: prev.events.map((e) =>
+                    e._id === event._id
+                      ? { ...e, isPinned: !event.isPinned }
+                      : e
+                  ),
+                }));
+              }}
+              aria-label={event.isPinned ? "Unpin event" : "Pin event"}
+              className="p-1 rounded-full transition-colors absolute top-1 right-1 hover:bg-yellow-100"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill={event.isPinned ? "#eab308" : "none"}
+                stroke={event.isPinned ? "#eab308" : "currentColor"}
+                strokeWidth={1.5}
+                className={`w-6 h-6 ${
+                  event.isPinned ? "drop-shadow" : "opacity-40"
+                }`}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.98 20.54a.562.562 0 01-.84-.61l1.285-5.386a.563.563 0 00-.182-.557L3.04 10.385a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"
+                />
+              </svg>
             </button>
           </div>
         ))}

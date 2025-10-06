@@ -8,10 +8,6 @@ import useAuth from "../hooks/useAuth.jsx";
 const Navbar = () => {
   const { user } = useAuth();
 
-  /*  if (isLoading) {
-    return <div className="skeleton h-32 w-32"></div>;
-  } */
-
   return (
     <div className="navbar bg-base-100 shadow-sm">
       <div className="flex-1">

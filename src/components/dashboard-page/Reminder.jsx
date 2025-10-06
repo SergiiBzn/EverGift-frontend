@@ -1,4 +1,11 @@
-import { addMonths, format, isWithinInterval, compareAsc } from "date-fns";
+import {
+  addMonths,
+  format,
+  isWithinInterval,
+  compareAsc,
+  startOfMonth,
+  endOfMonth,
+} from "date-fns";
 import useAuth from "../../hooks/useAuth.jsx";
 import useEventActions from "../../hooks/useEventActions.js";
 
@@ -7,15 +14,28 @@ const ReminderComponent = ({ onEventClick = () => {} }) => {
   const { handleTogglePin } = useEventActions();
 
   //********** filter the next 2 months events **********
-
   const today = new Date();
+  const nextMonthStart = startOfMonth(addMonths(today, 1));
+  const nextMonthEnd = endOfMonth(addMonths(today, 1));
 
-  const twoMonthsLater = addMonths(today, 2);
+  const secondMonthStart = startOfMonth(addMonths(today, 2));
+  const secondMonthEnd = endOfMonth(addMonths(today, 2));
+
+  // const twoMonthsLater = addMonths(today, 2);
 
   const filteredEvents = user.events
     ?.filter((event) => {
       const eventDate = new Date(event.date);
-      return isWithinInterval(eventDate, { start: today, end: twoMonthsLater });
+      return (
+        isWithinInterval(eventDate, {
+          start: nextMonthStart,
+          end: nextMonthEnd,
+        }) ||
+        isWithinInterval(eventDate, {
+          start: secondMonthStart,
+          end: secondMonthEnd,
+        })
+      );
     })
     .sort((a, b) => compareAsc(new Date(a.date), new Date(b.date)));
 
@@ -91,7 +111,12 @@ const ReminderComponent = ({ onEventClick = () => {} }) => {
       <div className="space-y-4 mt-6">
         <div className="divider divider-primary " />
         <h3 className="text-lg font-bold mb-4 text-center">
-          Events in the next 2 months
+          {`Events in ${format(nextMonthStart, "MMM")} & ${format(
+            secondMonthStart,
+            "MMM"
+          )}`}
+          {/* Upcoming Events (Next 2 Months) */}
+          {/* Events in the next 2 months */}
         </h3>
 
         <div className="divider divider-primary "></div>

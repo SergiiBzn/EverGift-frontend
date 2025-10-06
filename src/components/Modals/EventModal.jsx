@@ -245,7 +245,7 @@ const EventModal = ({
 
                         return (
                           <div
-                            key={contact.id}
+                            key={contact._id}
                             onClick={() => handleContactToggle(contact._id)}
                             className={`flex-shrink-0 w-20 cursor-pointer p-2 rounded-lg text-center transition-all ${
                               isSelected

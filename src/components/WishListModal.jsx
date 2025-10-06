@@ -45,82 +45,82 @@ export default function WishlistModal({
 
   return (
     <div
-      className='fixed inset-0 z-50 flex items-center justify-center p-4'
-      aria-modal='true'
-      role='dialog'
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      aria-modal="true"
+      role="dialog"
     >
       {/* Backdrop */}
       <div
-        className='absolute inset-0 bg-black/60 backdrop-blur-sm'
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
         onClick={onClose}
       />
 
       {/* Modal card */}
       <form
         onSubmit={handleSave}
-        className='relative z-10 w-full max-w-lg rounded-3xl bg-amber-700 text-white shadow-xl'
+        className="relative z-10 w-full max-w-lg rounded-3xl bg-base-100 text-[#332E2B] shadow-xl"
       >
-        <div className='px-6 py-5 sm:px-8 sm:py-7'>
-          <h2 className='mb-6 text-center text-3xl font-semibold'>Wish Item</h2>
+        <div className="px-6 py-5 sm:px-8 sm:py-7">
+          <h2 className="mb-6 text-center text-3xl font-semibold">Wish Item</h2>
 
-          <div className='space-y-4'>
+          <div className="space-y-4">
             {/* Wish name */}
-            <div className='grid grid-cols-12 items-center gap-3'>
+            <div className="grid grid-cols-12 items-center gap-3">
               <label
-                className='col-span-4 text-right text-lg'
-                htmlFor='wishName'
+                className="col-span-4 text-right text-lg"
+                htmlFor="wishName"
               >
                 Wish name:
               </label>
-              <div className='col-span-8'>
+              <div className="col-span-8">
                 <input
-                  id='wishName'
-                  type='text'
-                  className='w-full rounded-xl bg-white/95 p-3 text-gray-900 outline-none ring-0 focus:ring-2 focus:ring-orange-400'
+                  id="wishName"
+                  type="text"
+                  className="w-full rounded-xl bg-white/95 p-3 text-gray-900 outline-none ring-0 focus:ring-2 focus:ring-orange-400"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
-                  placeholder='e.g. Noise Cancelling Headphones'
+                  placeholder="e.g. Noise Cancelling Headphones"
                   autoFocus
                 />
               </div>
             </div>
 
             {/* Description */}
-            <div className='grid grid-cols-12 items-start gap-3'>
+            <div className="grid grid-cols-12 items-start gap-3">
               <label
-                className='col-span-4 text-right text-lg'
-                htmlFor='wishDescription'
+                className="col-span-4 text-right text-lg"
+                htmlFor="wishDescription"
               >
                 Description:
               </label>
-              <div className='col-span-8'>
+              <div className="col-span-8">
                 <textarea
-                  id='wishDescription'
+                  id="wishDescription"
                   rows={3}
-                  className='w-full resize-none rounded-xl bg-white/95 p-3 text-gray-900 outline-none focus:ring-2 focus:ring-orange-400'
+                  className="w-full resize-none rounded-xl bg-white/95 p-3 text-gray-900 outline-none focus:ring-2 focus:ring-orange-400"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  placeholder='Short description (optional)'
+                  placeholder="Short description (optional)"
                 />
               </div>
             </div>
           </div>
 
           {/* Actions */}
-          <div className='mt-8 flex items-center justify-between'>
+          <div className="flex justify-end gap-4 pt-4">
             <button
-              type='button'
+              type="button"
               onClick={onClose}
-              className='btn btn-outline min-w-28 rounded-2xl'
+              className="btn btn-outline min-w-28 rounded-xl"
               disabled={loading}
             >
               cancel
             </button>
             <button
-              type='submit'
+              type="submit"
               disabled={loading}
-              className='btn btn-primary min-w-28 rounded-2xl'
+              className="btn btn-primary min-w-28 rounded-xl"
             >
               save
             </button>

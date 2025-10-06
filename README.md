@@ -7,16 +7,16 @@ It allows users to create wishlists, connect events with gifts, and even get AI-
 
 ---
 
-## ✨ Key Features
+## 🚀 Features
 
-- 🧑‍🎁 **Gift Management:** Create, edit, and organize personalized gift lists  
-- 🎉 **Event Calendar:** View and connect gifts with upcoming events  
-- 💬 **AI Integration:** Interacts with the backend AI to suggest gift ideas  
-- 🖼 **Markdown Support:** Create notes with markdown and syntax highlighting (React Markdown + PrismJS)  
-- 🪄 **Smooth Animations:** Page and element transitions with Framer Motion  
-- 📆 **Date & Time Utilities:** Simplified date formatting using date-fns  
-- 🔔 **Notifications:** Toast messages for user actions and feedback  
-- 📱 **Fully Responsive:** Built with TailwindCSS and DaisyUI for a modern, adaptive design  
+- **Gift Management:** Create, edit, and organize personalized gift lists  
+- **Event Calendar:** View and connect gifts with upcoming events  
+- **AI Integration:** Interacts with the backend AI to suggest gift ideas  
+- **Markdown Support:** Create notes with markdown and syntax highlighting (React Markdown + PrismJS)  
+- **Smooth Animations:** Page and element transitions with Framer Motion  
+- **Date & Time Utilities:** Simplified date formatting using date-fns  
+- **Notifications:** Toast messages for user actions and feedback  
+- **Fully Responsive:** Built with TailwindCSS and DaisyUI for a modern, adaptive design  
 
 ---
 
@@ -37,7 +37,7 @@ It allows users to create wishlists, connect events with gifts, and even get AI-
 
 ---
 
-## ⚙️ Installation & Setup
+## 📦 Installation & Setup
 
 1. **Clone the repository**
 ```bash

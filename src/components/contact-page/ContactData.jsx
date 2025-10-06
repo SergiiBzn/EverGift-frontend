@@ -2,6 +2,9 @@ import EditContactProfile from "./EditContactProfile.jsx";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import ContactNote from "./ContactNote.jsx";
+
+import AiChatModal from "../Modals/AiChatModal.jsx";
+
 import ConfirmModal from "../Modals/ConfirmModal.jsx";
 
 const ContactData = ({ contact, setContact, deleteContact }) => {
@@ -23,6 +26,11 @@ const ContactData = ({ contact, setContact, deleteContact }) => {
       console.error("Failed to delete contact:", error);
     }
   };
+
+  const openAIGiftSuggestionsModal = () => {
+    document.getElementById("aiChatModal").showModal();
+  };
+
   return (
     <div className="rounded-xl bg-white shadow-sm p-6">
       <div className="flex flex-c items-start gap-6 md:flex-row">
@@ -77,10 +85,17 @@ const ContactData = ({ contact, setContact, deleteContact }) => {
                 setIsOpen={setIsOpenEditProfile}
               />
             )}
-            <button className="btn btn-primary shadow-md">
+
+            {/* ai gift suggestions */}
+            <button
+              onClick={openAIGiftSuggestionsModal}
+              className="btn btn-primary shadow-md"
+            >
               <span className="material-symbols-outlined">auto_awesome</span>
               <span>AI Gift Suggestions</span>
             </button>
+
+            <AiChatModal contact={contact} />
           </div>
           <div className="mt-4 flex flex-wrap gap-2">
             <div className="mt-4 flex flex-wrap justify-center gap-2 md:justify-start">

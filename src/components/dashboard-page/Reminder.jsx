@@ -13,7 +13,7 @@ const ReminderComponent = ({ onEventClick = () => {} }) => {
   const twoMonthsLater = addMonths(today, 2);
 
   const filteredEvents = user.events
-    .filter((event) => {
+    ?.filter((event) => {
       const eventDate = new Date(event.date);
       return isWithinInterval(eventDate, { start: today, end: twoMonthsLater });
     })
@@ -99,18 +99,16 @@ const ReminderComponent = ({ onEventClick = () => {} }) => {
           className={`space-y-4  overflow-y-auto pr-1`}
           style={{ maxHeight: "228px" }}
         >
-          {filteredEvents.length === 0 && (
+          {filteredEvents?.length === 0 && (
             <p className="text-center text-lg text-muted-dark opacity-70">
               No Event in the next 2 months
             </p>
           )}
-          {filteredEvents.map((event) => (
+          {filteredEvents?.map((event) => (
             <div
               key={event._id}
-
               onClick={() => onEventClick(event)}
               className="flex items-center gap-4 p-4 rounded-lg bg-white shadow-sm"
-
             >
               <div className="flex-1">
                 <p className="font-bold">{event.title}</p>

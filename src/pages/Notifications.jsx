@@ -1,16 +1,15 @@
-import { useEffect } from "react";
-import useNotifications from "../hooks/useNotifications";
-
 import { formatDistanceToNow } from "date-fns";
+import useAuth from "../hooks/useAuth";
+import { useEffect } from "react";
 
 export default function Notifications() {
   const {
     notifications,
-    getNotifications,
     updateNotification,
-    getSentRequests,
     sentRequests,
-  } = useNotifications();
+    getNotifications,
+    getSentRequests,
+  } = useAuth();
 
   useEffect(() => {
     getNotifications();

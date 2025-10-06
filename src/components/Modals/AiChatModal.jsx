@@ -6,8 +6,10 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { improveErrorMessage } from "../../utils/improveErrorMessage";
 import { toast } from "react-toastify";
+import Markdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
-const AiChatModal = ({ contact }) => {
+const AiChatModal = ({ contact, isOpen, onClose }) => {
   const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
   const { user } = useAuth();
@@ -78,29 +80,44 @@ const AiChatModal = ({ contact }) => {
     setMessage(submittedMessage);
   };
 
+  /*  const handleClose = () => {
+    // document.getElementById("aiChatModal").close();
+
+  }; */
+
   return (
-    <dialog
-      id="aiChatModal"
-      className="modal modal-bottom fixed inset-0 z-50 flex items-center justify-center p-4 bg-primary text-black  "
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      role="dialog"
+      aria-modal="true"
     >
+      {/* Overlay */}
       <div
-        className="modal-box bg-white rounded-2xl shadow-xl overflow-y-auto w-full sm:w-2/3 h-full   min-w-[600px] "
-        style={{ maxWidth: "none", maxHeight: "none" }}
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        onClick={onClose}
+      />
+
+      {/* Modal */}
+      <div
+        id="aiChatModal"
+        className="relative bg-white w-full max-w-3xl rounded-3xl shadow-xl flex flex-col"
+        style={{ maxHeight: "90vh" }} // limits modal height
       >
         {/* Header */}
-        <div className="flex items-center justify-between border-b pb-2 mb-3">
+        <div className="flex items-center justify-between border-b p-3">
           <h3 className="font-bold text-lg text-primary">AI Gift Assistant</h3>
-          <form method="dialog">
-            <button className="btn btn-sm btn-outline">Close</button>
-          </form>
+          <button onClick={onClose} className="btn btn-sm btn-outline">
+            X
+          </button>
         </div>
 
-        {/* Chat area */}
+        {/* Chat Area */}
         <div
           id="chatMessages"
-          className="  overflow-y-auto space-y-3 p-2 border rounded-xl bg-gray-50 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200"
+          className="flex-1 overflow-y-auto space-y-3 p-4 border-t border-b bg-gray-50
+                 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200"
         >
-          {/* Initial AI greeting */}
+          {/* Initial greeting */}
           <div className="chat chat-start">
             <div className="chat-image avatar">
               <div className="w-10 rounded-full">
@@ -113,13 +130,11 @@ const AiChatModal = ({ contact }) => {
             </div>
           </div>
 
-          {/* messages  */}
+          {/* Messages */}
           {messages.map((msg, i) => (
             <div
               key={i}
-              className={`chat ${
-                msg.sender === "user" ? "chat-end" : "chat-start"
-              }`}
+              className={`chat ${msg.sender === "user" ? "chat-end" : "chat-start"}`}
             >
               <div className="chat-image avatar">
                 <div className="w-8 rounded-full">
@@ -134,13 +149,17 @@ const AiChatModal = ({ contact }) => {
                 </div>
               </div>
               <div
-                className={`chat-bubble ${
+                className={`chat-bubble leading-relaxed text-md ${
                   msg.sender === "user"
                     ? "bg-amber-600 text-white"
                     : "bg-gray-200 text-black"
                 }`}
               >
-                <p className="whitespace-pre-wrap">{msg.text}</p>
+                {/*  <Markdown>
+                  <p className="whitespace-pre-wrap">{msg.text}</p>
+                </Markdown> */}
+
+                <Markdown>{msg.text}</Markdown>
               </div>
             </div>
           ))}
@@ -153,39 +172,40 @@ const AiChatModal = ({ contact }) => {
                 </div>
               </div>
               <div className="chat-bubble bg-gray-200 text-black">
-                <span className="loading loading-dots loading-sm"></span>
+                <span className="loading loading-dots loading-sm"></span>{" "}
                 Thinking...
               </div>
             </div>
           )}
         </div>
 
-        {/* Quick suggestion button */}
-        <button
-          onClick={handleSuggestion}
-          className="btn btn-outline btn-primary mt-4 rounded-lg max-w-sm p-2 text-center text-sm w-full"
-        >
-          Suggest Me Some gifts for{" "}
-          <span className="font-bold">{contact.profile.name}</span>
-        </button>
+        {/* Footer section (input + buttons) */}
+        <div className="p-3 flex flex-col gap-3">
+          <button
+            onClick={handleSuggestion}
+            className="btn btn-outline btn-primary rounded-lg text-sm w-1/2"
+          >
+            Suggest Me Some gifts for{" "}
+            <span className="font-bold">{contact.profile.name}</span>
+          </button>
 
-        {/* Input area */}
-        <form
-          className="mt-4 flex items-center gap-2 w-full"
-          onSubmit={handleMessageSubmit}
-        >
-          <input
-            type="text"
-            name="message"
-            value={message}
-            onChange={handleChange}
-            placeholder="Type your message..."
-            className="flex-1 input input-bordered input-lg rounded-lg w-full"
-          />
-          <button className="btn btn-primary rounded-xl">Send</button>
-        </form>
+          <form
+            className="flex items-center gap-2 w-full"
+            onSubmit={handleMessageSubmit}
+          >
+            <input
+              type="text"
+              name="message"
+              value={message}
+              onChange={handleChange}
+              placeholder="Type your message..."
+              className="flex-1 input input-bordered input-lg rounded-lg w-full"
+            />
+            <button className="btn btn-primary rounded-xl">Send</button>
+          </form>
+        </div>
       </div>
-    </dialog>
+    </div>
   );
 };
 

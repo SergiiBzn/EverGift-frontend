@@ -23,9 +23,13 @@ export default function Calendar({ onEventClick, onCreateEvent }) {
   const [selectedDate, setSelectedDate] = useState(currentMonth);
 
   const today = new Date();
+
   const selectedEvents =
     (user.events || [])
-      .map((e) => ({ ...e, nextDate: getNextEventDate(e, today) }))
+      .map((e) => ({
+        ...e,
+        nextDate: getNextEventDate(e, today),
+      }))
       .filter((e) => isSameDay(e.nextDate, selectedDate)) || [];
 
   const eventDates =
@@ -121,11 +125,10 @@ export default function Calendar({ onEventClick, onCreateEvent }) {
 
       for (let i = 0; i < 7; i++) {
         const cloneDay = day;
-        const hasEvent = eventDates.some(
+        const hasEvent = eventDates?.some(
           (eventDate) =>
             eventDate &&
-            format(new Date(eventDate), "yyyy-MM-dd") ===
-              format(cloneDay, "yyyy-MM-dd")
+            format(eventDate, "yyyy-MM-dd") === format(cloneDay, "yyyy-MM-dd")
         );
 
         days.push(

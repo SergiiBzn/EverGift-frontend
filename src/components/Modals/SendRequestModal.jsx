@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import useAuth from "../../hooks/useAuth";
 import { toast } from "react-toastify";
@@ -136,7 +136,10 @@ const SendRequestModal = ({ isOpen, setIsOpen }) => {
             </svg>
           </button>
           <h3 className="text-lg font-semibold ">Send Friend Requests</h3>
-
+          <p className="text-sm text-gray-500 mt-2">
+            Invite your friends! Type their email and press Enter to add them to
+            the list.
+          </p>
           <form onSubmit={handleSubmit} className="mt-4 space-y-4">
             <div className=" flex flex-col gap-2">
               <div className="flex flex-wrap gap-2">

@@ -149,7 +149,7 @@ const AiChatModal = ({ contact, isOpen, onClose }) => {
                 </div>
               </div>
               <div
-                className={`chat-bubble leading-relaxed text-md ${
+                className={`chat-bubble leading-relaxed text-md  prose break-words  ${
                   msg.sender === "user"
                     ? "bg-amber-600 text-white"
                     : "bg-gray-200 text-black"

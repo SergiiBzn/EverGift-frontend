@@ -31,7 +31,7 @@ const ReminderComponent = ({ onEventClick = () => {} }) => {
         <div className="divider divider-primary "></div>
         <div
           className={`space-y-4 overflow-y-auto pr-1`}
-          style={{ maxHeight: "240px" }}
+          style={{ maxHeight: "280px" }}
         >
           {pinnedEvents.length === 0 && (
             <p className="text-center text-lg text-muted-dark opacity-70">
@@ -88,7 +88,7 @@ const ReminderComponent = ({ onEventClick = () => {} }) => {
         </div>
       </div>
 
-      <div className="space-y-4 mt-[3.50rem]">
+      <div className="space-y-4 mt-6">
         <div className="divider divider-primary " />
         <h3 className="text-lg font-bold mb-4 text-center">
           Events in the next 2 months
@@ -97,7 +97,7 @@ const ReminderComponent = ({ onEventClick = () => {} }) => {
         <div className="divider divider-primary "></div>
         <div
           className={`space-y-4  overflow-y-auto pr-1`}
-          style={{ maxHeight: "228px" }}
+          style={{ maxHeight: "280px" }}
         >
           {filteredEvents?.length === 0 && (
             <p className="text-center text-lg text-muted-dark opacity-70">

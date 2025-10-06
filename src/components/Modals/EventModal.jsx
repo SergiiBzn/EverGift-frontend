@@ -43,8 +43,8 @@ const EventModal = ({
                 typeof c === "object" ? c.id : c
               )
             : eventToEdit.contacts
-              ? [eventToEdit.contacts]
-              : [],
+            ? [eventToEdit.contacts]
+            : [],
           gift: {
             name: eventToEdit.gift?.name || "",
           },
@@ -123,7 +123,13 @@ const EventModal = ({
 
   return (
     <dialog id="event_modal" className="modal modal-open">
-      <div className="modal-box w-11/12 max-w-lg rounded-xl">
+      {/* Backdrop */}
+      <div
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        onClick={onClose}
+      />
+      {/* Modal card */}
+      <div className="modal-box relative z-10 w-full max-w-lg rounded-3xl bg-base-100 text-[#332E2B] shadow-xl">
         <div className="p-4">
           {isEditMode && (
             <div className="flex flex-col items-center mb-6">
@@ -297,10 +303,10 @@ const EventModal = ({
               </div>
             </div>
 
-            <div className="mt-8 flex items-center justify-between">
+            <div className="flex justify-end gap-4 pt-6">
               <button
                 type="button"
-                className="btn btn-ghost"
+                className="btn btn-outline min-w-26 rounded-2xl"
                 onClick={onClose}
                 disabled={isSubmitting}
               >
@@ -308,7 +314,7 @@ const EventModal = ({
               </button>
               <button
                 type="submit"
-                className="btn btn-primary"
+                className="btn btn-primary min-w-26 rounded-2xl"
                 disabled={
                   isSubmitting ||
                   (!isEditMode && formData.contacts.length === 0)

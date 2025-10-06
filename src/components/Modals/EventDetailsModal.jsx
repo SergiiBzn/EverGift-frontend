@@ -65,18 +65,29 @@ const EventDetailsModal = ({ event, onClose, onDelete, onEdit }) => {
 
             {/* Action Buttons */}
             <div className="modal-action mt-6">
-              <button onClick={onEdit} className="btn btn-primary">
+              <button
+                onClick={onEdit}
+                className="btn btn-primary min-w-28 rounded-xl"
+              >
                 Edit
               </button>
-              <button onClick={handleDeleteClick} className="btn btn-error">
+              <button
+                onClick={handleDeleteClick}
+                className="btn btn-error min-w-28 rounded-xl text-white"
+              >
                 Delete
               </button>
-              <button onClick={onClose} className="btn">
+              <button
+                onClick={onClose}
+                className="btn btn-outline min-w-28 rounded-xl"
+              >
                 Close
               </button>
             </div>
           </div>
         </div>
+        {/* Backdrop: click outside to close */}
+        <div className="modal-backdrop" onClick={onClose}></div>
       </dialog>
       <ConfirmModal
         isOpen={isConfirmOpen}

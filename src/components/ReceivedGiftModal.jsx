@@ -252,7 +252,7 @@ export default function ReceivedGiftModal({
       {/* Modal card */}
       <form
         onSubmit={handleSave}
-        className="relative z-10 w-full max-w-lg rounded-3xl bg-base-200 shadow-xl"
+        className="relative z-10 w-full max-w-lg rounded-3xl bg-base-100 text-[#332E2B] shadow-xl"
       >
         <div className="px-6 py-5 sm:px-8 sm:py-7">
           <h2 className="mb-6 text-center text-2xl font-semibold">
@@ -412,7 +412,7 @@ export default function ReceivedGiftModal({
           </div>
 
           {/* Actions */}
-          <div className="mt-8 flex items-center justify-between">
+          <div className="flex justify-end gap-4 pt-4">
             <button
               type="button"
               onClick={onClose}

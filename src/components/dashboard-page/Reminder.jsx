@@ -8,6 +8,7 @@ import {
 } from "date-fns";
 import useAuth from "../../hooks/useAuth.jsx";
 import useEventActions from "../../hooks/useEventActions.js";
+import { getNextEventDate } from "../../utils/eventHelpers.js";
 
 const ReminderComponent = ({ onEventClick = () => {} }) => {
   const { user } = useAuth();
@@ -22,8 +23,13 @@ const ReminderComponent = ({ onEventClick = () => {} }) => {
   const secondMonthEnd = endOfMonth(addMonths(today, 2));
 
   // const twoMonthsLater = addMonths(today, 2);
+  // *********************** handle repeat events ***********************
+  const normalizedEvents = user.events?.map((event) => ({
+    ...event,
+    date: getNextEventDate(event, today),
+  }));
 
-  const filteredEvents = user.events
+  const filteredEvents = normalizedEvents
     ?.filter((event) => {
       const eventDate = new Date(event.date);
       return (
@@ -39,7 +45,7 @@ const ReminderComponent = ({ onEventClick = () => {} }) => {
     })
     .sort((a, b) => compareAsc(new Date(a.date), new Date(b.date)));
 
-  const pinnedEvents = (user?.events || [])
+  const pinnedEvents = normalizedEvents
     .filter((e) => e.isPinned)
     .sort((a, b) => compareAsc(new Date(a.date), new Date(b.date)));
 

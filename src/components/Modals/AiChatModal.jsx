@@ -39,7 +39,7 @@ const AiChatModal = ({ contact }) => {
         body: JSON.stringify({
           prompt: message,
           contactId: contact.id,
-          contactName: user.profile.name,
+          contactName: contact.profile.name,
           wishList: contact.wishList,
         }),
         credentials: "include",
@@ -74,7 +74,7 @@ const AiChatModal = ({ contact }) => {
   };
 
   const handleSuggestion = () => {
-    const submittedMessage = `Suggest Me Some gifts for ${user.profile.name}`;
+    const submittedMessage = `Suggest Me Some gifts for ${contact.profile.name}`;
     setMessage(submittedMessage);
   };
 

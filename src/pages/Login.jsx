@@ -1,11 +1,7 @@
-/** @format */
-
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useAuth from "../hooks/useAuth.jsx";
-import { toast } from "react-toastify";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Eye, EyeOff } from "lucide-react";
-import { useNavigate } from "react-router";
 
 const Login = () => {
   const [formState, setFormState] = useState({
@@ -20,9 +16,11 @@ const Login = () => {
   const { login, error, setError, user } = useAuth();
 
   const navigate = useNavigate();
-  if (user) {
-    navigate("/");
-  }
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
 
   const handleChange = (e) => {
     setFormState((prev) => {

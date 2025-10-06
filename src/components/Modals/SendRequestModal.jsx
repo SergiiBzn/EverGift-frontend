@@ -25,7 +25,8 @@ const SendRequestModal = ({ isOpen, setIsOpen }) => {
         credentials: "include",
       });
       if (!res.ok) {
-        throw new Error("Search failed. Please try again.");
+        const errorData = await res.json();
+        throw new Error(errorData.error || "Search failed. Please try again.");
       }
       const data = await res.json();
 
@@ -47,6 +48,7 @@ const SendRequestModal = ({ isOpen, setIsOpen }) => {
   const addRequest = (value) => {
     if (!value.trim()) return;
     if (requests.includes(value)) return;
+
     setRequests([...requests, value]);
     setInputValue("");
     setFoundUser(null);

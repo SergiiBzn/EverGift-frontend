@@ -149,7 +149,7 @@ const AiChatModal = ({ contact, isOpen, onClose }) => {
                 </div>
               </div>
               <div
-                className={`chat-bubble leading-relaxed text-md  prose break-words  ${
+                className={`chat-bubble prose prose-md white-space-pre-wrap leading-9 text-md   break-words  ${
                   msg.sender === "user"
                     ? "bg-amber-600 text-white"
                     : "bg-gray-200 text-black"
@@ -159,7 +159,7 @@ const AiChatModal = ({ contact, isOpen, onClose }) => {
                   <p className="whitespace-pre-wrap">{msg.text}</p>
                 </Markdown> */}
 
-                <Markdown>{msg.text}</Markdown>
+                <Markdown>{msg.text.replace(/\n{3,}/g, "\n\n")}</Markdown>
               </div>
             </div>
           ))}

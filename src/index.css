@@ -71,8 +71,9 @@
 }
 
 .chat-bubble {
-  /* white-space: pre-line; */
-  line-height: 1.6;
+  /* white-space: normal; */
+  white-space: pre-line;
+  line-height: 1.4;
 }
 
 .modal-box {

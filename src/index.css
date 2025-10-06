@@ -69,3 +69,22 @@
   scrollbar-width: thin;
   scrollbar-color: #9ca3af #e5e7eb;
 }
+
+.chat-bubble {
+  white-space: pre-line;
+}
+
+.modal-box {
+  width: 60%;
+}
+@media (min-width: 640px) {
+  .modal-box {
+    max-width: 32rem;
+  }
+}
+
+@media (max-width: 639px) {
+  .modal-box {
+    width: 100%;
+  }
+}

@@ -10,6 +10,8 @@ import ConfirmModal from "../Modals/ConfirmModal.jsx";
 const ContactData = ({ contact, setContact, deleteContact }) => {
   const [isOpenEditProfile, setIsOpenEditProfile] = useState(false);
   const [isOpenDeleteConfirm, setIsOpenDeleteConfirm] = useState(false);
+
+  const [isOpenAiChat, setIsOpenAiChat] = useState(false);
   const navigate = useNavigate();
 
   if (!contact) {
@@ -27,9 +29,9 @@ const ContactData = ({ contact, setContact, deleteContact }) => {
     }
   };
 
-  const openAIGiftSuggestionsModal = () => {
-    document.getElementById("aiChatModal").showModal();
-  };
+  /*  const openAIGiftSuggestionsModal = () => {
+     document.getElementById("aiChatModal").showModal();
+  }; */
 
   return (
     <div className="rounded-xl bg-white shadow-sm p-6">
@@ -88,14 +90,21 @@ const ContactData = ({ contact, setContact, deleteContact }) => {
 
             {/* ai gift suggestions */}
             <button
-              onClick={openAIGiftSuggestionsModal}
+              // onClick={openAIGiftSuggestionsModal}
+              onClick={() => setIsOpenAiChat(true)}
               className="btn btn-primary shadow-md"
             >
               <span className="material-symbols-outlined">auto_awesome</span>
               <span>AI Gift Suggestions</span>
             </button>
 
-            <AiChatModal contact={contact} />
+            {isOpenAiChat && (
+              <AiChatModal
+                contact={contact}
+                isOpen={isOpenAiChat}
+                onClose={() => setIsOpenAiChat(false)}
+              />
+            )}
           </div>
           <div className="mt-4 flex flex-wrap gap-2">
             <div className="mt-4 flex flex-wrap justify-center gap-2 md:justify-start">

@@ -1,5 +1,3 @@
-/** @format */
-
 import { useState } from "react";
 import { AddContact, SendRequestModal } from "../index.js";
 import useAuth from "../../hooks/useAuth.jsx";
@@ -14,9 +12,7 @@ const ContactsComponent = () => {
 
   const totalContacts = user?.contacts || [];
   const handleClose = () => {
-    // if (document.activeElement instanceof HTMLElement) {
     document.activeElement.blur();
-    // }
   };
 
   //********** filter contacts **********
@@ -47,6 +43,7 @@ const ContactsComponent = () => {
           >
             <li>
               <button
+                className="text-primary font-bold"
                 onClick={() => {
                   setIsOpenAddContact(true);
                   handleClose();
@@ -57,6 +54,7 @@ const ContactsComponent = () => {
             </li>
             <li>
               <button
+                className="text-primary font-bold"
                 onClick={() => {
                   setIsOpenSendRequest(true);
                   handleClose();

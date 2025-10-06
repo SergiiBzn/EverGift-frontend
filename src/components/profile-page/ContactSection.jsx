@@ -11,9 +11,7 @@ const ContactSection = () => {
 
   const { user } = useAuth();
   const handleClose = () => {
-    // if (document.activeElement instanceof HTMLElement) {
     document.activeElement.blur();
-    // }
   };
 
   const scrollContainer = useRef(null);
@@ -76,7 +74,7 @@ const ContactSection = () => {
           </div>
 
           {/* dropdown menu to add contact or send contact request */}
-          <div className="dropdown dropdown-right dropdown-center ">
+          <div className="dropdown dropdown-end dropdown-center ">
             <div
               tabIndex={0}
               role="button"
@@ -105,6 +103,7 @@ const ContactSection = () => {
             >
               <li>
                 <button
+                  className="text-primary font-bold"
                   onClick={() => {
                     setIsOpenAddContact(true);
                     handleClose();
@@ -115,6 +114,7 @@ const ContactSection = () => {
               </li>
               <li>
                 <button
+                  className="text-primary font-bold"
                   onClick={() => {
                     setIsOpenSendRequest(true);
                     handleClose();

@@ -224,7 +224,7 @@ const ProfileForm = ({
         <input
           className="w-full rounded-lg input input-lg input-primary text-base-content"
           name="tags"
-          placeholder="Add a tag..."
+          placeholder="Enter a tag and press Enter"
           type="text"
           value={newTag}
           onChange={(e) => setNewTag(e.target.value)}

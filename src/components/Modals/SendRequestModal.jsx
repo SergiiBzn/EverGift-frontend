@@ -1,20 +1,85 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import useAuth from "../../hooks/useAuth";
 import { toast } from "react-toastify";
 
 const SendRequestModal = ({ isOpen, setIsOpen }) => {
-  const [email, setEmail] = useState("");
+  // const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { sendContactRequest } = useAuth();
+  const [inputValue, setInputValue] = useState("");
+  const [requests, setRequests] = useState([]);
+  const [foundUser, setFoundUser] = useState(null);
+  const [searchError, setSearchError] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
 
+  const { sendContactRequest, baseUrl } = useAuth();
+
+  const handleSearch = async () => {
+    if (!inputValue.trim()) return;
+    setIsSearching(true);
+    setSearchError;
+    setFoundUser(null);
+    try {
+      const res = await fetch(`${baseUrl}/users/search?q=${inputValue}`, {
+        method: "GET",
+        credentials: "include",
+      });
+      if (!res.ok) {
+        throw new Error("Search failed. Please try again.");
+      }
+      const data = await res.json();
+
+      if (!data) {
+        setFoundUser(null);
+        setSearchError(`No users found with email ${inputValue}.`);
+      } else {
+        setFoundUser(data);
+        setSearchError("");
+      }
+    } catch (err) {
+      setSearchError(err.message || "Error fetching user. Please try again.");
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  // ================ add request  ==================
+  const addRequest = (value) => {
+    if (!value.trim()) return;
+    if (requests.includes(value)) return;
+    setRequests([...requests, value]);
+    setInputValue("");
+    setFoundUser(null);
+  };
+
+  // ================ remove request  ==================
+  const removeRequest = (value) => {
+    setRequests(requests.filter((r) => r !== value));
+  };
+
+  // ================ handle keydown  ==================
+  const handleKeydown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleSearch();
+    }
+  };
+
+  // ================ submit requests ==================
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (requests.length === 0) {
+      setSearchError("Please add at least one email.");
+      return;
+    }
 
     setIsLoading(true);
     try {
-      await sendContactRequest({ email });
-      setEmail("");
+      for (const req of requests) {
+        await sendContactRequest({ email: req });
+      }
+      setRequests([]);
+      setInputValue("");
       setIsLoading(false);
       setIsOpen(false);
     } catch (err) {
@@ -47,7 +112,7 @@ const SendRequestModal = ({ isOpen, setIsOpen }) => {
         />
         {/* modal body */}
         <motion.div
-          className="relative w-full max-w-md rounded-2xl bg-base-100 p-6 shadow-xl dark:bg-background-dark
+          className="relative w-full max-w-md rounded-2xl bg-base-100 p-6 shadow-xl dark:bg-background-dark text-[#332E2B]
               max-h-[90vh] mx-auto"
         >
           <button
@@ -70,44 +135,84 @@ const SendRequestModal = ({ isOpen, setIsOpen }) => {
               />
             </svg>
           </button>
-          <h3 className="text-lg font-semibold text-primary">
-            Send Friend Request
-          </h3>
-          <p className="mt-1 text-sm text-gray-600">
-            Enter the email address of the user you want to connect with.
-          </p>
+          <h3 className="text-lg font-semibold ">Send Friend Requests</h3>
+
           <form onSubmit={handleSubmit} className="mt-4 space-y-4">
-            <div>
-              <label
-                htmlFor="email"
-                className="block font-medium text-gray-700"
-              >
-                Contact's Email:
-              </label>
-              <input
-                type="email"
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="input input-bordered input-primary w-full mt-2"
-                placeholder="name@example.com"
-                required
-              />
+            <div className=" flex flex-col gap-2">
+              <div className="flex flex-wrap gap-2">
+                {requests.map((email) => (
+                  <div
+                    key={email}
+                    className="badge badge-primary gap-2 py-3 px-4 text-sm"
+                  >
+                    <span>{email}</span>
+                    <button
+                      type="button"
+                      onClick={() => removeRequest(email)}
+                      className="ml-1 text-white/80 hover:text-red-300"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
+              </div>
+              <div className="flex items-center gap-2">
+                <input
+                  type="email"
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  onKeyDown={handleKeydown}
+                  className="input input-bordered input-primary w-full mt-2"
+                  placeholder="Enter email and press Enter"
+                />
+              </div>
+
+              {searchError && (
+                <p className="text-red-500 text-sm mt-1">{searchError}</p>
+              )}
+              {isSearching && (
+                <p className="text-sm text-primary mt-1">Searching...</p>
+              )}
+
+              {foundUser && (
+                <div className="menu bg-base-200 w-full rounded-box mt-2">
+                  <div
+                    onClick={() => addRequest(foundUser.email)}
+                    className="flex items-center justify-between p-2"
+                  >
+                    <div className="flex items-center gap-2">
+                      <img
+                        alt={foundUser.profile?.name}
+                        className="w-8 h-8 rounded-full"
+                        src={foundUser.profile?.avatar}
+                      />
+                      <div>
+                        <p className="text-sm font-medium">
+                          {foundUser.profile?.name}
+                        </p>
+                        <p className="text-xs text-base-content/60">
+                          {foundUser.email}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
-            <div className="flex justify-end space-x-2">
+            <div className="flex justify-end gap-4 pt-4">
               <button
                 type="button"
                 onClick={() => setIsOpen(false)}
-                className="btn btn-outline btn-primary"
+                className="btn btn-outline min-w-28 rounded-xl"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={isLoading}
-                className="btn btn-primary"
+                className="btn btn-primary rounded-xl min-w-28"
               >
-                {isLoading ? "Sending..." : "Send Request"}
+                {isLoading ? "Sending..." : "Send Requests"}
               </button>
             </div>
           </form>

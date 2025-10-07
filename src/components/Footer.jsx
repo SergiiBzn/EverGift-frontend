@@ -1,16 +1,18 @@
 /** @format */
 import { Link } from "react-router";
 import Logo from "./Logo";
+import useAuth from "../hooks/useAuth.jsx";
 
 const Footer = () => {
+  const { user } = useAuth();
   return (
-    <footer className="bg-base-200 text-base-content px-10  py-6">
-      <div className="w-full mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+    <footer className="bg-base-200 text-base-content py-6 shadow-inner">
+      {/* <div className="w-full mx-auto grid grid-cols-1 md:grid-cols-3 gap-8"> */}
+      <div
+        className={`w-full mx-auto flex flex-col md:flex-row justify-around gap-8`}
+      >
         {/* Branding */}
         <div>
-          {/* <h2 className="text-2xl font-bold text-primary footer-title">
-            🎁 GiftApp
-          </h2> */}
           <Logo />
           <p className="mt-2 text-sm text-base-content/70">
             Keep track of your gifts, contacts, and events in one place.
@@ -18,28 +20,38 @@ const Footer = () => {
         </div>
 
         {/* Navigation */}
-        <div>
-          <h6 className="footer-title">Navigation</h6>
-          <ul className="flex flex-col space-y-2">
-            <Link className="link link-hover" to="/">
-              Dashboard
-            </Link>
-            <Link className="link link-hover" to="/profile">
-              Profile
-            </Link>
-
-            <Link className="link link-hover" to="/Notifications">
-              Notifications
-            </Link>
-          </ul>
-        </div>
+        {user && (
+          <div>
+            <h6 className="footer-title">Navigation</h6>
+            <ul className="flex flex-col space-y-2">
+              <Link className="link link-hover" to="/">
+                Dashboard
+              </Link>
+              <Link className="link link-hover" to="/profile">
+                Profile
+              </Link>
+              <Link className="link link-hover" to="/Notifications">
+                Notifications
+              </Link>
+            </ul>
+          </div>
+        )}
 
         {/* our Contact */}
         <div>
-          <h6 className="footer-title"> Contacts Us</h6>
-          <ul className="flex flex-col flex-start  w-full space-y-2">
-            <li className="flex  gap-2  ">
+          <h6 className={user ? `footer-title` : `footer-title text-center`}>
+            Contacts Us
+          </h6>
+          <ul
+            className={
+              user
+                ? "flex flex-col flex-start w-full space-y-2"
+                : "flex gap-10 "
+            }
+          >
+            <li className="flex flex-col sm:flex-row sm:items-center gap-2 ">
               <h2 className="font-medium">Yan Yang</h2>
+
               <a
                 href="https://www.linkedin.com/in/yan-yang-dev25/"
                 target="_blank"

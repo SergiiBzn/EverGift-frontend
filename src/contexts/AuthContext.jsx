@@ -16,7 +16,6 @@ export const AuthContextProvider = ({ children }) => {
 
   const [allContacts, setAllContacts] = useState([]);
 
-  const [allUsers, setAllUsers] = useState([]);
   const [notifications, setNotifications] = useState([]);
   const [sentRequests, setSentRequests] = useState([]);
   const navigate = useNavigate();
@@ -177,9 +176,6 @@ export const AuthContextProvider = ({ children }) => {
   const getNotifications = async () => {
     try {
       const res = await fetch(`${baseUrl}/notifications`, {
-        headers: {
-          "Content-Type": "application/json",
-        },
         method: "GET",
         credentials: "include",
       });
@@ -192,7 +188,6 @@ export const AuthContextProvider = ({ children }) => {
       setUser((prev) => ({
         ...prev,
         notifications: data,
-        hasNotification: false,
       }));
       setNotifications(data);
       return data;
@@ -236,9 +231,6 @@ export const AuthContextProvider = ({ children }) => {
   const getSentRequests = async () => {
     try {
       const res = await fetch(`${baseUrl}/requests`, {
-        // headers: {
-        //   "Content-Type": "application/json",
-        // },
         method: "GET",
         credentials: "include",
       });
@@ -259,6 +251,28 @@ export const AuthContextProvider = ({ children }) => {
       return null;
     }
   };
+  const getHasNotification = async () => {
+    try {
+      const res = await fetch(`${baseUrl}/users/hasNotification`, {
+        method: "GET",
+        credentials: "include",
+      });
+      if (!res.ok) {
+        toast.error("Failed to get hasNotification");
+        return null;
+      }
+      const data = await res.json();
+      setUser((prev) => ({
+        ...prev,
+        hasNotification: data,
+      }));
+      return data;
+    } catch (error) {
+      toast.error("Error getting hasNotification");
+      console.error("Error getting hasNotification:", error);
+      return null;
+    }
+  };
 
   return (
     <AuthContext.Provider
@@ -275,8 +289,6 @@ export const AuthContextProvider = ({ children }) => {
 
         allContacts,
         setAllContacts,
-        allUsers,
-        setAllUsers,
         sendContactRequest,
 
         baseUrl,
@@ -285,6 +297,7 @@ export const AuthContextProvider = ({ children }) => {
         getNotifications,
         updateNotification,
         getSentRequests,
+        getHasNotification,
       }}
     >
       {children}

@@ -13,7 +13,7 @@ const Navbar = () => {
       <div className="flex-1">
         <Logo />
       </div>
-      {user ? <UserMenu user={user} /> : <GuestMenu />}
+      {user ? <UserMenu /> : <GuestMenu />}
     </div>
   );
 };

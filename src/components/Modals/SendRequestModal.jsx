@@ -14,13 +14,16 @@ const SendRequestModal = ({ isOpen, setIsOpen }) => {
 
   const { sendContactRequest, baseUrl } = useAuth();
 
-  const handleSearch = async () => {
-    if (!inputValue.trim()) return;
+  const handleSearch = async (query) => {
+    const emailToSearch = query || inputValue.trim();
+    if (!emailToSearch) return null;
+
     setIsSearching(true);
-    setSearchError;
+    setSearchError("");
     setFoundUser(null);
+
     try {
-      const res = await fetch(`${baseUrl}/users/search?q=${inputValue}`, {
+      const res = await fetch(`${baseUrl}/users/search?q=${emailToSearch}`, {
         method: "GET",
         credentials: "include",
       });
@@ -31,14 +34,15 @@ const SendRequestModal = ({ isOpen, setIsOpen }) => {
       const data = await res.json();
 
       if (!data) {
-        setFoundUser(null);
-        setSearchError(`No users found with email ${inputValue}.`);
+        setSearchError(`No users found with email ${emailToSearch}.`);
+        return null;
       } else {
         setFoundUser(data);
-        setSearchError("");
+        return data;
       }
     } catch (err) {
       setSearchError(err.message || "Error fetching user. Please try again.");
+      return null;
     } finally {
       setIsSearching(false);
     }
@@ -70,6 +74,17 @@ const SendRequestModal = ({ isOpen, setIsOpen }) => {
   // ================ submit requests ==================
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    let updateRequests = [...requests];
+    if (inputValue.trim() && !removeRequest(inputValue.trim())) {
+      const foundUser = await handleSearch(inputValue.trim());
+      if (foundUser) {
+        updateRequests.push(foundUser.email);
+      } else {
+        updateRequests.push(inputValue.trim());
+      }
+    }
+
     if (requests.length === 0) {
       setSearchError("Please add at least one email.");
       return;
@@ -77,11 +92,13 @@ const SendRequestModal = ({ isOpen, setIsOpen }) => {
 
     setIsLoading(true);
     try {
-      for (const req of requests) {
+      const uniqueRequests = [...new Set(updateRequests)];
+      for (const req of uniqueRequests) {
         await sendContactRequest({ email: req });
       }
       setRequests([]);
       setInputValue("");
+      setFoundUser(null);
       setIsLoading(false);
       setIsOpen(false);
     } catch (err) {
@@ -139,8 +156,8 @@ const SendRequestModal = ({ isOpen, setIsOpen }) => {
           </button>
           <h3 className="text-lg font-semibold ">Send Friend Requests</h3>
           <p className="text-sm text-gray-500 mt-2">
-            Invite your friends! Type their email and press Enter to add them to
-            the list.
+            Invite your friends! Type their emails and press Enter then add them
+            to the list.
           </p>
           <form onSubmit={handleSubmit} className="mt-4 space-y-4">
             <div className=" flex flex-col gap-2">
@@ -155,6 +172,7 @@ const SendRequestModal = ({ isOpen, setIsOpen }) => {
                       type="button"
                       onClick={() => removeRequest(email)}
                       className="ml-1 text-white/80 hover:text-red-300"
+                      // disabled={!requests}
                     >
                       ✕
                     </button>
@@ -214,10 +232,16 @@ const SendRequestModal = ({ isOpen, setIsOpen }) => {
               </button>
               <button
                 type="submit"
-                disabled={isLoading}
+                disabled={isLoading || (!inputValue && requests.length === 0)}
                 className="btn btn-primary rounded-xl min-w-28"
               >
-                {isLoading ? "Sending..." : "Send Requests"}
+                {isLoading
+                  ? "Sending..."
+                  : requests.length > 0
+                  ? `Send ${requests.length + (inputValue ? 1 : 0)} Request${
+                      requests.length + (inputValue ? 1 : 0) > 1 ? "s" : ""
+                    }`
+                  : "Send Request"}
               </button>
             </div>
           </form>

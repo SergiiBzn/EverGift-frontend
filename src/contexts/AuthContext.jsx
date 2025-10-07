@@ -168,6 +168,7 @@ export const AuthContextProvider = ({ children }) => {
       }
       const { message } = await response.json();
       toast.success(message);
+      setUser((prev) => ({ ...prev, hasNotification: true }));
     } catch (error) {
       toast.error(error);
     }
@@ -258,7 +259,7 @@ export const AuthContextProvider = ({ children }) => {
         credentials: "include",
       });
       if (!res.ok) {
-        toast.error("Failed to get hasNotification");
+        console.error("Failed to get hasNotification");
         return null;
       }
       const data = await res.json();
@@ -268,7 +269,6 @@ export const AuthContextProvider = ({ children }) => {
       }));
       return data;
     } catch (error) {
-      toast.error("Error getting hasNotification");
       console.error("Error getting hasNotification:", error);
       return null;
     }

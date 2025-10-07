@@ -241,7 +241,7 @@ export default function ReceivedGiftSection() {
           </label>
           <select
             id="filter-year"
-            className="w-full rounded border-primary/20 bg-background-light px-3 py-2 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary dark:border-primary/30 dark:bg-background-dark dark:focus:border-primary"
+            className="w-full rounded-2xl input input-md input-primary bg-white/95 text-base-content"
             value={filterYear}
             onChange={(e) => setFilterYear(e.target.value)}
           >
@@ -278,7 +278,7 @@ export default function ReceivedGiftSection() {
             </span>
             <input
               id="search-contact-history"
-              className="w-full rounded border-primary/20 bg-background-light py-2 pl-10 pr-4 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary dark:border-primary/30 dark:bg-background-dark dark:focus:border-primary"
+              className="w-full rounded-2xl input input-md input-primary bg-white/95 text-base-content pl-10 pr-4"
               placeholder="Search by gifter"
               type="text"
               value={searchTerm}

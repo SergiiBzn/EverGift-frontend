@@ -162,7 +162,7 @@ const EventModal = ({
                 type="text"
                 name="title"
                 placeholder="Event Title"
-                className="input input-bordered w-full"
+                className="w-full rounded-2xl input input-md input-primary bg-white/95 text-base-content"
                 value={formData.title}
                 onChange={handleInputChange}
                 required
@@ -170,7 +170,7 @@ const EventModal = ({
               <input
                 type="date"
                 name="date"
-                className="input input-bordered w-full"
+                className="w-full rounded-2xl input input-md input-primary bg-white/95 text-base-content"
                 value={formData.date}
                 onChange={handleInputChange}
                 required
@@ -189,7 +189,7 @@ const EventModal = ({
                   <input
                     type="text"
                     placeholder="Search contacts..."
-                    className="input input-bordered w-full mb-3"
+                    className="w-full rounded-2xl input input-md input-primary bg-white/95 text-base-content mb-3"
                     value={formData.contactSearch || ""}
                     onChange={(e) =>
                       setFormData((prev) => ({
@@ -276,7 +276,7 @@ const EventModal = ({
                 type="text"
                 name="giftName"
                 placeholder="Gift Name (Optional)"
-                className="input input-bordered w-full"
+                className="w-full rounded-2xl input input-md input-primary bg-white/95 text-base-content"
                 value={formData.gift.name}
                 onChange={handleInputChange}
               />

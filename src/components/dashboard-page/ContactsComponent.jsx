@@ -81,7 +81,7 @@ const ContactsComponent = () => {
       </div>
       <div className="relative mb-4">
         <input
-          className="w-full pl-10 pr-4 py-2 rounded-lg bg-zinc-100 border border-subtle-light dark:border-subtle-dark focus:outline-none focus:border-0 focus:ring-2 focus:ring-primary/50 transition-colors"
+          className="w-full rounded-2xl input input-md input-primary bg-white/95 text-base-content pl-10 pr-4"
           placeholder="Search contacts..."
           value={searchContact}
           onChange={(e) => setSearchContact(e.target.value)}

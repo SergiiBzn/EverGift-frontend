@@ -40,12 +40,9 @@ const ContactSection = () => {
         <h2 className="text-2xl font-bold">Contacts</h2>
         <div className="w-full sm:w-auto flex flex-col sm:flex-row items-start sm:items-center gap-4">
           <div className="w-full sm:w-64">
-            <label
-              className="input input-primary input-sm"
-              htmlFor="search-contact"
-            >
+            <label className="relative block" htmlFor="search-contact">
               <svg
-                className="h-[1em] opacity-50"
+                className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 opacity-50"
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
               >
@@ -68,7 +65,7 @@ const ContactSection = () => {
                 type="text"
                 value={searchContact}
                 onChange={handleSearchContact}
-                className=" rounded-lg  "
+                className="w-full rounded-2xl input input-md input-primary bg-white/95 text-base-content pl-10"
               />
             </label>
           </div>

@@ -76,7 +76,7 @@ export default function WishlistModal({
                 <input
                   id="wishName"
                   type="text"
-                  className="w-full rounded-xl bg-white/95 p-3 text-gray-900 outline-none ring-0 focus:ring-2 focus:ring-orange-400"
+                  className="w-full rounded-2xl input input-md input-primary bg-white/95 text-base-content"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
@@ -98,7 +98,7 @@ export default function WishlistModal({
                 <textarea
                   id="wishDescription"
                   rows={3}
-                  className="w-full resize-none rounded-xl bg-white/95 p-3 text-gray-900 outline-none focus:ring-2 focus:ring-orange-400"
+                  className="w-full rounded-2xl input input-md input-primary bg-white/95 text-base-content"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Short description (optional)"

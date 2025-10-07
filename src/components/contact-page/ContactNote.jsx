@@ -74,7 +74,7 @@ const ContactNote = ({ contact, setContact }) => {
         <>
           <textarea
             name="note"
-            className="mt-1 w-full h-32 textarea  textarea-primary"
+            className="mt-1 w-full h-32 rounded-2xl input input-md input-primary bg-white/95 text-base-content"
             value={note}
             onChange={(e) => setNote(e.target.value)}
             onKeyDown={handleKeyDown}

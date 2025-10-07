@@ -43,7 +43,7 @@ const ContactData = ({ contact, setContact, deleteContact }) => {
           }}
         ></div>
         <div className="flex-1">
-          <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="flex flex-wrap items-center justify-between gap-4 ">
             <div className="flex flex-col">
               <div className="flex items-center gap-6">
                 <h2 className="text-3xl font-bold text-zinc-900">
@@ -63,7 +63,7 @@ const ContactData = ({ contact, setContact, deleteContact }) => {
                 {contactType == "custom" && (
                   <button
                     onClick={() => setIsOpenEditProfile(true)}
-                    className="btn btn-sm btn-primary btn-outline"
+                    className="btn btn-sm btn-primary btn-outline "
                   >
                     Edit
                   </button>

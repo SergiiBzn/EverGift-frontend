@@ -116,7 +116,7 @@ const ContactEvent = ({ contact, setContact }) => {
         <div className="flex items-center gap-2">
           <button
             onClick={handleOpenCreateModal}
-            className="btn btn-primary btn-outline rounded-2xl"
+            className="btn btn-primary btn-outline "
           >
             <span className="material-symbols-outlined"> add </span>
             <span>Add</span>

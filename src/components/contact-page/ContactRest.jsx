@@ -230,7 +230,7 @@ const ContactRest = ({ contact, setContact }) => {
           </h3>
           <button
             onClick={() => setOpenAddGivenGift(true)}
-            className="btn btn-primary btn-outline rounded-2xl disabled:opacity-50"
+            className="btn btn-primary btn-outline  disabled:opacity-50"
             disabled={submitting}
           >
             <span className="material-symbols-outlined"> add </span>
@@ -358,7 +358,7 @@ const ContactRest = ({ contact, setContact }) => {
           {/* chekc if the user if a linkedUser */}
           {contact.contactType !== "user" && (
             <button
-              className="btn btn-primary btn-outline rounded-2xl disabled:opacity-50"
+              className="btn btn-primary btn-outline  disabled:opacity-50"
               onClick={() => {
                 setEditingWishIndex(null);
                 setWlModalOpen(true);

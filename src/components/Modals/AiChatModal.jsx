@@ -43,6 +43,8 @@ const AiChatModal = ({ contact, isOpen, onClose }) => {
           contactId: contact.id,
           contactName: contact.profile.name,
           wishList: contact.wishList,
+          birthdate: contact.profile.birthday,
+          gender: contact.profile.gender,
         }),
         credentials: "include",
       });

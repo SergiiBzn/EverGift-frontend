@@ -109,7 +109,6 @@ const useEventActions = () => {
       toast.error("Error editing event");
       console.error("Error editing event:", error);
     }
-    console.log(`Editing event ${event}`);
   };
   const handleTogglePin = async (event) => {
     console.log("toggle pin event:", event);
@@ -158,18 +157,42 @@ const useEventActions = () => {
       return null;
     }
   };
-  const handleArchieve = async (event) => {
-    if (!event || !event.contact || !event.contact._id || !event._id) {
-      toast.error("Invalid event data provided for achieving.");
+  const handleArchive = async (event, onArchiveSuccess) => {
+    if (!event) {
+      toast.error("Invalid event data provided for archiving.");
       return;
     }
-    console.log(`archieve event:${event}`);
+
+    try {
+      const res = await fetch(`${baseUrl}/users/archivedEvents/${event._id}`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "PUT",
+        credentials: "include",
+      });
+      if (!res.ok) {
+        toast.error("Failed to archive event");
+        return null;
+      }
+      const archivedEvent = await res.json();
+
+      if (onArchiveSuccess) {
+        onArchiveSuccess(archivedEvent);
+      }
+      toast.success("Event archived successfully");
+      return archivedEvent;
+    } catch (error) {
+      toast.error("Error archiving event");
+      console.error("Error archiving event:", error);
+      return null;
+    }
   };
 
   return {
     handleDelete,
     handleUpdate,
-    handleArchieve,
+    handleArchive,
     handleCreateEvent,
     handleTogglePin,
   };

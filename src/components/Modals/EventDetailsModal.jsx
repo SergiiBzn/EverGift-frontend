@@ -3,15 +3,14 @@ import { format } from "date-fns";
 import { useState } from "react";
 import { ConfirmModal } from "../index.js";
 import { getNextEventDate } from "../../utils/eventHelpers.js";
-const EventDetailsModal = ({ event, onClose, onDelete, onEdit }) => {
+import useEventActions from "../../hooks/useEventActions.js";
+
+const EventDetailsModal = ({ event, onClose, onDelete, onEdit, onArchive }) => {
   // const { user } = useAuth();
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const { handleArchive } = useEventActions();
   if (!event) return null;
 
-  // Find the contact details from the user's contacts list
-  // const getContactDetails = (contactId) => {
-  //   return user?.contacts?.find((c) => c.id === contactId);
-  // };
   const nextEventDate = getNextEventDate(event, new Date());
   const handleDeleteClick = () => {
     setIsConfirmOpen(true); //
@@ -21,11 +20,20 @@ const EventDetailsModal = ({ event, onClose, onDelete, onEdit }) => {
     onDelete();
     setIsConfirmOpen(false);
   };
-
+  const handleArchiveClick = () => {
+    handleArchive(event, onArchive);
+    onClose();
+  };
   return (
     <>
       <dialog id="event_details_modal" className="modal modal-open">
         <div className="modal-box w-11/12 max-w-lg rounded-3xl">
+          <button
+            onClick={onClose}
+            className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+          >
+            ✕
+          </button>
           <div className="p-4">
             {/* Modal Header with Contact Info */}
             <div className="flex flex-col items-center mb-6">
@@ -78,10 +86,10 @@ const EventDetailsModal = ({ event, onClose, onDelete, onEdit }) => {
                 Delete
               </button>
               <button
-                onClick={onClose}
-                className="btn btn-outline min-w-28 rounded-xl"
+                onClick={handleArchiveClick}
+                className="btn btn-success min-w-28 rounded-xl text-white"
               >
-                Close
+                Archive
               </button>
             </div>
           </div>

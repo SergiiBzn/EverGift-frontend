@@ -96,6 +96,15 @@ const Dashboard = () => {
           onClose={handleCloseDetailsModal}
           onDelete={handleDeleteEvent}
           onEdit={handleOpenEditModal}
+          onArchive={(response) => {
+            const { eventToAchive } = response;
+            setUser((prevUser) => ({
+              ...prevUser,
+              events: prevUser.events.filter(
+                (event) => event._id !== eventToAchive._id
+              ),
+            }));
+          }}
         />
       )}
       {(isCreateModalOpen || isEditModalOpen) && (

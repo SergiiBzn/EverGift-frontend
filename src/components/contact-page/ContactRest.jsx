@@ -1,18 +1,18 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState } from "react";
 import { GivenGiftModal, ConfirmModal } from "../Modals";
 import WishlistModal from "../WishListModal.jsx";
 
 const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
-const ContactRest = ({ contact }) => {
+const ContactRest = ({ contact, setContact }) => {
   const [openAddGivenGift, setOpenAddGivenGift] = useState(false);
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
-  const [givenGifts, setGivenGifts] = useState([]);
+  // const [givenGifts, setGivenGifts] = useState([]);
   const [editingGift, setEditingGift] = useState(null); // stores full givenGift object
   // Wishlist state
-  const [wishList, setWishList] = useState(() => contact?.wishList || []);
+  // const [wishList, setWishList] = useState(() => contact?.wishList || []);
   const [wlModalOpen, setWlModalOpen] = useState(false);
   const [editingWishIndex, setEditingWishIndex] = useState(null); // index in wishList
   const [wlSubmitting, setWlSubmitting] = useState(false);
@@ -22,31 +22,33 @@ const ContactRest = ({ contact }) => {
     id: null,
     index: null,
   });
+  const givenGifts = contact?.givenGifts || [];
+  const wishList = contact?.wishList || [];
 
   // Fetch existing given gifts for this contact
-  const fetchGivenGifts = useCallback(async () => {
-    if (!contact?.id) return;
-    setLoading(true);
-    setErrorMsg("");
-    try {
-      const res = await fetch(`${baseUrl}/contacts/${contact.id}/givenGifts`, {
-        credentials: "include",
-      });
-      if (!res.ok)
-        throw new Error(`Failed to load given gifts (${res.status})`);
-      const data = await res.json();
-      setGivenGifts(data);
-    } catch (e) {
-      console.error(e);
-      setErrorMsg(e.message || "Error loading given gifts");
-    } finally {
-      setLoading(false);
-    }
-  }, [contact?.id]);
+  // const fetchGivenGifts = useCallback(async () => {
+  //   if (!contact?.id) return;
+  //   setLoading(true);
+  //   setErrorMsg("");
+  //   try {
+  //     const res = await fetch(`${baseUrl}/contacts/${contact.id}/givenGifts`, {
+  //       credentials: "include",
+  //     });
+  //     if (!res.ok)
+  //       throw new Error(`Failed to load given gifts (${res.status})`);
+  //     const data = await res.json();
+  //     setGivenGifts(data);
+  //   } catch (e) {
+  //     console.error(e);
+  //     setErrorMsg(e.message || "Error loading given gifts");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }, [contact?.id]);
 
-  useEffect(() => {
-    fetchGivenGifts();
-  }, [fetchGivenGifts]);
+  // useEffect(() => {
+  //   fetchGivenGifts();
+  // }, [fetchGivenGifts]);
 
   const addGivenGift = async ({ name, description, date }) => {
     if (!contact?.id) return;
@@ -67,7 +69,11 @@ const ContactRest = ({ contact }) => {
         throw new Error(txt || `Failed to create gift (${res.status})`);
       }
       const created = await res.json();
-      setGivenGifts((prev) => [...prev, created]);
+      // setGivenGifts((prev) => [...prev, created])
+      setContact((prev) => ({
+        ...prev,
+        givenGifts: [...prev.givenGifts, created],
+      }));
       setOpenAddGivenGift(false);
     } catch (e) {
       console.error(e);
@@ -97,9 +103,12 @@ const ContactRest = ({ contact }) => {
         throw new Error(txt || `Failed to update gift (${res.status})`);
       }
       const updated = await res.json();
-      setGivenGifts((prev) =>
-        prev.map((g) => (g._id === updated._id ? updated : g))
-      );
+      setContact((prev) => ({
+        ...prev,
+        givenGifts: prev.givenGifts.map((g) =>
+          g._id === updated._id ? updated : g
+        ),
+      }));
       setOpenAddGivenGift(false);
       setEditingGift(null);
     } catch (e) {
@@ -125,7 +134,10 @@ const ContactRest = ({ contact }) => {
         const txt = await res.text();
         throw new Error(txt || `Failed to delete gift (${res.status})`);
       }
-      setGivenGifts((prev) => prev.filter((g) => g._id !== id));
+      setContact((prev) => ({
+        ...prev,
+        givenGifts: prev.givenGifts.filter((g) => g._id !== id),
+      }));
       if (editingGift?._id === id) setEditingGift(null);
     } catch (e) {
       console.error(e);
@@ -166,7 +178,7 @@ const ContactRest = ({ contact }) => {
         throw new Error(txt || `Failed to update wishlist (${res.status})`);
       }
       const updatedContact = await res.json();
-      setWishList(updatedContact.wishList || []);
+      setContact((prev) => ({ ...prev, wishList: updatedContact.wishList }));
       setWlModalOpen(false);
       setEditingWishIndex(null);
     } catch (e) {

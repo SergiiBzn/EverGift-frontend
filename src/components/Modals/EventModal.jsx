@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import useAuth from "../../hooks/useAuth.jsx";
+import { getNextEventDate } from "../../utils/eventHelpers.js";
 
 const EventModal = ({
   isOpen,
@@ -30,11 +31,13 @@ const EventModal = ({
   useEffect(() => {
     if (isOpen) {
       if (eventToEdit) {
+        // Calculate next valid date for repeat events
+        const nextEventDate = getNextEventDate(eventToEdit, new Date());
         // Edit mode: pre-fill form with event data
         setFormData({
           title: eventToEdit.title || "",
-          date: eventToEdit.date
-            ? new Date(eventToEdit.date).toISOString().split("T")[0]
+          date: nextEventDate
+            ? new Date(nextEventDate).toISOString().split("T")[0]
             : "",
           isRepeat: eventToEdit.isRepeat || "none", // CORRECTED: Handle incoming string
           isPinned: eventToEdit.isPinned || false,

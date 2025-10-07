@@ -1,5 +1,3 @@
-/** @format */
-
 import { useState } from "react";
 import {
   startOfMonth,
@@ -17,19 +15,27 @@ import {
 // import EventModal from "../Modals/EventModal.jsx";
 import useAuth from "../../hooks/useAuth.jsx";
 import EventCard from "./EventCard.jsx";
+import { getNextEventDate } from "../../utils/eventHelpers.js";
 
 export default function Calendar({ onEventClick, onCreateEvent }) {
   const { user } = useAuth();
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(currentMonth);
 
-  const selectedEvents =
-    user.events?.filter(
-      (e) =>
-        e.date && e.date.split("T")[0] === format(selectedDate, "yyyy-MM-dd")
-    ) || [];
+  const today = new Date();
 
-  const eventDates = user.events?.map((e) => e.date).filter(Boolean) || [];
+  const selectedEvents =
+    (user.events || [])
+      .map((e) => ({
+        ...e,
+        nextDate: getNextEventDate(e, today),
+      }))
+      .filter((e) => isSameDay(e.nextDate, selectedDate)) || [];
+
+  const eventDates =
+    (user.events || [])
+      .map((e) => getNextEventDate(e, today))
+      .filter(Boolean) || [];
 
   const handleDateClick = (date) => {
     setSelectedDate(date);
@@ -119,11 +125,10 @@ export default function Calendar({ onEventClick, onCreateEvent }) {
 
       for (let i = 0; i < 7; i++) {
         const cloneDay = day;
-        const hasEvent = eventDates.some(
+        const hasEvent = eventDates?.some(
           (eventDate) =>
             eventDate &&
-            format(new Date(eventDate), "yyyy-MM-dd") ===
-              format(cloneDay, "yyyy-MM-dd")
+            format(eventDate, "yyyy-MM-dd") === format(cloneDay, "yyyy-MM-dd")
         );
 
         days.push(

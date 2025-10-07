@@ -5,27 +5,6 @@ import useEventActions from "../../hooks/useEventActions.js";
 const EventCard = ({ event, onEventClick }) => {
   const { handleTogglePin } = useEventActions();
 
-  //   try {
-  //     const res = await fetch(
-  //       `${baseUrl}/contacts/${contactId}/events/${eventId}`,
-  //       {
-  //         method: "DELETE",
-  //         credentials: "include",
-  //       }
-  //     );
-
-  //     if (res.ok) {
-  //       setUser((prevUser) => ({
-  //         ...prevUser,
-  //         events: prevUser.events.filter((event) => event._id !== eventId),
-  //       }));
-  //     } else {
-  //       console.error("Failed to delete event");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error deleting event:", error);
-  //   }
-  // };
   return (
     <div className="flex items-center justify-between gap-4 p-4 rounded-lg bg-white shadow-md">
       <div

@@ -1,13 +1,18 @@
 import { Link } from "react-router";
 import useAuth from "../hooks/useAuth";
+import { useEffect } from "react";
 
-const UserMenu = ({ user }) => {
-  const { logout } = useAuth();
+const UserMenu = () => {
+  const { logout, user, getHasNotification } = useAuth();
   const handleClose = () => {
-    // if (document.activeElement instanceof HTMLElement) {
     document.activeElement.blur();
-    // }
   };
+  useEffect(() => {
+    const interval = setInterval(() => {
+      getHasNotification();
+    }, 10000);
+    return () => clearInterval(interval);
+  }, [getHasNotification]);
 
   return (
     <div className="flex-none">

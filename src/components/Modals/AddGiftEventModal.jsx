@@ -110,7 +110,7 @@ const AddGiftEventModal = ({ contact, setContact }) => {
                     <input
                       id="title"
                       type="text"
-                      className="w-full rounded-xl bg-white/95 p-3 text-gray-900 outline-none focus:ring-2 focus:ring-orange-400"
+                      className="w-full rounded-2xl input input-md input-primary bg-white/95 text-base-content"
                       value={formData.title || ""}
                       onChange={(e) =>
                         setFormData({
@@ -136,7 +136,7 @@ const AddGiftEventModal = ({ contact, setContact }) => {
                     <input
                       id="date"
                       type="date"
-                      className="w-full rounded-xl bg-white/95 p-3 text-gray-900 outline-none focus:ring-2 focus:ring-orange-400"
+                      className="w-full rounded-2xl input input-md input-primary bg-white/95 text-base-content"
                       value={formData.date}
                       onChange={(e) =>
                         setFormData({ ...formData, date: e.target.value })

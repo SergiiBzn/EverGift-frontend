@@ -94,7 +94,7 @@ export default function GivenGiftModal({
                 <input
                   id="giftName"
                   type="text"
-                  className="w-full rounded-xl bg-white/95 p-3 text-gray-900 outline-none focus:ring-2 focus:ring-orange-400"
+                  className="w-full rounded-2xl input input-md input-primary bg-white/95 text-base-content"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
@@ -115,7 +115,7 @@ export default function GivenGiftModal({
                 <input
                   id="description"
                   type="text"
-                  className="w-full rounded-xl bg-white/95 p-3 text-gray-900 outline-none focus:ring-2 focus:ring-orange-400"
+                  className="w-full rounded-2xl input input-md input-primary bg-white/95 text-base-content"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   disabled={submitting}
@@ -132,7 +132,7 @@ export default function GivenGiftModal({
                 <input
                   id="date"
                   type="date"
-                  className="w-full rounded-xl bg-white/95 p-3 text-gray-900 outline-none focus:ring-2 focus:ring-orange-400"
+                  className="w-full rounded-2xl input input-md input-primary bg-white/95 text-base-content"
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
                   required

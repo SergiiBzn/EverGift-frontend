@@ -118,7 +118,7 @@ const ProfileForm = ({
                 Paste Avatar Url
               </label>
               <input
-                className="input input-primary w-full"
+                className="w-full rounded-2xl input input-md input-primary bg-white/95 text-base-content"
                 type="text"
                 name="avatar"
                 value={formData.avatar}
@@ -150,7 +150,7 @@ const ProfileForm = ({
         <label className="block font-medium text-neutral-content">
           Name
           <input
-            className="w-full rounded-lg input input-lg input-primary text-base-content"
+            className="w-full rounded-2xl input input-md input-primary bg-white/95 text-base-content"
             name="name"
             type="text"
             value={formData.name}
@@ -165,7 +165,7 @@ const ProfileForm = ({
         <label className="block text-sm font-medium text-neutral-content">
           Birthday
           <input
-            className="w-full rounded-lg input input-lg input-primary text-base-content"
+            className="w-full rounded-2xl input input-md input-primary bg-white/95 text-base-content"
             name="birthday"
             type="date"
             value={formData.birthday}
@@ -222,7 +222,7 @@ const ProfileForm = ({
           ))}
         </div>
         <input
-          className="w-full rounded-lg input input-lg input-primary text-base-content"
+          className="w-full rounded-2xl input input-md input-primary bg-white/95 text-base-content"
           name="tags"
           placeholder="Enter a tag and press Enter"
           type="text"

@@ -39,7 +39,7 @@ const UserMenu = ({ user }) => {
             </Link>
           </li>
           <li onClick={handleClose}>
-            <Link to="/">dashboard</Link>
+            <Link to="/">Dashboard</Link>
           </li>
           <li onClick={handleClose}>
             <button onClick={logout}>Logout</button>

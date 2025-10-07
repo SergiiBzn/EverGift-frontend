@@ -15,6 +15,7 @@ import {
 } from "./pages";
 
 import { AuthContextProvider } from "./contexts/AuthContext.jsx";
+import "@fortawesome/fontawesome-free/css/all.min.css";
 
 const App = () => {
   return (

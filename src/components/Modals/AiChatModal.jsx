@@ -183,7 +183,7 @@ const AiChatModal = ({ contact, isOpen, onClose }) => {
         <div className="p-3 flex flex-col gap-3">
           <button
             onClick={handleSuggestion}
-            className="btn btn-outline btn-primary rounded-lg text-sm w-1/2"
+            className="btn btn-outline btn-primary rounded-lg text-sm  w-2/3 sm:w-1/2"
           >
             Suggest Me Some gifts for{" "}
             <span className="font-bold">{contact.profile.name}</span>

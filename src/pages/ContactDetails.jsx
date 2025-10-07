@@ -31,7 +31,7 @@ const ContactDetails = () => {
           deleteContact={deleteContact}
         />
         <ContactEvent contact={contact} setContact={setContact} />
-        <ContactRest contact={contact} />
+        <ContactRest contact={contact} setContact={setContact} />
       </div>
     </main>
   );

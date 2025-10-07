@@ -201,7 +201,7 @@ const AiChatModal = ({ contact, isOpen, onClose }) => {
               value={message}
               onChange={handleChange}
               placeholder="Type your message..."
-              className="flex-1 input input-bordered input-lg rounded-lg w-full"
+              className="flex-1 w-full rounded-2xl input input-md input-primary bg-white/95 text-base-content"
             />
             <button className="btn btn-primary rounded-xl">Send</button>
           </form>

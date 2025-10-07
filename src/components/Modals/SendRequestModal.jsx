@@ -196,7 +196,7 @@ const SendRequestModal = ({ isOpen, setIsOpen }) => {
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyDown={handleKeydown}
-                  className="input input-bordered input-primary w-full mt-2"
+                  className="w-full rounded-2xl input input-md input-primary bg-white/95 text-base-content mt-2"
                   placeholder="Enter email and press Enter"
                 />
                 <motion.p

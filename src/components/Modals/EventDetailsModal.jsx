@@ -1,18 +1,18 @@
-import useAuth from "../../hooks/useAuth";
+// import useAuth from "../../hooks/useAuth";
 import { format } from "date-fns";
 import { useState } from "react";
 import { ConfirmModal } from "../index.js";
-
+import { getNextEventDate } from "../../utils/eventHelpers.js";
 const EventDetailsModal = ({ event, onClose, onDelete, onEdit }) => {
-  const { user } = useAuth();
+  // const { user } = useAuth();
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   if (!event) return null;
 
   // Find the contact details from the user's contacts list
-  const getContactDetails = (contactId) => {
-    return user?.contacts?.find((c) => c.id === contactId);
-  };
-
+  // const getContactDetails = (contactId) => {
+  //   return user?.contacts?.find((c) => c.id === contactId);
+  // };
+  const nextEventDate = getNextEventDate(event, new Date());
   const handleDeleteClick = () => {
     setIsConfirmOpen(true); //
   };
@@ -50,7 +50,7 @@ const EventDetailsModal = ({ event, onClose, onDelete, onEdit }) => {
               {/* Date */}
               <div className="flex items-center gap-4">
                 <span className="font-semibold">Date:</span>
-                <span>{format(new Date(event.date), "MMMM d, yyyy")}</span>
+                <span>{format(new Date(nextEventDate), "MMMM d, yyyy")}</span>
               </div>
               {/* Gift */}
               <div className="flex items-center gap-4">

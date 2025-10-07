@@ -100,7 +100,7 @@ const AiChatModal = ({ contact, isOpen, onClose }) => {
       {/* Modal */}
       <div
         id="aiChatModal"
-        className="relative bg-white w-full max-w-3xl rounded-3xl shadow-xl flex flex-col"
+        className="relative bg-white w-full max-w-3xl rounded-xl shadow-xl flex flex-col p-4"
         style={{ maxHeight: "90vh" }} // limits modal height
       >
         {/* Header */}

@@ -79,17 +79,19 @@ const EventDetailsModal = ({ event, onClose, onDelete, onEdit, onArchive }) => {
               >
                 Edit
               </button>
+
+              <button
+                onClick={handleArchiveClick}
+                className="btn btn-success min-w-28 rounded-xl text-white"
+                title="Move this event to archive"
+              >
+                Archive
+              </button>
               <button
                 onClick={handleDeleteClick}
                 className="btn btn-error min-w-28 rounded-xl text-white"
               >
                 Delete
-              </button>
-              <button
-                onClick={handleArchiveClick}
-                className="btn btn-success min-w-28 rounded-xl text-white"
-              >
-                Archive
               </button>
             </div>
           </div>

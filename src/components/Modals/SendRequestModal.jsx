@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import useAuth from "../../hooks/useAuth";
 import { toast } from "react-toastify";
@@ -56,6 +56,7 @@ const SendRequestModal = ({ isOpen, setIsOpen }) => {
     setRequests([...requests, value]);
     setInputValue("");
     setFoundUser(null);
+    inputRef.current.focus();
   };
 
   // ================ remove request  ==================
@@ -107,6 +108,15 @@ const SendRequestModal = ({ isOpen, setIsOpen }) => {
       setIsLoading(false);
     }
   };
+  const inputRef = useRef(null);
+  useEffect(() => {
+    if (isOpen && inputRef.current) {
+      const timer = setTimeout(() => {
+        inputRef.current.focus();
+      }, 200);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
 
   if (!isOpen) {
     return null;
@@ -179,15 +189,26 @@ const SendRequestModal = ({ isOpen, setIsOpen }) => {
                   </div>
                 ))}
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <input
                   type="email"
+                  ref={inputRef}
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyDown={handleKeydown}
                   className="input input-bordered input-primary w-full mt-2"
                   placeholder="Enter email and press Enter"
                 />
+                <motion.p
+                  className="text-xs text-gray-500 mt-1 ml-1"
+                  initial={{ opacity: 0, y: -3 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4 }}
+                >
+                  Press
+                  <span className="font-semibold text-primary mx-1">Enter</span>
+                  after each email to add multiple recipients.
+                </motion.p>
               </div>
 
               {searchError && (

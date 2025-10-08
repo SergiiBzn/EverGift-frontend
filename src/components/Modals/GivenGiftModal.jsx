@@ -1,6 +1,7 @@
 /** @format */
 
 import React, { useEffect, useState } from "react";
+import BodyScrollLock from "../BodyScrollLock.jsx";
 
 // TailwindCSS-based modal for adding a given gift
 // Props:
@@ -67,6 +68,7 @@ export default function GivenGiftModal({
       role="dialog"
       aria-modal="true"
     >
+      <BodyScrollLock active={isOpen} />
       <div
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
         onClick={onClose}

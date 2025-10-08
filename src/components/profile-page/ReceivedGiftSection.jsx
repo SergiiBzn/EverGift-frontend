@@ -3,6 +3,7 @@ import { useState, useEffect, useMemo } from "react";
 import ReceivedGiftModal from "../ReceivedGiftModal.jsx";
 import useAuth from "../../hooks/useAuth.jsx";
 import { ConfirmModal } from "../Modals";
+import BodyScrollLock from "../BodyScrollLock.jsx";
 
 const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
@@ -409,6 +410,9 @@ export default function ReceivedGiftSection() {
         onAddSender={handleAddSender}
         initialData={editingGift}
       />
+
+      {/* Lock body scroll when confirmation modal is open */}
+      <BodyScrollLock active={confirmState.open} />
 
       <ConfirmModal
         isOpen={confirmState.open}

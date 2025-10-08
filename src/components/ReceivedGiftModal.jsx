@@ -1,6 +1,7 @@
 /** @format */
 
 import React, { useEffect, useState, useRef, useCallback } from "react";
+import BodyScrollLock from "./BodyScrollLock";
 
 // Modal for creating / editing a received gift.
 // Props:
@@ -77,6 +78,8 @@ export default function ReceivedGiftModal({
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [isOpen, onClose]);
+
+  // Body scroll lock is handled by reusable component
 
   // Close suggestions when clicking outside
   useEffect(() => {
@@ -243,6 +246,7 @@ export default function ReceivedGiftModal({
       aria-modal="true"
       role="dialog"
     >
+      <BodyScrollLock active={isOpen} />
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"

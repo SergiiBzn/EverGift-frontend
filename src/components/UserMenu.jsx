@@ -3,7 +3,7 @@ import useAuth from "../hooks/useAuth";
 import { useEffect } from "react";
 
 const UserMenu = () => {
-  const { logout, user, getHasNotification } = useAuth();
+  const { logout, user, getHasNotification, setUser } = useAuth();
   const handleClose = () => {
     document.activeElement.blur();
   };
@@ -16,7 +16,11 @@ const UserMenu = () => {
 
   return (
     <div className="flex-none">
-      <Link to="/Notifications" className="btn btn-ghost btn-circle relative">
+      <Link
+        to="/Notifications"
+        className="btn btn-ghost btn-circle relative"
+        onClick={() => setUser({ ...user, hasNotification: false })}
+      >
         <span className="material-symbols-outlined">notifications</span>
         {user?.hasNotification && (
           <span className="absolute top-1 right-1 block h-2 w-2 rounded-full bg-primary"></span>

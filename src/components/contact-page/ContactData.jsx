@@ -93,14 +93,14 @@ const ContactData = ({ contact, setContact, deleteContact }) => {
             <button
               // onClick={openAIGiftSuggestionsModal}
               onClick={() => setIsOpenAiChat(true)}
-              className=" shadow-md"
+              className=" shadow-xl rounded-full"
             >
               {/* <span className="material-symbols-outlined">auto_awesome</span>
               <span>AI Gift Suggestions</span> */}
               <img
                 src={chataiAvatar}
                 alt="chatai"
-                className="w-20 h-20 rounded-full border border-primary ring ring-offset-base-100 ring-offset-2"
+                className="w-20 h-20 rounded-full border border-primary "
               />
             </button>
 

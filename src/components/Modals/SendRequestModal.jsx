@@ -109,14 +109,14 @@ const SendRequestModal = ({ isOpen, setIsOpen }) => {
     }
   };
   const inputRef = useRef(null);
-  useEffect(() => {
-    if (isOpen && inputRef.current) {
-      const timer = setTimeout(() => {
-        inputRef.current.focus();
-      }, 200);
-      return () => clearTimeout(timer);
-    }
-  }, [isOpen]);
+  // useEffect(() => {
+  //   if (isOpen && inputRef.current) {
+  //     const timer = setTimeout(() => {
+  //       inputRef.current.focus();
+  //     }, 200);
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [isOpen]);
 
   if (!isOpen) {
     return null;

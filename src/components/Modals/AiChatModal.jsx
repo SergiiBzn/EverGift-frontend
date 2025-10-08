@@ -1,6 +1,7 @@
 import React from "react";
 import useAuth from "../../hooks/useAuth";
 import chatbotAvatar from "../../assets/images/avatar.png";
+import chataiAvatar from "../../assets/images/ChatBox_image.jpg";
 import { useState } from "react";
 
 import { useEffect } from "react";
@@ -123,7 +124,7 @@ const AiChatModal = ({ contact, isOpen, onClose }) => {
           <div className="chat chat-start">
             <div className="chat-image avatar">
               <div className="w-10 rounded-full">
-                <img alt="ai avatar" src={chatbotAvatar} />
+                <img alt="ai avatar" src={chataiAvatar} />
               </div>
             </div>
             <div className="chat-bubble bg-gray-200 text-black">
@@ -142,9 +143,7 @@ const AiChatModal = ({ contact, isOpen, onClose }) => {
                 <div className="w-8 rounded-full">
                   <img
                     src={
-                      msg.sender === "user"
-                        ? user.profile.avatar
-                        : chatbotAvatar
+                      msg.sender === "user" ? user.profile.avatar : chataiAvatar
                     }
                     alt={msg.sender}
                   />
@@ -170,7 +169,7 @@ const AiChatModal = ({ contact, isOpen, onClose }) => {
             <div className="chat chat-start">
               <div className="chat-image avatar">
                 <div className="w-8 rounded-full">
-                  <img alt="ai avatar" src={chatbotAvatar} />
+                  <img alt="ai avatar" src={chataiAvatar} />
                 </div>
               </div>
               <div className="chat-bubble bg-gray-200 text-black">

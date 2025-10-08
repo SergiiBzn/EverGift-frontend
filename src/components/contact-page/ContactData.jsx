@@ -2,6 +2,7 @@ import EditContactProfile from "./EditContactProfile.jsx";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import ContactNote from "./ContactNote.jsx";
+import chataiAvatar from "../../assets/images/ChatBox_image.jpg";
 
 import AiChatModal from "../Modals/AiChatModal.jsx";
 
@@ -92,10 +93,15 @@ const ContactData = ({ contact, setContact, deleteContact }) => {
             <button
               // onClick={openAIGiftSuggestionsModal}
               onClick={() => setIsOpenAiChat(true)}
-              className="btn btn-primary shadow-md"
+              className=" shadow-md"
             >
-              <span className="material-symbols-outlined">auto_awesome</span>
-              <span>AI Gift Suggestions</span>
+              {/* <span className="material-symbols-outlined">auto_awesome</span>
+              <span>AI Gift Suggestions</span> */}
+              <img
+                src={chataiAvatar}
+                alt="chatai"
+                className="w-20 h-20 rounded-full border border-primary ring ring-offset-base-100 ring-offset-2"
+              />
             </button>
 
             {isOpenAiChat && (

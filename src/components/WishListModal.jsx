@@ -1,6 +1,7 @@
 /** @format */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
+import BodyScrollLock from "./BodyScrollLock";
 
 export default function WishlistModal({
   isOpen = false,
@@ -9,20 +10,20 @@ export default function WishlistModal({
   initialData = null,
   loading = false,
 }) {
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
 
   // Populate (edit) or reset (create)
   useEffect(() => {
     if (isOpen) {
       if (initialData) {
         setName(
-          initialData.item || initialData.title || initialData.name || ''
+          initialData.item || initialData.title || initialData.name || ""
         );
-        setDescription(initialData.description || '');
+        setDescription(initialData.description || "");
       } else {
-        setName('');
-        setDescription('');
+        setName("");
+        setDescription("");
       }
     }
   }, [isOpen, initialData]);
@@ -30,10 +31,12 @@ export default function WishlistModal({
   // Close on ESC like ReceivedGiftModal
   useEffect(() => {
     if (!isOpen) return;
-    const onKey = (e) => e.key === 'Escape' && onClose();
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    const onKey = (e) => e.key === "Escape" && onClose();
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, [isOpen, onClose]);
+
+  // Body scroll lock is handled by reusable component
 
   const handleSave = (e) => {
     e.preventDefault();
@@ -49,6 +52,7 @@ export default function WishlistModal({
       aria-modal="true"
       role="dialog"
     >
+      <BodyScrollLock active={isOpen} />
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"

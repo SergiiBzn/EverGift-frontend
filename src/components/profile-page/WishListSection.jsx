@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import WishlistModal from "../WishListModal.jsx";
 import { ConfirmModal } from "../Modals";
+import BodyScrollLock from "../BodyScrollLock.jsx";
 
 const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
@@ -164,6 +165,8 @@ export default function WishListSection({ initialWishList = [] }) {
           editingWishIndex !== null ? wishList[editingWishIndex] : null
         }
       />
+
+      <BodyScrollLock active={confirmState.open} />
 
       <ConfirmModal
         isOpen={confirmState.open}

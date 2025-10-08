@@ -85,7 +85,6 @@ export default function WishlistModal({
                   onChange={(e) => setName(e.target.value)}
                   required
                   placeholder="e.g. Noise Cancelling Headphones"
-                  autoFocus
                 />
               </div>
             </div>
@@ -101,8 +100,8 @@ export default function WishlistModal({
               <div className="col-span-8">
                 <textarea
                   id="wishDescription"
-                  rows={3}
-                  className="w-full rounded-2xl input input-md input-primary bg-white/95 text-base-content"
+                  rows={5}
+                  className="w-full rounded-2xl textarea textarea-md textarea-primary bg-white/95 text-base-content"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Short description (optional)"
